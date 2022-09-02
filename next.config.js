@@ -1,4 +1,4 @@
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
