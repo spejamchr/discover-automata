@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next export && next start --port 3012",
     "lint": "next lint"
   },
   "prettier": {
