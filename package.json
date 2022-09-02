@@ -9,9 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@execonline-inc/numbers": "^4.6.0",
+    "@execonline-inc/translations": "^9.13.0",
+    "@kofno/piper": "^4.3.0",
+    "maybeasy": "^3.0.0",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "resulty": "^5.0.0",
+    "taskarian": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
