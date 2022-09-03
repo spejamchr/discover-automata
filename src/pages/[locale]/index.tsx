@@ -1,6 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import { constrainToLocale, Locale, locales } from '../../Locales/Types';
+import Emulator from '../../components/Emulator';
+import { constrainToLocale, Locale, locales } from '../../utils/Locales/Types';
 
 export interface Props {
   locale: Locale;
@@ -18,6 +19,7 @@ const Home: NextPage<Props> = ({ locale }) => {
       <main>
         <h1>One-dimensional Cellular Automata</h1>
         <p>In {locale}</p>
+        <Emulator />
       </main>
     </div>
   );

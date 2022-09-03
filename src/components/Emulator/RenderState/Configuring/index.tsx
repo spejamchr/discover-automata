@@ -1,0 +1,101 @@
+import { observer } from 'mobx-react';
+import * as React from 'react';
+import { Index } from '../../../../utils/CellularAutomata/Types';
+import Store from '../../Store';
+import { Configuring as State } from '../../Types';
+
+interface Props {
+  store: Store;
+  state: State;
+}
+
+const isNeighborSelected = (state: State, index: Index): boolean => state.neighbors.includes(index);
+
+const toggleNeighbor =
+  (store: Store, state: State, index: Index): React.MouseEventHandler<HTMLButtonElement> =>
+  (e) => {
+    e.preventDefault();
+    store.setNeighbors(
+      isNeighborSelected(state, index)
+        ? state.neighbors.filter((i) => i !== index)
+        : [...state.neighbors, index],
+    );
+  };
+
+const next =
+  (store: Store): React.MouseEventHandler<HTMLButtonElement> =>
+  (e) => {
+    e.preventDefault();
+    store.ready();
+  };
+
+const Configuring: React.FC<Props> = ({ store, state }) => (
+  <form>
+    <label className={`block`}>
+      <span className={`block text-sm font-medium text-slate-700`}>States</span>
+      <input
+        type="number"
+        min={store.minStates}
+        max={store.maxStates}
+        step="1"
+        value={store.states.map(String).getOrElseValue(state.states)}
+        onChange={(e) => store.setStates(e.target.value)}
+      />
+      {store.states.cata({
+        Ok: () => <></>,
+        Err: (e) => <span>{JSON.stringify(e)}</span>,
+      })}
+    </label>
+    <label className={`block`}>
+      <span className={`block text-sm font-medium text-slate-700`}>Neighbors</span>
+      {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
+        <button
+          className={`${
+            isNeighborSelected(state, i) ? 'border-green-300' : 'border-slate-300'
+          } border-2 w-7 h-7 m-0.5 rounded`}
+          key={i}
+          onClick={toggleNeighbor(store, state, i)}
+        >
+          {i}
+        </button>
+      ))}
+      {store.neighbors.cata({
+        Ok: () => <></>,
+        Err: (e) => <span>{JSON.stringify(e)}</span>,
+      })}
+    </label>
+
+    <label className={`block`}>
+      <span className={`block text-sm font-medium text-slate-700`}>Rule ID</span>
+      <input
+        type="number"
+        min={store.minRule}
+        max={store.maxRule.map(String).getOrElseValue('')}
+        step="1"
+        value={store.ruleId.map(String).getOrElseValue(state.ruleId)}
+        onChange={(e) => store.setRuleId(e.target.value)}
+      />
+      {store.ruleId.cata({
+        Ok: () => <></>,
+        Err: (e) => <span>{JSON.stringify(e)}</span>,
+      })}
+    </label>
+    <label className={`block`}>
+      <span className={`block text-sm font-medium text-slate-700`}>Starting Generation</span>
+      <input
+        className={`w-80`}
+        value={store.starting.map((g) => g.join(',')).getOrElseValue(state.starting)}
+        onChange={(e) => store.setStarting(e.target.value)}
+      />
+      {store.starting.cata({
+        Ok: () => <></>,
+        Err: (e) => <span>{JSON.stringify(e)}</span>,
+      })}
+    </label>
+    <button type="submit" onClick={next(store)}>
+      Next
+    </button>
+  </form>
+);
+
+export default observer(Configuring);
