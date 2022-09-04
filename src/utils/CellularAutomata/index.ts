@@ -1,14 +1,32 @@
 import { NonEmptyList } from 'nonempty-list';
 import { Automata, Count, Generation, Index, Neighbors, Rules, State } from './Types';
 
+// The digits are stored in little-endian order, so that the index of the digit
+// is also the exponent needed to get the value of that digit
+interface IntBase {
+  base: number;
+  digits: ReadonlyArray<number>;
+}
+
+const toBase =
+  (base: number) =>
+  (int: number): IntBase => {
+    const digits: Array<number> = [];
+    while (int !== 0) {
+      digits.push(int % base);
+      int -= digits[digits.length - 1];
+      int /= base;
+    }
+    return { base, digits };
+  };
+
+const fromBase = ({ base, digits }: IntBase): number =>
+  digits.reduce((int, digit, exp) => int + digit * base ** exp, 0);
+
 export const calcRules = (id: number, states: Count, neighbors: Neighbors): Rules => {
   const configurations = states ** neighbors.length;
 
-  const ids = id
-    .toString(states)
-    .split('')
-    .map((s) => parseInt(s, states))
-    .reverse();
+  const ids = toBase(states)(id).digits as Array<number>;
 
   while (ids.length < configurations) {
     ids.push(0);
@@ -18,13 +36,7 @@ export const calcRules = (id: number, states: Count, neighbors: Neighbors): Rule
 };
 
 export const calcId = (rules: Rules, states: Count): number =>
-  parseInt(
-    rules
-      .map((s) => s.toString(states))
-      .reverse()
-      .join(''),
-    states,
-  );
+  fromBase({ base: states, digits: rules });
 
 export const automataCtor = (states: Count, neighbors: Neighbors, rules: Rules): Automata => ({
   states,
@@ -37,18 +49,16 @@ export const automataFromId = (states: Count, neighbors: Neighbors, id: number):
 
 const calcNextCellOnZero =
   (automata: Automata) =>
-  (_cell: State, index: Index, cells: ReadonlyArray<State>): State => {
-    return automata.rules[
-      parseInt(
-        automata.neighbors
+  (_cell: State, index: Index, cells: ReadonlyArray<State>): State =>
+    automata.rules[
+      fromBase({
+        digits: automata.neighbors
           .map((n) => n + index)
           .map((i) => cells[i] || 0)
-          .map((s) => s.toString(automata.states))
-          .join(''),
-        automata.states,
-      )
+          .toArray(),
+        base: automata.states,
+      })
     ];
-  };
 
 export const nextCellsOnZero =
   (automata: Automata) =>

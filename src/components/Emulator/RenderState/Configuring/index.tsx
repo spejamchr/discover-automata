@@ -36,7 +36,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       <input
         type="number"
         min={store.minStates}
-        max={store.maxStates}
+        max={store.maxStates.map(String).getOrElseValue('')}
         step="1"
         value={store.states.map(String).getOrElseValue(state.states)}
         onChange={(e) => store.setStates(e.target.value)}
@@ -69,8 +69,8 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       <span className={`block text-sm font-medium text-slate-700`}>Rule ID</span>
       <input
         type="number"
-        min={store.minRule}
-        max={store.maxRule.map(String).getOrElseValue('')}
+        min={store.minRuleId}
+        max={store.maxRuleId.map(String).getOrElseValue('')}
         step="1"
         value={store.ruleId.map(String).getOrElseValue(state.ruleId)}
         onChange={(e) => store.setRuleId(e.target.value)}

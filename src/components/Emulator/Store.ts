@@ -127,34 +127,59 @@ class Store {
     }
   };
 
+  // One state is boring but technically possible
   get minStates(): Count {
-    return 2;
+    return 1;
   }
 
-  get maxStates(): Count {
-    return 36;
+  // maxStates ** neighbors.length <= maxRuleCount
+  get maxStates(): ConfigResult<number> {
+    return this.parseNeighbors()
+      .map((n) => n.length)
+      .map((n) => {
+        const max = Math.round(Math.pow(10 ** 7, 1 / n));
+        return max ** n > this.maxRuleCount ? max - 1 : max;
+      });
   }
 
+  // Arbitrary limit... this is the size of the array of rules we have to
+  // store, so we don't want it to be "too big," whatever that is.
   get maxRuleCount(): Count {
     return 10 ** 7;
+  }
+
+  get minRuleId(): Index {
+    return 0;
+  }
+
+  get maxRuleId(): ConfigResult<Index> {
+    return ok<ConfigError, {}>({})
+      .assign('states', this.parseStates)
+      .assign('neighbors', this.parseNeighbors)
+      .map(({ states, neighbors }) => states ** (states ** neighbors.length) - 1);
+  }
+
+  // Zero would be boring, but possible
+  get minNeighbors(): Count {
+    return 1;
+  }
+
+  // states ** maxNeighbors <= maxRuleCount
+  get maxNeighbors(): ConfigResult<Index> {
+    return this.parseStates().map((s) => {
+      const max = Math.round(Math.log(this.maxRuleCount) / Math.log(s));
+      return s ** max > this.maxRuleCount ? max - 1 : max;
+    });
   }
 
   private parseStates = (): ConfigResult<number> => {
     switch (this.state.kind) {
       case 'configuring':
-        return ok<ConfigError, string>(this.state.states)
-          .andThen(parseIntR)
-          .andThen(whenBetweenR(this.minStates, this.maxStates));
+        return ok<ConfigError, string>(this.state.states).andThen(parseIntR);
       case 'ready':
         return ok(this.state.history.automata.states);
     }
   };
-
-  private whenValidRuleCount = <T>(
-    states: Count,
-    neighbors: Neighbors,
-    result: T,
-  ): ConfigResult<T> => whenLER(this.maxRuleCount)(states ** neighbors.length).map(always(result));
 
   private parseNeighbors = (): ConfigResult<Neighbors> => {
     switch (this.state.kind) {
@@ -166,41 +191,35 @@ class Store {
   };
 
   get states(): ConfigResult<Count> {
-    return this.parseNeighbors().cata({
-      Ok: (n) => this.parseStates().andThen((s) => this.whenValidRuleCount(s, n, s)),
-      Err: this.parseStates,
-    });
+    return this.parseStates().andThen(
+      this.maxStates
+        .map((max) => whenBetweenR(this.minStates, max))
+        .getOrElseValue(whenGER(this.minStates)),
+    );
   }
 
   get neighbors(): ConfigResult<Neighbors> {
-    return this.parseStates().cata({
-      Ok: (s) => this.parseNeighbors().andThen((n) => this.whenValidRuleCount(s, n, n)),
-      Err: this.parseNeighbors,
+    return this.parseNeighbors().andThen((n) => {
+      const compare = this.maxNeighbors
+        .map((max) => whenBetweenR(this.minNeighbors, max))
+        .getOrElseValue(whenGER(this.minNeighbors));
+      return compare(n.length).map(always(n));
     });
-  }
-
-  get minRule(): number {
-    return 0;
-  }
-
-  get maxRule(): ConfigResult<number> {
-    return ok<ConfigError, {}>({})
-      .assign('states', this.states)
-      .assign('neighbors', this.neighbors)
-      .map(({ states, neighbors }) => states ** (states ** neighbors.length) - 1);
   }
 
   get ruleId(): ConfigResult<number> {
     switch (this.state.kind) {
       case 'configuring':
         const state = this.state;
-        return this.maxRule.cata({
+        return this.maxRuleId.cata({
           Ok: (max) =>
             ok<ConfigError, string>(state.ruleId)
               .andThen(parseIntR)
-              .andThen(whenBetweenR(this.minRule, max)),
+              .andThen(whenBetweenR(this.minRuleId, max)),
           Err: () =>
-            ok<ConfigError, string>(state.ruleId).andThen(parseIntR).andThen(whenGER(this.minRule)),
+            ok<ConfigError, string>(state.ruleId)
+              .andThen(parseIntR)
+              .andThen(whenGER(this.minRuleId)),
         });
       case 'ready':
         return ok(calcId(this.state.history.automata.rules, this.state.history.automata.states));

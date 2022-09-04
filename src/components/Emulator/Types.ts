@@ -16,7 +16,7 @@ export interface Configuring {
   starting: string;
 }
 
-interface Ready {
+export interface Ready {
   kind: 'ready';
   history: HistoryStore;
 }
