@@ -67,7 +67,9 @@ class Store {
       case 'configuring':
         ok<ConfigError, {}>({})
           .assign('automata', this.automata)
-          .assign('starting', this.starting)
+          .assign('starting', ({ automata }) =>
+            fromArrayResult([...Array(100)].map(() => Math.floor(Math.random() * automata.states))),
+          )
           .map(({ automata, starting }) => new HistoryStore(automata, starting))
           .map(ready)
           .do((readyState) => (this.state = readyState));
