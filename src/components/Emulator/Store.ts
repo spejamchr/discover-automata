@@ -12,7 +12,7 @@ import {
   Neighbors,
   State as CellState,
 } from '../../utils/CellularAutomata/Types';
-import { fromArrayResult, whenBetweenR, whenGER, whenLER } from '../../utils/Extensions';
+import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, ready, State } from './Types';
 import { ok } from 'resulty';
 
@@ -152,11 +152,20 @@ class Store {
     return 0;
   }
 
+  // A RuleID encodes a unique automata as a rule array in a single integer.
+  // It's not much use if that integer can't be stored accurately.
+  //
+  // states ** (states ** neighbors.length) <= maxAccurateRuleId
+  get maxAccurateRuleId(): number {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
   get maxRuleId(): ConfigResult<Index> {
     return ok<ConfigError, {}>({})
       .assign('states', this.parseStates)
       .assign('neighbors', this.parseNeighbors)
-      .map(({ states, neighbors }) => states ** (states ** neighbors.length) - 1);
+      .map(({ states, neighbors }) => states ** (states ** neighbors.length) - 1)
+      .map((m) => Math.min(m, this.maxAccurateRuleId));
   }
 
   // Zero would be boring, but possible
