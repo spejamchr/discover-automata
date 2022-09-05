@@ -1,4 +1,4 @@
-import { fromNullable, just, Maybe, nothing } from 'maybeasy';
+import { just, Maybe, nothing } from 'maybeasy';
 import { makeObservable, computed, action, observable } from 'mobx';
 import { assertNever } from '../../Assert';
 import { Automata, Generation } from '../Types';
@@ -66,19 +66,6 @@ class HistoryStore {
         return nothing();
       case 'ready':
         return just(this.state.generations);
-    }
-  }
-
-  cancel(): void {
-    switch (this.state.kind) {
-      case 'waiting':
-      case 'ready':
-        break;
-      case 'working':
-        fromNullable(this.state.cancel).do((cancel) => cancel());
-        break;
-      default:
-        assertNever(this.state);
     }
   }
 }

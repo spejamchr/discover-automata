@@ -1,4 +1,3 @@
-import { noop } from '@kofno/piper';
 import { NonEmptyList } from 'nonempty-list';
 import Store from '.';
 import { nextCellsOnZero } from '..';
@@ -18,7 +17,12 @@ class Reactions extends ReactionComponent<Store, State> {
         this.props.store.working(new NonEmptyList(firstCell, rest));
         break;
       case 'working':
-        state.cancel = state.task.fork(noop, this.props.store.ready);
+        const generations = [state.first];
+
+        for (let i = 0; i < 100; i++) {
+          generations.push(this.calcNextGen(generations[i]));
+        }
+        this.props.store.ready(generations);
         break;
       case 'ready':
         break;

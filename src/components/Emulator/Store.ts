@@ -47,17 +47,14 @@ class Store {
   }
 
   setStates = (value: string): void => {
-    this.historyStore.do((store) => store.cancel());
     this.state.states = value;
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
-    this.historyStore.do((store) => store.cancel());
     this.state.neighbors = value;
   };
 
   setRuleId = (value: string): void => {
-    this.historyStore.do((store) => store.cancel());
     this.state.ruleId = value;
   };
 
