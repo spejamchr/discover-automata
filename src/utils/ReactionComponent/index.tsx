@@ -6,6 +6,7 @@ export interface ReactState {}
 export interface RCProps<Store> {
   store: Store;
   fireImmediately?: boolean;
+  throttleDelay?: number;
   debounceDelay?: number;
 }
 
@@ -36,7 +37,7 @@ abstract class ReactionComponent<Store, ObservedState, P extends {} = {}> extend
   private get options(): IReactionOptions<ObservedState, boolean> | undefined {
     return {
       fireImmediately: this.props.fireImmediately,
-      delay: this.props.debounceDelay,
+      delay: this.props.throttleDelay,
       equals: this.comparer,
     };
   }
@@ -60,8 +61,24 @@ abstract class ReactionComponent<Store, ObservedState, P extends {} = {}> extend
     return <></>;
   }
 
+  private debounceEffect(
+    effect: (arg: ObservedState, prev?: ObservedState, r?: IReactionPublic) => void,
+    debounceMs: number,
+  ) {
+    let timer: NodeJS.Timeout;
+    return (arg: ObservedState, prev?: ObservedState, r?: IReactionPublic) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => effect(arg, prev, r), debounceMs);
+    };
+  }
+
   private run(): IReactionDisposer {
-    return reaction(this.tester, this.effect, this.options);
+    let effect = this.effect;
+    const debounceDelay = this.props.debounceDelay;
+    if (debounceDelay) {
+      effect = this.debounceEffect(effect, debounceDelay);
+    }
+    return reaction(this.tester, effect, this.options);
   }
 }
 

@@ -8,7 +8,6 @@ export interface Waiting {
 export interface Working {
   kind: 'working';
   automata: Automata;
-  first: Generation;
 }
 
 export interface Ready {
@@ -21,10 +20,9 @@ export type State = Waiting | Ready | Working;
 
 export const waiting = (automata: Automata): Waiting => ({ kind: 'waiting', automata });
 
-export const working = (automata: Automata, first: Generation): Working => ({
+export const working = (automata: Automata): Working => ({
   kind: 'working',
   automata,
-  first,
 });
 
 export const ready = (automata: Automata, generations: ReadonlyArray<Generation>): Ready => ({

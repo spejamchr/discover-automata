@@ -11,6 +11,7 @@ class HistoryStore {
     this.state = waiting(automata);
     makeObservable(this, {
       state: observable,
+      working: action,
       ready: action,
       automata: computed,
       first: computed,
@@ -18,11 +19,11 @@ class HistoryStore {
     });
   }
 
-  working = (first: Generation): void => {
+  working = (): void => {
     switch (this.state.kind) {
       case 'waiting':
       case 'ready':
-        this.state = working(this.state.automata, first);
+        this.state = working(this.state.automata);
         break;
       case 'working':
         break;
@@ -51,9 +52,8 @@ class HistoryStore {
   get first(): Maybe<Generation> {
     switch (this.state.kind) {
       case 'waiting':
-        return nothing();
       case 'working':
-        return just(this.state.first);
+        return nothing();
       case 'ready':
         return just(this.state.generations[0]);
     }

@@ -2,7 +2,6 @@ import { parseIntR } from '@execonline-inc/numbers';
 import { always } from '@kofno/piper';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { automataCtor, serialize } from '../../utils/CellularAutomata';
-import HistoryStore from '../../utils/CellularAutomata/HistoryStore';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, State } from './Types';
@@ -30,7 +29,6 @@ class Store {
       states: computed,
       neighbors: computed,
       ruleId: computed,
-      historyStore: computed,
     });
   }
 
@@ -147,10 +145,6 @@ class Store {
       Err: () =>
         ok<ConfigError, string>(state.ruleId).andThen(parseIntR).andThen(whenGER(this.minRuleId)),
     });
-  }
-
-  get historyStore(): ConfigResult<HistoryStore> {
-    return this.automata.map((automata) => new HistoryStore(automata));
   }
 }
 

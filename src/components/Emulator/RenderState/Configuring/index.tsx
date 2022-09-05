@@ -1,10 +1,9 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Reactions from '../../../../utils/CellularAutomata/HistoryStore/Reactions';
-import { Automata, Index, State as CellState } from '../../../../utils/CellularAutomata/Types';
-import Generations from '../../Generations';
+import { Index } from '../../../../utils/CellularAutomata/Types';
 import Store from '../../Store';
 import { Configuring as State } from '../../Types';
+import History from './History';
 
 interface Props {
   store: Store;
@@ -23,18 +22,6 @@ const toggleNeighbor =
         : [...state.neighbors, index],
     );
   };
-
-const makeColorPicker = (automata: Automata) => {
-  const bigPrime = 100000007;
-  const otherPrime = 61528937;
-  const hueStepSize = 360 / automata.states;
-  const lStepSize = 100 / automata.states;
-  const offset = Math.floor((((automata.ruleId * otherPrime) ** 3 % bigPrime) / bigPrime) * 360);
-  const colors = [...Array(automata.states)]
-    .map((_, i) => [hueStepSize * i + offset, lStepSize * i + lStepSize / 3])
-    .map(([hue, v]) => `hsl(${hue}, ${v}%, ${v}%)`);
-  return (state: CellState): string => colors[state];
-};
 
 const Configuring: React.FC<Props> = ({ store, state }) => (
   <div>
@@ -89,16 +76,8 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         })}
       </label>
     </form>
-    {store.historyStore
-      .map((historyStore) => (
-        <div key={store.serialized.getOrElseValue('')}>
-          <Reactions store={historyStore} fireImmediately />
-          <Generations
-            historyStore={historyStore}
-            colorPicker={makeColorPicker(historyStore.automata)}
-          />
-        </div>
-      ))
+    {store.automata
+      .map((automata) => <History key={store.serialized.getOrElseValue('')} automata={automata} />)
       .getOrElse(() => (
         <></>
       ))}
