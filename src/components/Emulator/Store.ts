@@ -1,12 +1,11 @@
 import { parseIntR } from '@execonline-inc/numbers';
 import { always } from '@kofno/piper';
-import { action, makeObservable, observable } from 'mobx';
-import { assertNever } from '../../utils/Assert';
-import { automataCtor } from '../../utils/CellularAutomata';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { automataCtor, serialize } from '../../utils/CellularAutomata';
 import HistoryStore from '../../utils/CellularAutomata/HistoryStore';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
-import { ConfigError, ConfigResult, configuring, ready, State } from './Types';
+import { ConfigError, ConfigResult, configuring, State } from './Types';
 import { ok } from 'resulty';
 
 class Store {
@@ -15,90 +14,51 @@ class Store {
   constructor() {
     makeObservable(this, {
       state: observable,
-      configuring: action,
-      ready: action,
+      automata: computed,
+      serialized: computed,
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
+      minStates: computed,
+      maxStates: computed,
+      maxRuleCount: computed,
+      minRuleId: computed,
+      maxAccurateRuleId: computed,
+      maxRuleId: computed,
+      minNeighbors: computed,
+      maxNeighbors: computed,
+      states: computed,
+      neighbors: computed,
+      ruleId: computed,
+      historyStore: computed,
     });
   }
 
-  configuring = (): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        break;
-      case 'ready':
-        const {
-          automata: { states, neighbors, ruleId },
-        } = this.state.history;
-
-        this.state = configuring(String(states), neighbors.toArray(), String(ruleId));
-        break;
-      default:
-        assertNever(this.state);
-    }
-  };
-
-  private automata = (): ConfigResult<Automata> =>
-    ok<ConfigError, {}>({})
+  get automata(): ConfigResult<Automata> {
+    return ok<ConfigError, {}>({})
       .assign('states', this.states)
       .assign('neighbors', this.neighbors)
       .assign('ruleId', this.ruleId)
       .map(automataCtor);
+  }
 
-  ready = (): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        ok<ConfigError, {}>({})
-          .assign('automata', this.automata)
-          .assign('starting', ({ automata }) =>
-            fromArrayResult([...Array(100)].map(() => Math.floor(Math.random() * automata.states))),
-          )
-          .map(({ automata, starting }) => new HistoryStore(automata, starting))
-          .map(ready)
-          .do((readyState) => (this.state = readyState));
-        break;
-      case 'ready':
-        break;
-      default:
-        assertNever(this.state);
-    }
-  };
+  get serialized(): ConfigResult<string> {
+    return this.automata.map(serialize);
+  }
 
   setStates = (value: string): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        this.state.states = value;
-        break;
-      case 'ready':
-        break;
-      default:
-        assertNever(this.state);
-    }
+    this.historyStore.do((store) => store.cancel());
+    this.state.states = value;
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        this.state.neighbors = value;
-        break;
-      case 'ready':
-        break;
-      default:
-        assertNever(this.state);
-    }
+    this.historyStore.do((store) => store.cancel());
+    this.state.neighbors = value;
   };
 
   setRuleId = (value: string): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        this.state.ruleId = value;
-        break;
-      case 'ready':
-        break;
-      default:
-        assertNever(this.state);
-    }
+    this.historyStore.do((store) => store.cancel());
+    this.state.ruleId = value;
   };
 
   // One state is boring but technically possible
@@ -156,21 +116,11 @@ class Store {
   }
 
   private parseStates = (): ConfigResult<number> => {
-    switch (this.state.kind) {
-      case 'configuring':
-        return ok<ConfigError, string>(this.state.states).andThen(parseIntR);
-      case 'ready':
-        return ok(this.state.history.automata.states);
-    }
+    return ok<ConfigError, string>(this.state.states).andThen(parseIntR);
   };
 
   private parseNeighbors = (): ConfigResult<Neighbors> => {
-    switch (this.state.kind) {
-      case 'configuring':
-        return fromArrayResult(this.state.neighbors).map((a) => a.sort());
-      case 'ready':
-        return ok(this.state.history.automata.neighbors);
-    }
+    return fromArrayResult(this.state.neighbors).map((a) => a.sort());
   };
 
   get states(): ConfigResult<Count> {
@@ -191,22 +141,19 @@ class Store {
   }
 
   get ruleId(): ConfigResult<number> {
-    switch (this.state.kind) {
-      case 'configuring':
-        const state = this.state;
-        return this.maxRuleId.cata({
-          Ok: (max) =>
-            ok<ConfigError, string>(state.ruleId)
-              .andThen(parseIntR)
-              .andThen(whenBetweenR(this.minRuleId, max)),
-          Err: () =>
-            ok<ConfigError, string>(state.ruleId)
-              .andThen(parseIntR)
-              .andThen(whenGER(this.minRuleId)),
-        });
-      case 'ready':
-        return ok(this.state.history.automata.ruleId);
-    }
+    const state = this.state;
+    return this.maxRuleId.cata({
+      Ok: (max) =>
+        ok<ConfigError, string>(state.ruleId)
+          .andThen(parseIntR)
+          .andThen(whenBetweenR(this.minRuleId, max)),
+      Err: () =>
+        ok<ConfigError, string>(state.ruleId).andThen(parseIntR).andThen(whenGER(this.minRuleId)),
+    });
+  }
+
+  get historyStore(): ConfigResult<HistoryStore> {
+    return this.automata.map((automata) => new HistoryStore(automata));
   }
 }
 

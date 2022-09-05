@@ -1,3 +1,5 @@
+import { noop } from '@kofno/piper';
+import { NonEmptyList } from 'nonempty-list';
 import Store from '.';
 import { nextCellsOnZero } from '..';
 import { assertNever } from '../../Assert';
@@ -9,10 +11,16 @@ class Reactions extends ReactionComponent<Store, State> {
   calcNextGen = nextCellsOnZero(this.props.store.automata);
   effect = (state: State) => {
     switch (state.kind) {
-      case 'ready':
+      case 'waiting':
+        const randState = () => Math.floor(Math.random() * state.automata.states);
+        const firstCell = randState();
+        const rest = [...Array(99)].map(randState);
+        this.props.store.working(new NonEmptyList(firstCell, rest));
         break;
-      case 'progressing':
-        this.props.store.ready(this.calcNextGen(state.current));
+      case 'working':
+        state.cancel = state.task.fork(noop, this.props.store.ready);
+        break;
+      case 'ready':
         break;
       default:
         assertNever(state);

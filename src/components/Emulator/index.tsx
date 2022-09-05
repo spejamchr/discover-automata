@@ -12,7 +12,7 @@ class Emulator extends React.Component<Props> {
   render() {
     return (
       <>
-        <Reactions store={this.store} />
+        <Reactions store={this.store} fireImmediately />
         <RenderState store={this.store} />
       </>
     );
