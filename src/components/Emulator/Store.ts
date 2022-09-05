@@ -6,15 +6,21 @@ import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/
 import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, State } from './Types';
 import { ok } from 'resulty';
+import { NonEmptyList } from 'nonempty-list';
+
+const simplestAutomata = automataCtor({
+  states: 1,
+  neighbors: new NonEmptyList<number>(0, []),
+  ruleId: 0,
+});
 
 class Store {
-  state: State = configuring('2', [-1, 0, 1], '110');
+  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata);
 
   constructor() {
     makeObservable(this, {
       state: observable,
       automata: computed,
-      serialized: computed,
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
@@ -32,16 +38,17 @@ class Store {
     });
   }
 
-  get automata(): ConfigResult<Automata> {
-    return ok<ConfigError, {}>({})
+  get automata(): Automata {
+    ok<ConfigError, {}>({})
       .assign('states', this.states)
       .assign('neighbors', this.neighbors)
       .assign('ruleId', this.ruleId)
-      .map(automataCtor);
-  }
-
-  get serialized(): ConfigResult<string> {
-    return this.automata.map(serialize);
+      .do((partialAutomata) => {
+        if (serialize(partialAutomata) !== serialize(this.state.automata)) {
+          this.state.automata = automataCtor(partialAutomata);
+        }
+      });
+    return this.state.automata;
   }
 
   setStates = (value: string): void => {

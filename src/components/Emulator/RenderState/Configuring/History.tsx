@@ -19,13 +19,13 @@ class History extends React.Component<Props> {
 
   render() {
     return (
-      <div>
+      <>
         <Reactions store={this.historyStore} debounceDelay={300} />
         <Generations
           historyStore={this.historyStore}
           colorPicker={makeColorPicker(this.historyStore.automata)}
         />
-      </div>
+      </>
     );
   }
 }

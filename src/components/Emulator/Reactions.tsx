@@ -1,15 +1,11 @@
+import { serialize } from '../../utils/CellularAutomata';
 import ReactionComponent from '../../utils/ReactionComponent';
 import Store from './Store';
-import { ConfigResult } from './Types';
 
-class Reactions extends ReactionComponent<Store, ConfigResult<string>> {
-  tester = () => this.props.store.serialized;
-  effect = (serialized: ConfigResult<string>) => {
-    serialized
-      .do((id) => (window.location.hash = id))
-      .elseDo(() =>
-        history.replaceState({}, document.title, window.location.pathname + window.location.search),
-      );
+class Reactions extends ReactionComponent<Store, string> {
+  tester = () => serialize(this.props.store.automata);
+  effect = (serialized: string) => {
+    window.location.hash = serialized;
   };
 }
 

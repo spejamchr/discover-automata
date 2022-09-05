@@ -1,6 +1,6 @@
 import { NumberParseFailure } from '@execonline-inc/numbers';
 import { Result } from 'resulty';
-import { Index } from '../../utils/CellularAutomata/Types';
+import { Automata, Index } from '../../utils/CellularAutomata/Types';
 import { ComparerError, EmptyArrayError } from '../../utils/Extensions';
 
 export type ConfigError = NumberParseFailure | ComparerError | EmptyArrayError;
@@ -12,17 +12,20 @@ export interface Configuring {
   states: string;
   neighbors: ReadonlyArray<Index>;
   ruleId: string;
+  automata: Automata;
 }
 
 export const configuring = (
   states: string,
   neighbors: ReadonlyArray<Index>,
   ruleId: string,
+  automata: Automata,
 ): Configuring => ({
   kind: 'configuring',
   states,
   neighbors,
   ruleId,
+  automata,
 });
 
 export type State = Configuring;

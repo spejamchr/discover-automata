@@ -36,5 +36,5 @@ export const nextCellsOnZero =
     return new NonEmptyList(first, rest);
   };
 
-export const serialize = (automata: Automata): string =>
+export const serialize = (automata: Omit<Automata, 'rules'>): string =>
   [automata.states, automata.neighbors.join(':'), automata.ruleId].join('/');
