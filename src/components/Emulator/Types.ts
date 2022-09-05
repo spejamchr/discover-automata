@@ -13,7 +13,6 @@ export interface Configuring {
   states: string;
   neighbors: ReadonlyArray<Index>;
   ruleId: string;
-  starting: string;
 }
 
 export interface Ready {
@@ -25,13 +24,11 @@ export const configuring = (
   states: string,
   neighbors: ReadonlyArray<Index>,
   ruleId: string,
-  starting: string,
 ): Configuring => ({
   kind: 'configuring',
   states,
   neighbors,
   ruleId,
-  starting,
 });
 
 export const ready = (history: HistoryStore): Ready => ({

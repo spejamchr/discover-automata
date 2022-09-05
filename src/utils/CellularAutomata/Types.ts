@@ -12,4 +12,5 @@ export interface Automata {
   states: Count;
   neighbors: Neighbors;
   rules: Rules;
+  ruleId: number;
 }

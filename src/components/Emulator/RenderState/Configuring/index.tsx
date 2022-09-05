@@ -80,18 +80,6 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         Err: (e) => <span>{JSON.stringify(e)}</span>,
       })}
     </label>
-    <label className={`block`}>
-      <span className={`block text-sm font-medium text-slate-700`}>Starting Generation</span>
-      <input
-        className={`w-80`}
-        value={store.starting.map((g) => g.join(',')).getOrElseValue(state.starting)}
-        onChange={(e) => store.setStarting(e.target.value)}
-      />
-      {store.starting.cata({
-        Ok: () => <></>,
-        Err: (e) => <span>{JSON.stringify(e)}</span>,
-      })}
-    </label>
     <button type="submit" onClick={next(store)}>
       Next
     </button>

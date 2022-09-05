@@ -2,22 +2,15 @@ import { parseIntR } from '@execonline-inc/numbers';
 import { always } from '@kofno/piper';
 import { action, makeObservable, observable } from 'mobx';
 import { assertNever } from '../../utils/Assert';
-import { calcId, calcRules } from '../../utils/CellularAutomata';
+import { automataCtor } from '../../utils/CellularAutomata';
 import HistoryStore from '../../utils/CellularAutomata/HistoryStore';
-import {
-  Automata,
-  Count,
-  Generation,
-  Index,
-  Neighbors,
-  State as CellState,
-} from '../../utils/CellularAutomata/Types';
+import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, ready, State } from './Types';
 import { ok } from 'resulty';
 
 class Store {
-  state: State = configuring('2', [-1, 0, 1], '110', '0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0');
+  state: State = configuring('2', [-1, 0, 1], '110');
 
   constructor() {
     makeObservable(this, {
@@ -27,7 +20,6 @@ class Store {
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
-      setStarting: action,
     });
   }
 
@@ -37,17 +29,10 @@ class Store {
         break;
       case 'ready':
         const {
-          automata: { states, neighbors, rules },
-          history,
-          current,
+          automata: { states, neighbors, ruleId },
         } = this.state.history;
 
-        this.state = configuring(
-          String(states),
-          neighbors.toArray(),
-          String(calcId(rules, states)),
-          (history[0] || current).toArray().join(','),
-        );
+        this.state = configuring(String(states), neighbors.toArray(), String(ruleId));
         break;
       default:
         assertNever(this.state);
@@ -58,9 +43,8 @@ class Store {
     ok<ConfigError, {}>({})
       .assign('states', this.states)
       .assign('neighbors', this.neighbors)
-      .assign('rules', ({ states, neighbors }) =>
-        this.ruleId.map((id) => calcRules(id, states, neighbors)),
-      );
+      .assign('ruleId', this.ruleId)
+      .map(automataCtor);
 
   ready = (): void => {
     switch (this.state.kind) {
@@ -109,18 +93,6 @@ class Store {
     switch (this.state.kind) {
       case 'configuring':
         this.state.ruleId = value;
-        break;
-      case 'ready':
-        break;
-      default:
-        assertNever(this.state);
-    }
-  };
-
-  setStarting = (value: string): void => {
-    switch (this.state.kind) {
-      case 'configuring':
-        this.state.starting = value;
         break;
       case 'ready':
         break;
@@ -233,29 +205,7 @@ class Store {
               .andThen(whenGER(this.minRuleId)),
         });
       case 'ready':
-        return ok(calcId(this.state.history.automata.rules, this.state.history.automata.states));
-    }
-  }
-
-  get starting(): ConfigResult<Generation> {
-    switch (this.state.kind) {
-      case 'configuring':
-        const state = this.state;
-        return state.starting
-          .split(',')
-          .map<ConfigResult<number>>(parseIntR)
-          .map((r) =>
-            r.andThen(
-              this.states.map((states) => whenBetweenR(0, states - 1)).getOrElseValue(whenGER(0)),
-            ),
-          )
-          .reduce(
-            (ma, ms) => ma.andThen((a) => ms.map((s) => [...a, s])),
-            ok<ConfigError, Array<CellState>>([]),
-          )
-          .andThen(fromArrayResult);
-      case 'ready':
-        return ok(this.state.history.history[0] || this.state.history.current);
+        return ok(this.state.history.automata.ruleId);
     }
   }
 }
