@@ -9,17 +9,14 @@ interface Props {
   colorPicker: (state: State) => string;
 }
 
-const Generations: React.FC<Props> = ({ historyStore, colorPicker }) =>
-  historyStore.generations
-    .map((generations) => (
-      <table className={`w-full`}>
-        <tbody>
-          {generations.map((g, i) => (
-            <Row key={i} row={g} colorPicker={colorPicker} />
-          ))}
-        </tbody>
-      </table>
-    ))
-    .getOrElse(() => <></>);
+const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => (
+  <table className={`w-full`}>
+    <tbody>
+      {historyStore.generations.map((g, i) => (
+        <Row key={i} row={g} colorPicker={colorPicker} />
+      ))}
+    </tbody>
+  </table>
+);
 
 export default observer(Generations);

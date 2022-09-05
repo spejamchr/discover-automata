@@ -22,8 +22,12 @@ class HistoryStore {
   working = (): void => {
     switch (this.state.kind) {
       case 'waiting':
+        this.state = working(this.state.automata, []);
+        break;
       case 'ready':
-        this.state = working(this.state.automata);
+        // TODO: This doesn't currently run, because the store isn't reused
+        // between different automata
+        this.state = working(this.state.automata, this.state.generations);
         break;
       case 'working':
         break;
@@ -59,13 +63,14 @@ class HistoryStore {
     }
   }
 
-  get generations(): Maybe<ReadonlyArray<Generation>> {
+  get generations(): ReadonlyArray<Generation> {
     switch (this.state.kind) {
       case 'waiting':
+        return [];
       case 'working':
-        return nothing();
+        return this.state.previousGenerations;
       case 'ready':
-        return just(this.state.generations);
+        return this.state.generations;
     }
   }
 }
