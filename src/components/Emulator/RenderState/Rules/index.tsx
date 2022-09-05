@@ -26,12 +26,7 @@ const Rules: React.FC<Props> = ({ store }) => {
     <div className={`flex flex-wrap overflow-y-auto`}>
       {store.automata.rules
         .map((r, i) => (
-          <Rule
-            key={i}
-            neighborStates={indexToNeighborStates(i)}
-            state={r}
-            colorPicker={store.colorPicker}
-          />
+          <Rule key={i} neighborStates={indexToNeighborStates(i)} state={r} store={store} />
         ))
         .reverse()}
     </div>
