@@ -112,14 +112,24 @@ class Store {
 
   // Zero would be boring, but possible
   get minNeighbors(): Count {
-    return 1;
+    return ok<ConfigError, {}>({})
+      .assign('states', this.parseStates)
+      .assign('ruleId', this.ruleId)
+      .map(({ states, ruleId }) => {
+        let min = 1;
+        while (states ** (states ** min) - 1 < ruleId) min++;
+        return min;
+      })
+      .do((m) => console.log(`[SJC] minNeighbors:`, m))
+      .getOrElseValue(1);
   }
 
   // states ** maxNeighbors <= maxRuleCount
   get maxNeighbors(): ConfigResult<Index> {
     return this.parseStates().map((s) => {
       const max = Math.round(Math.log(this.maxRuleCount) / Math.log(s));
-      return s ** max > this.maxRuleCount ? max - 1 : max;
+      const r = s ** max > this.maxRuleCount ? max - 1 : max;
+      return Math.min(r, 7);
     });
   }
 

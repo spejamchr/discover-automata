@@ -35,11 +35,23 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         value={store.states.map(String).getOrElseValue(state.states)}
         onChange={(e) => store.setStates(e.target.value)}
       />
+      <button
+        onClick={() =>
+          store.maxStates
+            .map((max) => max - store.minStates)
+            .map((size) => Math.random() * size + store.minStates)
+            .map(String)
+            .do(store.setStates)
+        }
+      >
+        Randomize
+      </button>
       {store.states.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,
       })}
     </label>
+
     <div>
       <span className={`block text-sm font-medium text-slate-700`}>Neighbors</span>
       {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
@@ -53,6 +65,17 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
           {i}
         </button>
       ))}
+      <button
+        onClick={() =>
+          store.maxNeighbors
+            .map((max) => max - store.minNeighbors)
+            .map((size) => Math.random() * size + store.minNeighbors)
+            .map((n) => [-3, -2, -1, 0, 1, 2, 3].sort(() => Math.random() - 0.5).slice(0, n))
+            .do(store.setNeighbors)
+        }
+      >
+        Randomize
+      </button>
       {store.neighbors.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,
@@ -69,6 +92,17 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         value={store.ruleId.map(String).getOrElseValue(state.ruleId)}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
+      <button
+        onClick={() =>
+          store.maxRuleId
+            .map((max) => max - store.minRuleId)
+            .map((size) => Math.random() * size + store.minRuleId)
+            .map(String)
+            .do(store.setRuleId)
+        }
+      >
+        Randomize
+      </button>
       {store.ruleId.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,
