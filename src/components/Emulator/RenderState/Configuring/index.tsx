@@ -39,6 +39,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
           store.maxStates
             .map((max) => max - store.minStates)
             .map((size) => Math.random() * size + store.minStates)
+            .map(Math.round)
             .map(String)
             .do(store.setStates)
         }
@@ -69,6 +70,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
           store.maxNeighbors
             .map((max) => max - store.minNeighbors)
             .map((size) => Math.random() * size + store.minNeighbors)
+            .map(Math.round)
             .map((n) => [-3, -2, -1, 0, 1, 2, 3].sort(() => Math.random() - 0.5).slice(0, n))
             .do(store.setNeighbors)
         }
@@ -96,6 +98,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
           store.maxRuleId
             .map((max) => max - store.minRuleId)
             .map((size) => Math.random() * size + store.minRuleId)
+            .map(Math.round)
             .map(String)
             .do(store.setRuleId)
         }
