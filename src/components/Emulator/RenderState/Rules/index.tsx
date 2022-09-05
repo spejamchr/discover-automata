@@ -3,7 +3,6 @@ import * as React from 'react';
 import Store from '../../Store';
 import { toBase } from '../../../../utils/IntBase';
 import Rule from './Rule';
-import { makeColorPicker } from '../../../../utils/ColorPicker';
 
 interface Props {
   store: Store;
@@ -23,7 +22,6 @@ const Rules: React.FC<Props> = ({ store }) => {
     store.automata.states,
     store.automata.neighbors.length,
   );
-  const colorPicker = makeColorPicker(store.automata);
   return (
     <div className={`flex flex-wrap overflow-y-auto`}>
       {store.automata.rules
@@ -32,7 +30,7 @@ const Rules: React.FC<Props> = ({ store }) => {
             key={i}
             neighborStates={indexToNeighborStates(i)}
             state={r}
-            colorPicker={colorPicker}
+            colorPicker={store.colorPicker}
           />
         ))
         .reverse()}

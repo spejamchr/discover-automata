@@ -7,6 +7,7 @@ import { fromArrayResult, whenBetweenR, whenGER } from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, State } from './Types';
 import { ok } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
+import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 
 const simplestAutomata = automataCtor({
   states: 1,
@@ -15,7 +16,7 @@ const simplestAutomata = automataCtor({
 });
 
 class Store {
-  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata);
+  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata, true);
 
   constructor() {
     makeObservable(this, {
@@ -24,6 +25,7 @@ class Store {
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
+      toggleShowStateLabels: action,
       minStates: computed,
       maxStates: computed,
       maxRuleCount: computed,
@@ -35,6 +37,7 @@ class Store {
       states: computed,
       neighbors: computed,
       ruleId: computed,
+      colorPicker: computed,
     });
   }
 
@@ -67,6 +70,10 @@ class Store {
   setRuleId = (value: string): void => {
     this.state.ruleId = value;
     this.setAutomataIfNeeded();
+  };
+
+  toggleShowStateLabels = (): void => {
+    this.state.showStateLabels = !this.state.showStateLabels;
   };
 
   // One state is boring but technically possible
@@ -120,7 +127,6 @@ class Store {
         while (states ** (states ** min) - 1 < ruleId) min++;
         return min;
       })
-      .do((m) => console.log(`[SJC] minNeighbors:`, m))
       .getOrElseValue(1);
   }
 
@@ -168,6 +174,10 @@ class Store {
       Err: () =>
         ok<ConfigError, string>(state.ruleId).andThen(parseIntR).andThen(whenGER(this.minRuleId)),
     });
+  }
+
+  get colorPicker(): ColorPicker {
+    return makeColorPicker(this);
   }
 }
 

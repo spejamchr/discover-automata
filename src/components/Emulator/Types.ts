@@ -13,6 +13,7 @@ export interface Configuring {
   neighbors: ReadonlyArray<Index>;
   ruleId: string;
   automata: Automata;
+  showStateLabels: boolean;
 }
 
 export const configuring = (
@@ -20,12 +21,14 @@ export const configuring = (
   neighbors: ReadonlyArray<Index>,
   ruleId: string,
   automata: Automata,
+  showStateLabels: boolean,
 ): Configuring => ({
   kind: 'configuring',
   states,
   neighbors,
   ruleId,
   automata,
+  showStateLabels,
 });
 
 export type State = Configuring;

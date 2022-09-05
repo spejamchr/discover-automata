@@ -13,8 +13,8 @@ interface Props {
 const Rule: React.FC<Props> = ({ neighborStates, state, colorPicker }) => (
   <span className={`flex flex-col m-1 items-center`}>
     <span className={`flex`}>
-      {neighborStates.map((s) => (
-        <Cell state={s} colorPicker={colorPicker} />
+      {neighborStates.map((s, i) => (
+        <Cell key={i} state={s} colorPicker={colorPicker} />
       ))}
     </span>
     <Cell state={state} colorPicker={colorPicker} />

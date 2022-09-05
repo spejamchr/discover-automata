@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import HistoryStore from '../../../../../utils/CellularAutomata/HistoryStore';
 import Reactions from '../../../../../utils/CellularAutomata/HistoryStore/Reactions';
-import { makeColorPicker } from '../../../../../utils/ColorPicker';
 import Generations from '../../../Generations';
 import Store from '../../../Store';
 import EmulatorReactions from './EmulatorReactions';
@@ -29,7 +28,7 @@ class History extends React.Component<Props> {
         />
         <Generations
           historyStore={this.historyStore}
-          colorPicker={makeColorPicker(this.historyStore.automata)}
+          colorPicker={this.props.emulatorStore.colorPicker}
         />
       </>
     );

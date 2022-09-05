@@ -1,10 +1,12 @@
+import Store from '../../components/Emulator/Store';
 import { serialize } from '../CellularAutomata';
-import { Automata, State } from '../CellularAutomata/Types';
+import { State } from '../CellularAutomata/Types';
 import { hasher } from '../StrHash';
 
 export type ColorPicker = (state: State) => [string, string];
 
-export const makeColorPicker = (automata: Automata): ColorPicker => {
+export const makeColorPicker = (store: Store): ColorPicker => {
+  const { automata } = store;
   const minHueStepSize = 30;
   const hueStepSize = Math.max(minHueStepSize, 90 / automata.states);
   const hueOffset = hasher(serialize(automata)) % 360;
@@ -18,6 +20,10 @@ export const makeColorPicker = (automata: Automata): ColorPicker => {
       : [...Array(automata.states)].map((_, i) => i * lStepSize + buffer).reverse();
 
   const colors = hues.map((h, i) => `hsl(${h}, 90%, ${ls[i]}%)`);
-  const textColors = ls.map((l) => (l >= 50 ? 'black' : 'white'));
-  return (state: State) => [colors[state % automata.states], textColors[state % automata.states]];
+  if (store.state.showStateLabels) {
+    const textColors = ls.map((l) => (l >= 50 ? 'black' : 'white'));
+    return (state: State) => [colors[state % automata.states], textColors[state % automata.states]];
+  } else {
+    return (state: State) => [colors[state % automata.states], 'rgba(0, 0, 0, 0)'];
+  }
 };

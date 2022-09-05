@@ -24,6 +24,11 @@ const toggleNeighbor =
 
 const Configuring: React.FC<Props> = ({ store, state }) => (
   <div className={`shrink-0`}>
+    <div>
+      <button onClick={store.toggleShowStateLabels}>
+        {store.state.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
+      </button>
+    </div>
     <label className={`block`}>
       <span className={`block text-sm font-medium text-slate-700`}>States</span>
       <input
