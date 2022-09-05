@@ -1,13 +1,13 @@
+import { serialize } from '../CellularAutomata';
 import { Automata, State } from '../CellularAutomata/Types';
+import { hasher } from '../StrHash';
 
 export const makeColorPicker = (automata: Automata) => {
-  const bigPrime = 100000007;
-  const otherPrime = 61528937;
-  const hueStepSize = 360 / automata.states;
+  const hueStepSize = 90 / automata.states;
   const lStepSize = 100 / automata.states;
-  const offset = Math.floor((((automata.ruleId * otherPrime) ** 3 % bigPrime) / bigPrime) * 360);
+  const hueOffset = hasher(serialize(automata)) % 360;
   const colors = [...Array(automata.states)]
-    .map((_, i) => [hueStepSize * i + offset, lStepSize * i + lStepSize / 3])
-    .map(([hue, v]) => `hsl(${hue}, ${v}%, ${v}%)`);
-  return (state: State): string => colors[state];
+    .map((_, i) => [hueStepSize * i + hueOffset, lStepSize * i + lStepSize / 2])
+    .map(([hue, v]) => `hsl(${hue}, 50%, ${v}%)`);
+  return (state: State): string => colors[state % automata.states];
 };

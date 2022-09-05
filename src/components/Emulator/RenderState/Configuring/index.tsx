@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { serialize } from '../../../../utils/CellularAutomata';
 import { Index } from '../../../../utils/CellularAutomata/Types';
 import Store from '../../Store';
 import { Configuring as State } from '../../Types';
@@ -78,7 +77,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       </label>
     </form>
     <div className={`transition-all ease-in-out delay-150 duration-300`}>
-      <History key={serialize(store.automata)} automata={store.automata} />
+      <History emulatorStore={store} />
     </div>
   </div>
 );

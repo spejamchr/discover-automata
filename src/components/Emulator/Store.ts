@@ -38,7 +38,7 @@ class Store {
     });
   }
 
-  get automata(): Automata {
+  private setAutomataIfNeeded = (): void => {
     ok<ConfigError, {}>({})
       .assign('states', this.states)
       .assign('neighbors', this.neighbors)
@@ -48,19 +48,25 @@ class Store {
           this.state.automata = automataCtor(partialAutomata);
         }
       });
+  };
+
+  get automata(): Automata {
     return this.state.automata;
   }
 
   setStates = (value: string): void => {
     this.state.states = value;
+    this.setAutomataIfNeeded();
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
     this.state.neighbors = value;
+    this.setAutomataIfNeeded();
   };
 
   setRuleId = (value: string): void => {
     this.state.ruleId = value;
+    this.setAutomataIfNeeded();
   };
 
   // One state is boring but technically possible

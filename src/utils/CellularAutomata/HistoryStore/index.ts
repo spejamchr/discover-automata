@@ -19,15 +19,15 @@ class HistoryStore {
     });
   }
 
-  working = (): void => {
+  working = (automata: Automata): void => {
     switch (this.state.kind) {
       case 'waiting':
-        this.state = working(this.state.automata, []);
+        this.state = working(automata, []);
         break;
       case 'ready':
         // TODO: This doesn't currently run, because the store isn't reused
         // between different automata
-        this.state = working(this.state.automata, this.state.generations);
+        this.state = working(automata, this.state.generations);
         break;
       case 'working':
         break;

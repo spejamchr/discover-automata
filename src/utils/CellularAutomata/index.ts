@@ -37,4 +37,4 @@ export const nextCellsOnZero =
   };
 
 export const serialize = (automata: Omit<Automata, 'rules'>): string =>
-  [automata.states, automata.neighbors.join(':'), automata.ruleId].join('/');
+  [automata.states, automata.neighbors.toArray().join(':'), automata.ruleId].join('/');

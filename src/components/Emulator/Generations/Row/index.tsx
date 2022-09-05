@@ -12,8 +12,8 @@ const Row: React.FC<Props> = ({ row, colorPicker }) => {
     <tr>
       {row.toArray().map((s, i) => (
         <td
-          className={`transition ease-in-out delay-150 duration-300 w-[1%]`}
-          style={{ backgroundColor: colorPicker(s), color: colorPicker(s) }}
+          className={`transition ease-in-out duration-500 w-[1%]`}
+          style={{ backgroundColor: colorPicker(s), color: 'rgba(0, 0, 0, 0)' }}
           key={i}
         >
           {s}
