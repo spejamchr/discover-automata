@@ -11,11 +11,11 @@ interface Props {
 
 const Row: React.FC<Props> = ({ row, colorPicker }) => {
   return (
-    <tr>
+    <div className={`flex`}>
       {row.toArray().map((s, i) => (
         <Cell key={i} state={s} colorPicker={colorPicker} />
       ))}
-    </tr>
+    </div>
   );
 };
 

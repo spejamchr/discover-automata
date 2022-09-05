@@ -10,13 +10,16 @@ interface Props {
 
 const indices = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-const Cell: React.FC<Props> = ({ state, colorPicker }) => (
-  <td
-    className={`transition ease-in-out duration-500 w-4 text-center`}
-    style={{ backgroundColor: colorPicker(state) }}
-  >
-    <code>{indices[state] || state}</code>
-  </td>
-);
+const Cell: React.FC<Props> = ({ state, colorPicker }) => {
+  const [backgroundColor, color] = colorPicker(state);
+  return (
+    <span
+      className={`text-xs transition ease-in-out duration-500 flex items-center justify-center w-[1rem] h-[1rem] min-w-[1ch] font-mono`}
+      style={{ backgroundColor, color }}
+    >
+      {indices[state] || state}
+    </span>
+  );
+};
 
 export default observer(Cell);

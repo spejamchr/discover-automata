@@ -15,7 +15,7 @@ const indexToNeighborStatesMaker =
     const { digits } = toBase(states)(i);
     const digitsM = digits.slice(0);
     while (digitsM.length < neighbors) digitsM.push(0);
-    return digitsM;
+    return digitsM.reverse();
   };
 
 const Rules: React.FC<Props> = ({ store }) => {
@@ -25,7 +25,7 @@ const Rules: React.FC<Props> = ({ store }) => {
   );
   const colorPicker = makeColorPicker(store.automata);
   return (
-    <div className={`flex flex-wrap`}>
+    <div className={`flex flex-wrap overflow-y-auto`}>
       {store.automata.rules
         .map((r, i) => (
           <Rule

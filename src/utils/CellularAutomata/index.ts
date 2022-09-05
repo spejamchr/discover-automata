@@ -22,6 +22,7 @@ const calcNextCellOnZero =
     automata.rules[
       fromBase({
         digits: automata.neighbors
+          .reverse()
           .map((n) => n + index)
           .map((i) => cells[i] || 0)
           .toArray(),
