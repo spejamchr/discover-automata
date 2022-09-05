@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Index } from '../../../../utils/CellularAutomata/Types';
 import Store from '../../Store';
 import { Configuring as State } from '../../Types';
-import History from './History';
 
 interface Props {
   store: Store;
@@ -24,7 +23,7 @@ const toggleNeighbor =
   };
 
 const Configuring: React.FC<Props> = ({ store, state }) => (
-  <div>
+  <div className={`shrink-0`}>
     <label className={`block`}>
       <span className={`block text-sm font-medium text-slate-700`}>States</span>
       <input
@@ -108,9 +107,6 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         Err: (e) => <span>{JSON.stringify(e)}</span>,
       })}
     </label>
-    <div className={`transition-all ease-in-out delay-150 duration-300`}>
-      <History emulatorStore={store} />
-    </div>
   </div>
 );
 

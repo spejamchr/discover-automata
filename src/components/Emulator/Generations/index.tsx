@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import HistoryStore from '../../../utils/CellularAutomata/HistoryStore';
-import { State } from '../../../utils/CellularAutomata/Types';
+import { ColorPicker } from '../../../utils/ColorPicker';
 import Row from './Row';
 
 interface Props {
   historyStore: HistoryStore;
-  colorPicker: (state: State) => string;
+  colorPicker: ColorPicker;
 }
 
 const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => (

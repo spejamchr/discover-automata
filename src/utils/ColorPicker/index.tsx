@@ -2,8 +2,10 @@ import { serialize } from '../CellularAutomata';
 import { Automata, State } from '../CellularAutomata/Types';
 import { hasher } from '../StrHash';
 
-export const makeColorPicker = (automata: Automata) => {
-  const hueStepSize = 90 / automata.states;
+export type ColorPicker = (state: State) => string;
+
+export const makeColorPicker = (automata: Automata): ColorPicker => {
+  const hueStepSize = 360 / automata.states;
   const lStepSize = 100 / automata.states;
   const hueOffset = hasher(serialize(automata)) % 360;
   const colors = [...Array(automata.states)]
