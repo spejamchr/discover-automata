@@ -16,7 +16,7 @@ const simplestAutomata = automataCtor({
 });
 
 class Store {
-  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata, true);
+  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata, true, true);
 
   constructor() {
     makeObservable(this, {
@@ -26,6 +26,7 @@ class Store {
       setNeighbors: action,
       setRuleId: action,
       toggleShowStateLabels: action,
+      toggleDisplayInColor: action,
       minStates: computed,
       maxStates: computed,
       maxRuleCount: computed,
@@ -74,6 +75,10 @@ class Store {
 
   toggleShowStateLabels = (): void => {
     this.state.showStateLabels = !this.state.showStateLabels;
+  };
+
+  toggleDisplayInColor = (): void => {
+    this.state.displayInColor = !this.state.displayInColor;
   };
 
   // One state is boring but technically possible

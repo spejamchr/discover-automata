@@ -29,6 +29,11 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         {store.state.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
       </button>
     </div>
+    <div>
+      <button onClick={store.toggleDisplayInColor}>
+        {store.state.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'}
+      </button>
+    </div>
     <label className={`block`}>
       <span className={`block text-sm font-medium text-slate-700`}>States</span>
       <input

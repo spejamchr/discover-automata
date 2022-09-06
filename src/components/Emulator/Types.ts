@@ -14,6 +14,7 @@ export interface Configuring {
   ruleId: string;
   automata: Automata;
   showStateLabels: boolean;
+  displayInColor: boolean;
 }
 
 export const configuring = (
@@ -22,6 +23,7 @@ export const configuring = (
   ruleId: string,
   automata: Automata,
   showStateLabels: boolean,
+  displayInColor: boolean,
 ): Configuring => ({
   kind: 'configuring',
   states,
@@ -29,6 +31,7 @@ export const configuring = (
   ruleId,
   automata,
   showStateLabels,
+  displayInColor,
 });
 
 export type State = Configuring;
