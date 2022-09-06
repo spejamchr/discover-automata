@@ -23,18 +23,17 @@ const incrementResultState =
   };
 
 const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
-  <span className={`flex flex-col m-1 items-center`}>
-    <button onClick={incrementResultState(neighborStates, state, store)}>
-      <span className={`flex`}>
-        {neighborStates.map((s, i) => (
-          <Cell key={i} state={s} colorPicker={store.colorPicker} />
-        ))}
-      </span>
-    </button>
-    <button onClick={incrementResultState(neighborStates, state, store)}>
-      <Cell state={state} colorPicker={store.colorPicker} />
-    </button>
-  </span>
+  <button
+    className={`m-1 flex flex-col items-center`}
+    onClick={incrementResultState(neighborStates, state, store)}
+  >
+    <span className={`flex`}>
+      {neighborStates.map((s, i) => (
+        <Cell key={i} state={s} colorPicker={store.colorPicker} />
+      ))}
+    </span>
+    <Cell state={state} colorPicker={store.colorPicker} />
+  </button>
 );
 
 export default observer(Rule);

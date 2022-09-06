@@ -10,7 +10,7 @@ export const makeColorPicker = (store: Store): ColorPicker => {
   const minHueStepSize = 30;
   const hueStepSize = Math.max(minHueStepSize, 90 / automata.states);
   const hueOffset = hasher(serialize(automata)) % 360;
-  const hues = [...Array(automata.states)].map((_, i) => i * hueStepSize + hueOffset);
+  const hues = [...Array(automata.states)].map((_, i) => (i * hueStepSize + hueOffset) % 360);
 
   const buffer = 10;
   const lStepSize = (100 - 2 * buffer) / (automata.states - 1);
