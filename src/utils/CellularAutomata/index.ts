@@ -1,5 +1,6 @@
 import { NonEmptyList } from 'nonempty-list';
 import { fromBase, toBase } from '../IntBase';
+import { toZigZagCollection } from '../ZigZag';
 import { Automata, Generation, Index, Rules, State } from './Types';
 
 const calcRules = ({ ruleId, states, neighbors }: Omit<Automata, 'rules'>): Rules => {
@@ -37,5 +38,8 @@ export const nextCellsOnZero =
     return new NonEmptyList(first, rest);
   };
 
-export const serialize = (automata: Omit<Automata, 'rules'>): string =>
-  [automata.states, automata.neighbors.toArray().join(':'), automata.ruleId].join('/');
+export const serialize = (automata: Omit<Automata, 'rules'>): string => {
+  return [automata.states, toZigZagCollection(new Set(automata.neighbors)), automata.ruleId]
+    .map((n) => n.toString(36))
+    .join('.');
+};

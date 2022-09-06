@@ -9,14 +9,14 @@ import { ok } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 
-const simplestAutomata = automataCtor({
-  states: 1,
-  neighbors: new NonEmptyList<number>(0, []),
-  ruleId: 0,
+const rule110 = automataCtor({
+  states: 2,
+  neighbors: new NonEmptyList<number>(-1, [0, 1]),
+  ruleId: 110,
 });
 
 class Store {
-  state: State = configuring('2', [-1, 0, 1], '110', simplestAutomata, true, true);
+  state: State = configuring(rule110, false, true);
 
   constructor() {
     makeObservable(this, {

@@ -18,17 +18,14 @@ export interface Configuring {
 }
 
 export const configuring = (
-  states: string,
-  neighbors: ReadonlyArray<Index>,
-  ruleId: string,
   automata: Automata,
   showStateLabels: boolean,
   displayInColor: boolean,
 ): Configuring => ({
   kind: 'configuring',
-  states,
-  neighbors,
-  ruleId,
+  states: automata.states.toString(),
+  neighbors: automata.neighbors.toArray(),
+  ruleId: automata.ruleId.toString(),
   automata,
   showStateLabels,
   displayInColor,
