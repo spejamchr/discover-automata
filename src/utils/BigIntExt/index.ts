@@ -27,19 +27,12 @@ const overflowError = (): OverflowError => ({ kind: 'overflow-error' });
 const unsafeBigPow = (big: bigint, exp: number): bigint | never => {
   if (exp <= 0) {
     return BigInt(1);
+  } else if (exp === 1) {
+    return big;
+  } else if (exp % 2 === 0) {
+    return unsafeBigPow(big * big, exp / 2);
   } else {
-    let r = big;
-    while (exp > 1) {
-      if (exp % 2 === 0) {
-        r *= r;
-        exp /= 2;
-      } else {
-        r *= r * r;
-        exp -= 1;
-        exp /= 2;
-      }
-    }
-    return r;
+    return big * unsafeBigPow(big * big, (exp - 1) / 2);
   }
 };
 
