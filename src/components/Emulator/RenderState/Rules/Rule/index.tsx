@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { bigPow } from '../../../../../utils/BigIntExt';
 import { State } from '../../../../../utils/CellularAutomata/Types';
 import { fromBase } from '../../../../../utils/IntBase';
 import Cell from '../../../Generations/Row/Cell';
@@ -15,11 +16,16 @@ const incrementResultState =
   (neighborStates: ReadonlyArray<State>, state: State, store: Store) => (): void => {
     const base = store.automata.states;
     const ruleIndex = fromBase({
+      kind: 'int-base',
       base,
       digits: neighborStates.slice(0).reverse(),
     });
-    const ruleDiff = (((state + 1) % base) - state) * base ** ruleIndex;
-    store.setRuleId(String(store.automata.ruleId + ruleDiff));
+
+    bigPow(BigInt(base), ruleIndex)
+      .map((pow) => BigInt(((state + 1) % base) - state) * pow)
+      .map((ruleDiff) => store.automata.ruleId + ruleDiff)
+      .map(String)
+      .do(store.setRuleId);
   };
 
 const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (

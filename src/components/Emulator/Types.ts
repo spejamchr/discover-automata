@@ -1,9 +1,10 @@
 import { NumberParseFailure } from '@execonline-inc/numbers';
 import { Result } from 'resulty';
+import { OverflowError } from '../../utils/BigIntExt';
 import { Automata, Index } from '../../utils/CellularAutomata/Types';
 import { ComparerError, EmptyArrayError } from '../../utils/Extensions';
 
-export type ConfigError = NumberParseFailure | ComparerError | EmptyArrayError;
+export type ConfigError = NumberParseFailure | ComparerError | EmptyArrayError | OverflowError;
 
 export type ConfigResult<T> = Result<ConfigError, T>;
 

@@ -1,10 +1,12 @@
 import { NonEmptyList } from 'nonempty-list';
-import { fromBase, toBase } from '../IntBase';
+import { Result } from 'resulty';
+import { OverflowError } from '../BigIntExt';
+import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
 import { toZigZagCollection } from '../ZigZag';
 import { Automata, Generation, Index, Rules, State } from './Types';
 
 const calcRules = ({ ruleId, states, neighbors }: Omit<Automata, 'rules'>): Rules => {
-  const ids = toBase(states)(ruleId).digits as Array<number>;
+  const ids = toBaseBig(states)(ruleId).digits as Array<number>;
   const configurations = states ** neighbors.length;
 
   while (ids.length < configurations) ids.push(0);
@@ -17,11 +19,22 @@ export const automataCtor = (omitted: Omit<Automata, 'rules'>): Automata => ({
   rules: calcRules(omitted),
 });
 
+export const automataCtorWithRules = (
+  omitted: Omit<Automata, 'ruleId'>,
+): Result<OverflowError, Automata> =>
+  fromBaseBig({ kind: 'big-int-base', base: omitted.states, digits: omitted.rules }).map(
+    (ruleId) => ({
+      ...omitted,
+      ruleId,
+    }),
+  );
+
 const calcNextCellOnZero =
   (automata: Automata) =>
   (_cell: State, index: Index, cells: ReadonlyArray<State>): State =>
     automata.rules[
       fromBase({
+        kind: 'int-base',
         digits: automata.neighbors
           .reverse()
           .map((n) => n + index)

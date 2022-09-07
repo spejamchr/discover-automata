@@ -97,24 +97,13 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       <span className={`block text-sm font-medium text-slate-700`}>Rule ID</span>
       <input
         type="number"
-        min={store.minRuleId}
+        min={String(store.minRuleId)}
         max={store.maxRuleId.map(String).getOrElseValue('')}
         step="1"
         value={store.ruleId.map(String).getOrElseValue(state.ruleId)}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
-      <button
-        onClick={() =>
-          store.maxRuleId
-            .map((max) => max - store.minRuleId)
-            .map((size) => Math.random() * size + store.minRuleId)
-            .map(Math.round)
-            .map(String)
-            .do(store.setRuleId)
-        }
-      >
-        Randomize
-      </button>
+      <button onClick={store.randomizeRules}>Randomize</button>
       {store.ruleId.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,

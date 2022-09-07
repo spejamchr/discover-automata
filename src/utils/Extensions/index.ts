@@ -5,14 +5,16 @@ import { err, ok, Result } from 'resulty';
 
 type Comparer = '<' | '<=' | '===' | '>' | '>=';
 
+export type Int = Number | BigInt;
+
 export interface ComparerError {
   kind: 'comparer-error';
   comparer: Comparer;
-  target: number;
-  value: number;
+  target: string;
+  value: string;
 }
 
-const comparison = (comparer: Comparer, target: number, value: number): boolean => {
+const comparison = <T extends Int>(comparer: Comparer, target: T, value: T): boolean => {
   switch (comparer) {
     case '<':
       return value < target;
@@ -27,17 +29,17 @@ const comparison = (comparer: Comparer, target: number, value: number): boolean 
   }
 };
 
-const comparerErrorR = (comparer: Comparer, target: number, value: number): ComparerError => ({
+const comparerErrorR = <T extends Int>(comparer: Comparer, target: T, value: T): ComparerError => ({
   kind: 'comparer-error',
   comparer,
-  target,
-  value,
+  target: String(target),
+  value: String(value),
 });
 
 const whenComparedR =
   (comparer: Comparer) =>
-  (target: number) =>
-  (value: number): Result<ComparerError, number> =>
+  <T extends Int>(target: T) =>
+  (value: T): Result<ComparerError, T> =>
     comparison(comparer, target, value) ? ok(value) : err(comparerErrorR(comparer, target, value));
 
 export const whenLTR = whenComparedR('<');
@@ -47,9 +49,9 @@ export const whenGTR = whenComparedR('>');
 export const whenGER = whenComparedR('>=');
 
 export const whenBetweenR =
-  (min: number, max: number) =>
-  (x: number): Result<ComparerError, number> =>
-    ok<ComparerError, number>(x).andThen(whenGER(min)).andThen(whenLER(max));
+  <T extends Int>(min: T, max: T) =>
+  (x: T): Result<ComparerError, T> =>
+    ok<ComparerError, T>(x).andThen(whenGER(min)).andThen(whenLER(max));
 
 export const fromResultM = <T>(result: Result<unknown, T>): Maybe<T> =>
   result.map(just).getOrElse(nothing);
