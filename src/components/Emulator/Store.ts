@@ -82,7 +82,7 @@ class Store {
       .assign('states', this.states)
       .assign('neighbors', this.neighbors)
       .assign('rules', ({ states }) =>
-        ok(this.state.automata.rules.map(() => Math.round(Math.random()) * (states - 1))),
+        ok(this.state.automata.rules.map(() => Math.round(Math.random() * (states - 1)))),
       )
       .andThen(automataCtorWithRules)
       .do((automata) => {
