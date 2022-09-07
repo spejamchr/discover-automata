@@ -1,6 +1,8 @@
+import { always } from '@kofno/piper';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Index } from '../../../../utils/CellularAutomata/Types';
+import { whenGTR } from '../../../../utils/Extensions';
 import Store from '../../Store';
 import { Configuring as State } from '../../Types';
 
@@ -96,7 +98,10 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
     <label className={`block`}>
       <span className={`block text-sm font-medium text-slate-700`}>Rule ID</span>
       <input
-        type="number"
+        type={store.ruleId
+          .andThen(whenGTR(BigInt(Number.MAX_SAFE_INTEGER)))
+          .map(always('text'))
+          .getOrElseValue('number')}
         min={String(store.minRuleId)}
         max={store.maxRuleId.map(String).getOrElseValue('')}
         step="1"
