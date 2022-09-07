@@ -1,4 +1,4 @@
-import { pipe } from '@kofno/piper';
+import { always, pipe } from '@kofno/piper';
 import { just, Maybe, nothing } from 'maybeasy';
 import { fromArrayMaybe, NonEmptyList } from 'nonempty-list';
 import { err, ok, Result } from 'resulty';
@@ -52,6 +52,27 @@ export const whenBetweenR =
   <T extends Int>(min: T, max: T) =>
   (x: T): Result<ComparerError, T> =>
     ok<ComparerError, T>(x).andThen(whenGER(min)).andThen(whenLER(max));
+
+const whenComparedByR =
+  (comparer: Comparer) =>
+  <T extends Int, A>(target: T, by: (a: A) => T) =>
+  (a: A): Result<ComparerError, A> => {
+    const value = by(a);
+    return comparison(comparer, target, value)
+      ? ok(a)
+      : err(comparerErrorR(comparer, target, value));
+  };
+
+export const whenByLTR = whenComparedByR('<');
+export const whenByLER = whenComparedByR('<=');
+export const whenByEQR = whenComparedByR('===');
+export const whenByGTR = whenComparedByR('>');
+export const whenByGER = whenComparedByR('>=');
+
+export const whenBetweenBy =
+  <T extends Int, A>(min: T, max: T, by: (a: A) => T) =>
+  (a: A): Result<ComparerError, A> =>
+    ok<ComparerError, A>(a).map(by).andThen(whenBetweenR(min, max)).map(always(a));
 
 export const fromResultM = <T>(result: Result<unknown, T>): Maybe<T> =>
   result.map(just).getOrElse(nothing);

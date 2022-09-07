@@ -1,6 +1,7 @@
 import { always } from '@kofno/piper';
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { ok } from 'resulty';
 import { Index } from '../../../../utils/CellularAutomata/Types';
 import { whenGTR } from '../../../../utils/Extensions';
 import Store from '../../Store';
@@ -37,18 +38,20 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       </button>
     </div>
     <label className={`block`}>
-      <span className={`block text-sm font-medium text-slate-700`}>States</span>
+      <span className={`block text-sm font-medium text-slate-700`}>
+        States ({store.minStates} - {store.maxStates})
+      </span>
       <input
         type="number"
-        min={store.minStates}
-        max={store.maxStates.map(String).getOrElseValue('')}
+        min="1" // Intentionally ignore the minStates value here
+        max={store.maxStates}
         step="1"
         value={store.states.map(String).getOrElseValue(state.states)}
         onChange={(e) => store.setStates(e.target.value)}
       />
       <button
         onClick={() =>
-          store.maxStates
+          ok(store.maxStates)
             .map((max) => max - store.minStates)
             .map((size) => Math.random() * size + store.minStates)
             .map(Math.round)
@@ -65,7 +68,9 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
     </label>
 
     <div>
-      <span className={`block text-sm font-medium text-slate-700`}>Neighbors</span>
+      <span className={`block text-sm font-medium text-slate-700`}>
+        Neighbors ({store.minNeighbors} - {store.maxNeighbors})
+      </span>
       {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
         <button
           className={`${
@@ -79,7 +84,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       ))}
       <button
         onClick={() =>
-          store.maxNeighbors
+          ok(store.maxNeighbors)
             .map((max) => max - store.minNeighbors)
             .map((size) => Math.random() * size + store.minNeighbors)
             .map(Math.round)
@@ -96,7 +101,16 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
     </div>
 
     <label className={`block`}>
-      <span className={`block text-sm font-medium text-slate-700`}>Rule ID</span>
+      <span className={`block text-sm font-medium text-slate-700`}>
+        Rule ID{' '}
+        {store.maxRuleId
+          .map((max) =>
+            max > BigInt(Number.MAX_SAFE_INTEGER)
+              ? `(maximum digits: ${String(max).length})`
+              : `(${String(store.minRuleId)} - ${String(max)})`,
+          )
+          .getOrElseValue('')}
+      </span>
       <input
         type={store.ruleId
           .andThen(whenGTR(BigInt(Number.MAX_SAFE_INTEGER)))

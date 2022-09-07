@@ -3,7 +3,15 @@ import { always } from '@kofno/piper';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { automataCtor, automataCtorWithRules, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
-import { fromArrayResult, whenBetweenR, whenGER, whenGTR, whenLER } from '../../utils/Extensions';
+import {
+  fromArrayResult,
+  whenBetweenBy,
+  whenBetweenR,
+  whenByLER,
+  whenGER,
+  whenGTR,
+  whenLER,
+} from '../../utils/Extensions';
 import { ConfigError, ConfigResult, configuring, State } from './Types';
 import { ok } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
@@ -23,6 +31,7 @@ class Store {
     makeObservable(this, {
       state: observable,
       automata: computed,
+      setAutomata: action,
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
@@ -31,13 +40,13 @@ class Store {
       toggleDisplayInColor: action,
       minStates: computed,
       maxStates: computed,
-      maxRuleCount: computed,
       minRuleId: computed,
       maxRuleId: computed,
       minNeighbors: computed,
       maxNeighbors: computed,
       parseStates: computed,
       parseNeighbors: computed,
+      parseStatesAndNeighbors: computed,
       parseRuleId: computed,
       states: computed,
       neighbors: computed,
@@ -53,9 +62,13 @@ class Store {
       .assign('ruleId', this.ruleId)
       .do((partialAutomata) => {
         if (serialize(partialAutomata) !== serialize(this.state.automata)) {
-          this.state.automata = automataCtor(partialAutomata);
+          this.setAutomata(automataCtor(partialAutomata));
         }
       });
+  };
+
+  setAutomata = (value: Automata): void => {
+    this.state = configuring(value, this.state.showStateLabels, this.state.displayInColor);
   };
 
   get automata(): Automata {
@@ -64,7 +77,7 @@ class Store {
 
   setStates = (value: string): void => {
     this.state.states = value;
-    this.parseStates.andThen(whenLER(this.maxRuleCount)).do(this.setAutomataIfNeeded);
+    this.setAutomataIfNeeded();
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
@@ -78,17 +91,15 @@ class Store {
   };
 
   randomizeRules = (): void => {
-    ok<ConfigError, {}>({})
-      .assign('states', this.states)
-      .assign('neighbors', this.neighbors)
-      .assign('rules', ({ states }) =>
-        ok(this.state.automata.rules.map(() => Math.round(Math.random() * (states - 1)))),
-      )
+    this.parseStatesAndNeighbors
+      .map((partial) => ({
+        ...partial,
+        rules: [...Array(partial.states ** partial.neighbors.length)].map(() =>
+          Math.round(Math.random() * (partial.states - 1)),
+        ),
+      }))
       .andThen(automataCtorWithRules)
-      .do((automata) => {
-        this.state.automata = automata;
-        this.state.ruleId = String(automata.ruleId);
-      });
+      .do(this.setAutomata);
   };
 
   toggleShowStateLabels = (): void => {
@@ -99,6 +110,13 @@ class Store {
     this.state.displayInColor = !this.state.displayInColor;
   };
 
+  // Arbitrary limit... we display these, so we don't want too many
+  maxRuleCount: number = 100;
+
+  maxConsiderableStates: number = Math.floor(Math.sqrt(this.maxRuleCount));
+
+  maxConsiderableNeighbors: number = Math.floor(Math.log2(this.maxRuleCount));
+
   get minStates(): Count {
     return ok<ConfigError, {}>({})
       .assign('neighbors', this.parseNeighbors)
@@ -108,24 +126,21 @@ class Store {
         while (!this.testSNR(min, neighbors.length, ruleId)) {
           min++;
         }
-        return min;
+        return Math.min(min, this.maxStates);
       })
       .getOrElseValue(1);
   }
 
   // maxStates ** neighbors.length <= maxRuleCount
-  get maxStates(): ConfigResult<number> {
+  get maxStates(): number {
     return this.parseNeighbors
       .map((n) => n.length)
       .map((n) => {
         const max = Math.round(Math.pow(this.maxRuleCount, 1 / n));
         return max ** n > this.maxRuleCount ? max - 1 : max;
-      });
-  }
-
-  // Arbitrary limit... we display these, so we don't want too many
-  get maxRuleCount(): Count {
-    return 100;
+      })
+      .andThen(whenLER(this.maxConsiderableStates))
+      .getOrElseValue(this.maxConsiderableStates);
   }
 
   get minRuleId(): bigint {
@@ -133,8 +148,7 @@ class Store {
   }
 
   get maxRuleId(): ConfigResult<bigint> {
-    return ok<ConfigError, { states: number }>({ states: this.automata.states })
-      .assign('neighbors', this.parseNeighbors)
+    return this.parseStatesAndNeighbors
       .andThen(({ states, neighbors }) => bigPow(BigInt(states), states ** neighbors.length))
       .map((max) => max - BigInt(1));
   }
@@ -149,33 +163,44 @@ class Store {
   // Zero would be boring, but possible
   get minNeighbors(): Count {
     return ok<ConfigError, {}>({})
-      .assign('states', this.states.andThen(whenGTR(1)))
+      .assign('states', this.parseStates.andThen(whenGTR(1)))
       .assign('ruleId', this.parseRuleId)
       .map(({ states, ruleId }) => {
         let min = 1;
         while (!this.testSNR(states, min, ruleId)) {
           min++;
         }
-        return min;
+        return Math.min(min, this.maxNeighbors);
       })
       .getOrElseValue(1);
   }
 
   // states ** maxNeighbors <= maxRuleCount
-  get maxNeighbors(): ConfigResult<Index> {
-    return this.parseStates.andThen(whenGER(this.minStates)).map((s) => {
-      const max = Math.round(Math.log(this.maxRuleCount) / Math.log(s));
-      const r = s ** max > this.maxRuleCount ? max - 1 : max;
-      return Math.min(r, 7);
-    });
+  get maxNeighbors(): Index {
+    return this.parseStates
+      .map((s) => {
+        const max = Math.round(Math.log(this.maxRuleCount) / Math.log(s));
+        const r = s ** max > this.maxRuleCount ? max - 1 : max;
+        return Math.min(r, this.maxConsiderableNeighbors);
+      })
+      .getOrElseValue(this.maxConsiderableNeighbors);
   }
 
   get parseStates(): ConfigResult<number> {
-    return parseIntR(this.state.states);
+    return ok<ConfigError, string>(this.state.states)
+      .andThen(parseIntR)
+      .andThen(whenLER(this.maxConsiderableStates));
   }
 
   get parseNeighbors(): ConfigResult<Neighbors> {
     return fromArrayResult(this.state.neighbors).map((a) => a.sort());
+  }
+
+  get parseStatesAndNeighbors(): ConfigResult<{ states: number; neighbors: Neighbors }> {
+    return ok<ConfigError, {}>({})
+      .assign('states', this.parseStates)
+      .assign('neighbors', this.parseNeighbors)
+      .andThen(whenByLER(this.maxRuleCount, ({ states, neighbors }) => states ** neighbors.length));
   }
 
   get parseRuleId(): ConfigResult<bigint> {
@@ -183,20 +208,13 @@ class Store {
   }
 
   get states(): ConfigResult<Count> {
-    return this.parseStates.andThen(
-      this.maxStates
-        .map((max) => whenBetweenR(this.minStates, max))
-        .getOrElseValue(whenGER(this.minStates)),
-    );
+    return this.parseStates.andThen(whenBetweenR(this.minStates, this.maxStates));
   }
 
   get neighbors(): ConfigResult<Neighbors> {
-    return this.parseNeighbors.andThen((n) => {
-      const compare = this.maxNeighbors
-        .map((max) => whenBetweenR(this.minNeighbors, max))
-        .getOrElseValue(whenGER(this.minNeighbors));
-      return compare(n.length).map(always(n));
-    });
+    return this.parseNeighbors.andThen(
+      whenBetweenBy(this.minNeighbors, this.maxNeighbors, (n) => n.length),
+    );
   }
 
   get ruleId(): ConfigResult<bigint> {

@@ -3,9 +3,17 @@ import { Result } from 'resulty';
 import { OverflowError } from '../BigIntExt';
 import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
 import { toZigZagCollection } from '../ZigZag';
-import { Automata, Generation, Index, Rules, State } from './Types';
+import {
+  Automata,
+  AutomataWithRuleId,
+  AutomataWithRules,
+  Generation,
+  Index,
+  Rules,
+  State,
+} from './Types';
 
-const calcRules = ({ ruleId, states, neighbors }: Omit<Automata, 'rules'>): Rules => {
+const calcRules = ({ ruleId, states, neighbors }: AutomataWithRuleId): Rules => {
   const ids = toBaseBig(states)(ruleId).digits as Array<number>;
   const configurations = states ** neighbors.length;
 
@@ -14,17 +22,17 @@ const calcRules = ({ ruleId, states, neighbors }: Omit<Automata, 'rules'>): Rule
   return ids;
 };
 
-export const automataCtor = (omitted: Omit<Automata, 'rules'>): Automata => ({
-  ...omitted,
-  rules: calcRules(omitted),
+export const automataCtor = (partial: AutomataWithRuleId): Automata => ({
+  ...partial,
+  rules: calcRules(partial),
 });
 
 export const automataCtorWithRules = (
-  omitted: Omit<Automata, 'ruleId'>,
+  partial: AutomataWithRules,
 ): Result<OverflowError, Automata> =>
-  fromBaseBig({ kind: 'big-int-base', base: omitted.states, digits: omitted.rules }).map(
+  fromBaseBig({ kind: 'big-int-base', base: partial.states, digits: partial.rules }).map(
     (ruleId) => ({
-      ...omitted,
+      ...partial,
       ruleId,
     }),
   );
@@ -51,7 +59,7 @@ export const nextCellsOnZero =
     return new NonEmptyList(first, rest);
   };
 
-export const serialize = (automata: Omit<Automata, 'rules'>): string => {
+export const serialize = (automata: AutomataWithRuleId): string => {
   return [automata.states, toZigZagCollection(new Set(automata.neighbors)), automata.ruleId]
     .map((n) => n.toString(36))
     .join('.');
