@@ -140,7 +140,6 @@ const automataWithRuleIdFromSerialization = (
   ruleId: string,
 ): Result<string, Automata> =>
   ok<NumberParseFailure | EmptyArrayError, { ruleId: string }>({ ruleId })
-    .do(() => console.log(`[SJC] automataWithRuleIdFromSerialization`, states, zigZagged, ruleId))
     .assign('states', parseIntR(states))
     .assign(
       'neighbors',

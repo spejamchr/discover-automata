@@ -64,6 +64,26 @@
     maybeasy "^3.0.0"
     resulty "^5.0.0"
 
+"@execonline-inc/environment@^5.5.1":
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/@execonline-inc/environment/-/environment-5.5.1.tgz#d00cae78242f4f1d11de6121c16ce50a1f439440"
+  integrity sha512-tNR61uXKJmv+z673t8ovLNroFdFpGLzXNVi7vL5sAdZjUB8/QNJSFGpgxHx4QABEP6UW576aAwGfKcDLm41QYQ==
+  dependencies:
+    "@kofno/piper" "^4.3.0"
+    ajaxian "^4.4.0"
+    jsonous "^7.3.0"
+    maybeasy "^3.0.0"
+    resulty "^5.0.0"
+    taskarian "^5.1.0"
+
+"@execonline-inc/logging@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@execonline-inc/logging/-/logging-6.2.1.tgz#fe771804e3ecb93244c6248d8192d99f68133537"
+  integrity sha512-PNCwtzqQuT0nm4C086e7hiYh8RSc/XecNWqubJeCxzvBYUwrE5/C8W19Tk8iJ0VelswQWmnVu3FD7atfuQfIHg==
+  dependencies:
+    "@execonline-inc/environment" "^5.5.1"
+    date-fns "^2.28.0"
+
 "@execonline-inc/maybe-adapter@^4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@execonline-inc/maybe-adapter/-/maybe-adapter-4.4.0.tgz#ce0f50a91561f3725d4aae0d910f0ca21d209dca"
@@ -648,7 +668,7 @@ damerau-levenshtein@^1.0.8:
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz#b43d286ccbd36bc5b2f7ed41caf2d0aba1f8a6e7"
   integrity sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==
 
-date-fns@^2.16.1:
+date-fns@^2.16.1, date-fns@^2.28.0:
   version "2.29.2"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.2.tgz#0d4b3d0f3dff0f920820a070920f0d9662c51931"
   integrity sha512-0VNbwmWJDS/G3ySwFSJA3ayhbURMTJLtwM2DTxf9CWondCnh6DTNlO9JgRSq6ibf4eD0lfMJNBxUdEAHHix+bA==

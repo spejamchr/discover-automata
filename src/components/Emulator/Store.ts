@@ -19,13 +19,15 @@ import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 import { bigPow, parseBigIntR } from '../../utils/BigIntExt';
 import { windowGet } from '../../utils/WindowGet';
 import { serializedAutomataDecoder } from '../../utils/CellularAutomata/Decoders';
+import { warn } from '@execonline-inc/logging';
 
 const firstAutomata = () =>
   ok<unknown, 'location'>('location')
     .andThen(windowGet)
     .map((l) => l.hash)
     .andThen(serializedAutomataDecoder.decodeAny)
-    .elseDo((e) => console.log(`[SJC] Error deserializing automata from hash:`, e))
+    .mapError((s) => `Error deserializing automata from hash: ${s}`)
+    .elseDo(warn)
     .getOrElse(() =>
       automataCtor({
         states: 2,
