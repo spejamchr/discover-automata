@@ -1,18 +1,16 @@
+import { stringToNumberDecoder } from '@execonline-inc/decoders';
 import { NumberParseFailure, parseIntR } from '@execonline-inc/numbers';
-import { always } from '@kofno/piper';
 import Decoder, { array, field, number, string, succeed } from 'jsonous';
-import { err, ok, Result } from 'resulty';
+import { ok, Result } from 'resulty';
 import { automataCtor } from '.';
-import { ConfigError } from '../../components/Emulator/Types';
-import { bigIntDecoder, bigPow } from '../BigIntExt';
+import { bigIntDecoder, bigLog10, bigPow } from '../BigIntExt';
 import {
-  EmptyArrayError,
   fromArrayResult,
   whenBetweenByD,
   whenBetweenD,
+  whenByEQD,
   whenByGED,
   whenByLED,
-  whenGTR,
 } from '../Extensions';
 import { fromZigZagCollection } from '../ZigZag';
 import { Automata, AutomataWithRuleId, Count, Neighbors } from './Types';
@@ -54,8 +52,6 @@ export const statesAndNeighborsDecoder: Decoder<{ states: number; neighbors: Nei
   .assign('neighbors', field('neighbors', neighborsDecoder))
   .andThen(statesAndNeighborsPassMaxRuleCountCheck);
 
-export const ruleIdDecoder: Decoder<bigint> = bigIntDecoder;
-
 export const maxStates = (neighbors: Neighbors): Count => {
   const roughMax = Math.round(Math.pow(maxRuleCount, 1 / neighbors.length));
   const max = roughMax ** neighbors.length > maxRuleCount ? roughMax - 1 : roughMax;
@@ -65,12 +61,12 @@ export const maxStates = (neighbors: Neighbors): Count => {
 export const statesPassesMaxCheck = <T extends StatesNeighbors>(a: T): Decoder<T> =>
   whenByLED(maxStates(a.neighbors), (a: T) => a.states)(a);
 
+// states ** states ** neighbors >= ruleId
+// log(states ** states ** neighbors) >= log(ruleId)
+// states ** neighbors * log(states) >= log(ruleId)
+//
 const testSNR = (states: number, neighbors: number, ruleId: bigint): boolean =>
-  ok<ConfigError, number>(states)
-    .andThen(() => bigPow(BigInt(states), states ** neighbors))
-    .andThen(whenGTR(ruleId))
-    .map(always(true))
-    .getOrElseValue(false);
+  states ** neighbors * Math.log10(states) >= bigLog10(ruleId);
 
 export const minStates = (neighbors: Neighbors, ruleId: bigint): Count => {
   let min = minConsiderableStates;
@@ -88,6 +84,18 @@ export const maxNeighbors = (states: Count): Count => {
   const r = states ** max > maxRuleCount ? max - 1 : max;
   return Math.min(r, maxConsiderableNeighbors);
 };
+
+export const maxConsiderableRuleIdLength: number = Math.max(
+  ...[...Array(maxConsiderableStates - minConsiderableStates)]
+    .map((_, i) => i + minConsiderableStates + 1)
+    .map((s) => s ** maxNeighbors(s) * Math.log10(s))
+    .map(Math.floor),
+);
+
+// Decode a ruleId from a string
+export const ruleIdDecoder: Decoder<bigint> = string
+  .andThen((s) => whenByLED(maxConsiderableRuleIdLength, (s: string) => s.length)(s))
+  .andThen(() => bigIntDecoder);
 
 export const neighborsPassesMaxCheck = <T extends StatesNeighbors>(a: T): Decoder<T> =>
   whenByLED(maxNeighbors(a.states), (a: T) => a.neighbors.length)(a);
@@ -118,8 +126,8 @@ export const ruleIdPassesMaxCheck = <T extends AutomataWithRuleId>(a: T): Decode
     whenByLED(max, (a: T) => a.ruleId)(a),
   );
 
-// We don't need to test the states or neighbors min checks here, because the
-// ruleId max check does an equivalent check.
+// We don't need to test the min-states or min-neighbors checks here, because
+// the max-ruleId check is equivalent to both.
 export const automataWithRuleIdPassesMinMaxChecks = <T extends AutomataWithRuleId>(
   a: T,
 ): Decoder<T> =>
@@ -134,30 +142,32 @@ export const automataWithRuleIdDecoder: Decoder<Automata> = statesAndNeighborsDe
   .andThen(automataWithRuleIdPassesMinMaxChecks)
   .map(automataCtor);
 
-const automataWithRuleIdFromSerialization = (
+export const safeAutomataCtor = (
+  states: string,
+  neighbors: Array<number>,
+  ruleId: string,
+): Result<string, Automata> =>
+  ok<string, { ruleId: string; neighbors: Array<number> }>({ ruleId, neighbors })
+    .assign('states', stringToNumberDecoder.decodeAny(states))
+    .andThen((a) => automataWithRuleIdDecoder.decodeAny(a));
+
+const automataFromSerializedFields = (
   states: string,
   zigZagged: string,
   ruleId: string,
-): Result<string, Automata> =>
-  ok<NumberParseFailure | EmptyArrayError, { ruleId: string }>({ ruleId })
-    .assign('states', parseIntR(states))
-    .assign(
-      'neighbors',
-      ok<NumberParseFailure | EmptyArrayError, string>(zigZagged)
-        .andThen(parseIntR)
-        .map(fromZigZagCollection),
-    )
-    .mapError<string>((e) => e.kind)
-    .andThen((a) => automataWithRuleIdDecoder.decodeAny(a));
+): Decoder<Automata> =>
+  new Decoder(() =>
+    ok<NumberParseFailure, string>(zigZagged)
+      .andThen(parseIntR)
+      .mapError((e) => e.message)
+      .map(fromZigZagCollection)
+      .andThen((neighbors) => safeAutomataCtor(states, neighbors, ruleId)),
+  );
 
 export const serializedAutomataDecoder: Decoder<Automata> = string
   .map((s) => (s[0] === '#' ? s.slice(1) : s.slice(0)))
   .map((s) => s.split('.'))
-  .andThen(
-    (a) =>
-      new Decoder(() =>
-        a.length === 3
-          ? automataWithRuleIdFromSerialization(a[0], a[1], a[2])
-          : err(`Expected 3 '.'-separated sections, but received: ${a.length}`),
-      ),
+  .andThen(whenByEQD(3, (a) => a.length))
+  .andThen(([states, zigZagged, ruleId]) =>
+    automataFromSerializedFields(states, zigZagged, ruleId),
   );

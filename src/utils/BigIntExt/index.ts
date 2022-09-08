@@ -45,3 +45,11 @@ export const bigPow = (big: bigint, exp: number): Result<OverflowError, bigint> 
     return err(overflowError());
   }
 };
+
+// https://stackoverflow.com/a/70384828
+export const bigLog10 = (big: bigint) => {
+  if (big < 0) return NaN;
+  const s = big.toString(10);
+
+  return s.length + Math.log10(Number('0.' + s.substring(0, 15)));
+};
