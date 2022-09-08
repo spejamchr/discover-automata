@@ -1,17 +1,11 @@
 import { parseIntR } from '@execonline-inc/numbers';
 import { always } from '@kofno/piper';
 import { action, computed, makeObservable, observable } from 'mobx';
-import {
-  automataCtor,
-  automataCtorWithRules,
-  deserializeAutomata,
-  hashDecoder,
-  serialize,
-} from '../../utils/CellularAutomata';
+import { automataCtor, automataCtorWithRules, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import {
   fromArrayResult,
-  whenBetweenBy,
+  whenBetweenByR,
   whenBetweenR,
   whenByLER,
   whenGER,
@@ -24,13 +18,14 @@ import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 import { bigPow, parseBigIntR } from '../../utils/BigIntExt';
 import { windowGet } from '../../utils/WindowGet';
+import { serializedAutomataDecoder } from '../../utils/CellularAutomata/Decoders';
 
 const firstAutomata = () =>
   ok<unknown, 'location'>('location')
     .andThen(windowGet)
     .map((l) => l.hash)
-    .andThen(hashDecoder.decodeAny)
-    .andThen(deserializeAutomata)
+    .andThen(serializedAutomataDecoder.decodeAny)
+    .elseDo((e) => console.log(`[SJC] Error deserializing automata from hash:`, e))
     .getOrElse(() =>
       automataCtor({
         states: 2,
@@ -228,7 +223,7 @@ class Store {
 
   get neighbors(): ConfigResult<Neighbors> {
     return this.parseNeighbors.andThen(
-      whenBetweenBy(this.minNeighbors, this.maxNeighbors, (n) => n.length),
+      whenBetweenByR(this.minNeighbors, this.maxNeighbors, (n) => n.length),
     );
   }
 

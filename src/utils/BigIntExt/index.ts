@@ -10,7 +10,9 @@ export const bigIntDecoder: Decoder<bigint> = new Decoder((u: unknown): Result<s
       return err(`Could not parse value as bigint: ${e} (${JSON.stringify(u)})`);
     }
   } else {
-    return err(`Expected a bigint but received ${JSON.stringify(u)}`);
+    return err(
+      `Expected a string or number parseable as a bigint but received ${JSON.stringify(u)}`,
+    );
   }
 });
 

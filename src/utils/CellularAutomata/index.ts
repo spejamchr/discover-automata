@@ -1,7 +1,6 @@
 import { NumberParseFailure, parseIntR } from '@execonline-inc/numbers';
-import Decoder, { string } from 'jsonous';
 import { NonEmptyList } from 'nonempty-list';
-import { err, ok, Result } from 'resulty';
+import { ok, Result } from 'resulty';
 import { OverflowError, parseBigIntR } from '../BigIntExt';
 import { EmptyArrayError, fromArrayResult } from '../Extensions';
 import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
@@ -64,17 +63,6 @@ export const nextCellsOnZero =
 
 export const serialize = ({ states, neighbors, ruleId }: AutomataWithRuleId): string =>
   [states, toZigZagCollection(new Set(neighbors)), ruleId].join('.');
-
-export const hashDecoder: Decoder<string> = new Decoder(
-  (u: unknown): Result<string, string> =>
-    string
-      .decodeAny(u)
-      .andThen((s) =>
-        s[0] === '#'
-          ? ok(s.slice(1))
-          : err(`Expected a hash string starting with "#", but received ${JSON.stringify(s)}`),
-      ),
-);
 
 export const deserializeAutomata = (serialized: string): Result<string, Automata> => {
   const [states, zigZagged, ruleId] = serialized.split('.');
