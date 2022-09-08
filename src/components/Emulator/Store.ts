@@ -1,7 +1,13 @@
 import { parseIntR } from '@execonline-inc/numbers';
 import { always } from '@kofno/piper';
 import { action, computed, makeObservable, observable } from 'mobx';
-import { automataCtor, automataCtorWithRules, serialize } from '../../utils/CellularAutomata';
+import {
+  automataCtor,
+  automataCtorWithRules,
+  deserializeAutomata,
+  hashDecoder,
+  serialize,
+} from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import {
   fromArrayResult,
@@ -17,15 +23,24 @@ import { ok } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 import { bigPow, parseBigIntR } from '../../utils/BigIntExt';
+import { windowGet } from '../../utils/WindowGet';
 
-const rule110 = automataCtor({
-  states: 2,
-  neighbors: new NonEmptyList<number>(-1, [0, 1]),
-  ruleId: BigInt(110),
-});
+const firstAutomata = () =>
+  ok<unknown, 'location'>('location')
+    .andThen(windowGet)
+    .map((l) => l.hash)
+    .andThen(hashDecoder.decodeAny)
+    .andThen(deserializeAutomata)
+    .getOrElse(() =>
+      automataCtor({
+        states: 2,
+        neighbors: new NonEmptyList<number>(-1, [0, 1]),
+        ruleId: BigInt(110),
+      }),
+    );
 
 class Store {
-  state: State = configuring(rule110, false, true);
+  state: State = configuring(firstAutomata(), false, true);
 
   constructor() {
     makeObservable(this, {

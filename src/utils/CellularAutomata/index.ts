@@ -1,8 +1,11 @@
+import { NumberParseFailure, parseIntR } from '@execonline-inc/numbers';
+import Decoder, { string } from 'jsonous';
 import { NonEmptyList } from 'nonempty-list';
-import { Result } from 'resulty';
-import { OverflowError } from '../BigIntExt';
+import { err, ok, Result } from 'resulty';
+import { OverflowError, parseBigIntR } from '../BigIntExt';
+import { EmptyArrayError, fromArrayResult } from '../Extensions';
 import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
-import { toZigZagCollection } from '../ZigZag';
+import { fromZigZagCollection, toZigZagCollection } from '../ZigZag';
 import {
   Automata,
   AutomataWithRuleId,
@@ -59,8 +62,33 @@ export const nextCellsOnZero =
     return new NonEmptyList(first, rest);
   };
 
-export const serialize = (automata: AutomataWithRuleId): string => {
-  return [automata.states, toZigZagCollection(new Set(automata.neighbors)), automata.ruleId]
-    .map((n) => n.toString(36))
-    .join('.');
+export const serialize = ({ states, neighbors, ruleId }: AutomataWithRuleId): string =>
+  [states, toZigZagCollection(new Set(neighbors)), ruleId].join('.');
+
+export const hashDecoder: Decoder<string> = new Decoder(
+  (u: unknown): Result<string, string> =>
+    string
+      .decodeAny(u)
+      .andThen((s) =>
+        s[0] === '#'
+          ? ok(s.slice(1))
+          : err(`Expected a hash string starting with "#", but received ${JSON.stringify(s)}`),
+      ),
+);
+
+export const deserializeAutomata = (serialized: string): Result<string, Automata> => {
+  const [states, zigZagged, ruleId] = serialized.split('.');
+
+  return ok<NumberParseFailure | EmptyArrayError, {}>({})
+    .assign('states', parseIntR(states))
+    .assign(
+      'neighbors',
+      ok<NumberParseFailure | EmptyArrayError, string>(zigZagged)
+        .andThen(parseIntR)
+        .map(fromZigZagCollection)
+        .andThen(fromArrayResult),
+    )
+    .assign('ruleId', parseBigIntR(ruleId))
+    .mapError((e) => e.kind)
+    .map(automataCtor);
 };

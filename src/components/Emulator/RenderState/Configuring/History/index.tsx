@@ -13,14 +13,10 @@ interface Props {
 class History extends React.Component<Props> {
   historyStore = new HistoryStore(this.props.emulatorStore.automata);
 
-  componentDidMount() {
-    this.historyStore.working(this.props.emulatorStore.automata);
-  }
-
   render() {
     return (
       <>
-        <Reactions store={this.historyStore} debounceDelay={300} />
+        <Reactions store={this.historyStore} fireImmediately debounceDelay={300} />
         <EmulatorReactions
           store={this.props.emulatorStore}
           historyStore={this.historyStore}

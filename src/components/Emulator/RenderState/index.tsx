@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import OnlyOnClient from '../../OnlyOnClient';
 import Store from '../Store';
 import Configuring from './Configuring';
 import History from './Configuring/History';
@@ -11,7 +12,7 @@ interface Props {
 
 const RenderState: React.FC<Props> = ({ store }) => {
   return (
-    <>
+    <OnlyOnClient>
       <div className={`flex`}>
         <Configuring store={store} state={store.state} />
         <Rules store={store} />
@@ -19,7 +20,7 @@ const RenderState: React.FC<Props> = ({ store }) => {
       <div className={`transition-all ease-in-out delay-150 duration-300`}>
         <History emulatorStore={store} />
       </div>
-    </>
+    </OnlyOnClient>
   );
 };
 

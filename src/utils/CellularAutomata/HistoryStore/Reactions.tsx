@@ -10,6 +10,7 @@ class Reactions extends ReactionComponent<Store, State> {
   effect = (state: State) => {
     switch (state.kind) {
       case 'waiting':
+        this.props.store.working(this.props.store.automata);
         break;
       case 'working':
         const randState = () => Math.floor(Math.random() * state.automata.states);
