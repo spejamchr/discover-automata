@@ -1,24 +1,25 @@
-import { parseIntR } from '@execonline-inc/numbers';
-import { always } from '@kofno/piper';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { automataCtor, automataCtorWithRules, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
-import {
-  fromArrayResult,
-  whenBetweenByR,
-  whenBetweenR,
-  whenByLER,
-  whenGER,
-  whenGTR,
-  whenLER,
-} from '../../utils/Extensions';
-import { ConfigError, ConfigResult, configuring, State } from './Types';
-import { ok } from 'resulty';
+import { configuring, State } from './Types';
+import { ok, Result } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
-import { bigPow, parseBigIntR } from '../../utils/BigIntExt';
 import { windowGet } from '../../utils/WindowGet';
-import { serializedAutomataDecoder } from '../../utils/CellularAutomata/Decoders';
+import {
+  maxNeighbors,
+  maxRuleId,
+  maxStates,
+  minNeighbors,
+  minRuleId,
+  minStates,
+  neighborsDecoder,
+  ruleIdDecoder,
+  safeAutomataCtor,
+  serializedAutomataDecoder,
+  statesAndNeighborsDecoder,
+  statesDecoder,
+} from '../../utils/CellularAutomata/Decoders';
 import { warn } from '@execonline-inc/logging';
 
 const firstAutomata = () =>
@@ -52,10 +53,10 @@ class Store {
       toggleDisplayInColor: action,
       minStates: computed,
       maxStates: computed,
-      minRuleId: computed,
-      maxRuleId: computed,
       minNeighbors: computed,
       maxNeighbors: computed,
+      minRuleId: computed,
+      maxRuleId: computed,
       parseStates: computed,
       parseNeighbors: computed,
       parseStatesAndNeighbors: computed,
@@ -64,19 +65,16 @@ class Store {
       neighbors: computed,
       ruleId: computed,
       colorPicker: computed,
+      parseAutomata: computed,
     });
   }
 
   private setAutomataIfNeeded = (): void => {
-    ok<ConfigError, {}>({})
-      .assign('states', this.states)
-      .assign('neighbors', this.neighbors)
-      .assign('ruleId', this.ruleId)
-      .do((partialAutomata) => {
-        if (serialize(partialAutomata) !== serialize(this.state.automata)) {
-          this.setAutomata(automataCtor(partialAutomata));
-        }
-      });
+    this.parseAutomata.do((automata) => {
+      if (serialize(automata) !== serialize(this.state.automata)) {
+        this.setAutomata(automata);
+      }
+    });
   };
 
   setAutomata = (value: Automata): void => {
@@ -110,7 +108,7 @@ class Store {
           Math.round(Math.random() * (partial.states - 1)),
         ),
       }))
-      .andThen(automataCtorWithRules)
+      .andThen((o) => automataCtorWithRules(o).mapError((e) => e.kind))
       .do(this.setAutomata);
   };
 
@@ -122,122 +120,73 @@ class Store {
     this.state.displayInColor = !this.state.displayInColor;
   };
 
-  // Arbitrary limit... we display these, so we don't want too many
-  maxRuleCount: number = 100;
-
-  maxConsiderableStates: number = Math.floor(Math.sqrt(this.maxRuleCount));
-
-  maxConsiderableNeighbors: number = Math.floor(Math.log2(this.maxRuleCount));
-
-  get minStates(): Count {
-    return ok<ConfigError, {}>({})
-      .assign('neighbors', this.parseNeighbors)
-      .assign('ruleId', this.parseRuleId)
-      .map(({ neighbors, ruleId }) => {
-        let min = 1;
-        while (!this.testSNR(min, neighbors.length, ruleId)) {
-          min++;
-        }
-        return Math.min(min, this.maxStates);
-      })
-      .getOrElseValue(1);
+  get parseStates(): Result<string, number> {
+    return statesDecoder.decodeAny(this.state.states);
   }
 
-  // maxStates ** neighbors.length <= maxRuleCount
-  get maxStates(): number {
-    return this.parseNeighbors
-      .map((n) => n.length)
-      .map((n) => {
-        const max = Math.round(Math.pow(this.maxRuleCount, 1 / n));
-        return max ** n > this.maxRuleCount ? max - 1 : max;
-      })
-      .andThen(whenLER(this.maxConsiderableStates))
-      .getOrElseValue(this.maxConsiderableStates);
+  get parseNeighbors(): Result<string, Neighbors> {
+    return neighborsDecoder.decodeAny(this.state.neighbors);
   }
 
-  get minRuleId(): bigint {
-    return BigInt(0);
+  get parseStatesAndNeighbors(): Result<string, { states: number; neighbors: Neighbors }> {
+    return statesAndNeighborsDecoder.decodeAny(this.state);
   }
 
-  get maxRuleId(): ConfigResult<bigint> {
-    return this.parseStatesAndNeighbors
-      .andThen(({ states, neighbors }) => bigPow(BigInt(states), states ** neighbors.length))
-      .map((max) => max - BigInt(1));
+  get parseRuleId(): Result<string, bigint> {
+    return ruleIdDecoder.decodeAny(this.state.ruleId);
   }
 
-  private testSNR = (states: number, neighbors: number, ruleId: bigint) =>
-    ok<ConfigError, number>(states)
-      .andThen(() => bigPow(BigInt(states), states ** neighbors))
-      .andThen(whenGTR(ruleId))
-      .map(always(true))
-      .getOrElseValue(false);
-
-  // Zero would be boring, but possible
-  get minNeighbors(): Count {
-    return ok<ConfigError, {}>({})
-      .assign('states', this.parseStates.andThen(whenGTR(1)))
-      .assign('ruleId', this.parseRuleId)
-      .map(({ states, ruleId }) => {
-        let min = 1;
-        while (!this.testSNR(states, min, ruleId)) {
-          min++;
-        }
-        return Math.min(min, this.maxNeighbors);
-      })
-      .getOrElseValue(1);
+  get parseAutomata(): Result<string, Automata> {
+    return safeAutomataCtor(this.state.states, this.state.neighbors, this.state.ruleId);
   }
 
-  // states ** maxNeighbors <= maxRuleCount
-  get maxNeighbors(): Index {
-    return this.parseStates
-      .map((s) => {
-        const max = Math.round(Math.log(this.maxRuleCount) / Math.log(s));
-        const r = s ** max > this.maxRuleCount ? max - 1 : max;
-        return Math.min(r, this.maxConsiderableNeighbors);
-      })
-      .getOrElseValue(this.maxConsiderableNeighbors);
+  get states(): Result<string, Count> {
+    return this.parseAutomata.map((a) => a.states);
   }
 
-  get parseStates(): ConfigResult<number> {
-    return ok<ConfigError, string>(this.state.states)
-      .andThen(parseIntR)
-      .andThen(whenLER(this.maxConsiderableStates));
+  get neighbors(): Result<string, Neighbors> {
+    return this.parseAutomata.map((a) => a.neighbors);
   }
 
-  get parseNeighbors(): ConfigResult<Neighbors> {
-    return fromArrayResult(this.state.neighbors).map((a) => a.sort());
-  }
-
-  get parseStatesAndNeighbors(): ConfigResult<{ states: number; neighbors: Neighbors }> {
-    return ok<ConfigError, {}>({})
-      .assign('states', this.parseStates)
-      .assign('neighbors', this.parseNeighbors)
-      .andThen(whenByLER(this.maxRuleCount, ({ states, neighbors }) => states ** neighbors.length));
-  }
-
-  get parseRuleId(): ConfigResult<bigint> {
-    return parseBigIntR(this.state.ruleId);
-  }
-
-  get states(): ConfigResult<Count> {
-    return this.parseStates.andThen(whenBetweenR(this.minStates, this.maxStates));
-  }
-
-  get neighbors(): ConfigResult<Neighbors> {
-    return this.parseNeighbors.andThen(
-      whenBetweenByR(this.minNeighbors, this.maxNeighbors, (n) => n.length),
-    );
-  }
-
-  get ruleId(): ConfigResult<bigint> {
-    return this.maxRuleId.cata({
-      Ok: (max) => this.parseRuleId.andThen(whenBetweenR(this.minRuleId, max)),
-      Err: () => this.parseRuleId.andThen(whenGER(this.minRuleId)),
-    });
+  get ruleId(): Result<string, bigint> {
+    return this.parseAutomata.map((a) => a.ruleId);
   }
 
   get colorPicker(): ColorPicker {
     return makeColorPicker(this);
+  }
+
+  get minStates(): number {
+    return minStates(
+      this.parseNeighbors.getOrElseValue(this.automata.neighbors),
+      this.parseRuleId.getOrElseValue(this.automata.ruleId),
+    );
+  }
+
+  get maxStates(): number {
+    return maxStates(this.parseNeighbors.getOrElseValue(this.automata.neighbors));
+  }
+
+  get minNeighbors(): number {
+    return minNeighbors(
+      this.parseStates.getOrElseValue(this.automata.states),
+      this.parseRuleId.getOrElseValue(this.automata.ruleId),
+    );
+  }
+
+  get maxNeighbors(): number {
+    return maxNeighbors(this.parseStates.getOrElseValue(this.automata.states));
+  }
+
+  get minRuleId(): bigint {
+    return minRuleId;
+  }
+
+  get maxRuleId(): Result<string, bigint> {
+    return maxRuleId(
+      this.parseStates.getOrElseValue(this.automata.states),
+      this.parseNeighbors.getOrElseValue(this.automata.neighbors),
+    );
   }
 }
 

@@ -113,7 +113,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       </span>
       <input
         type={store.ruleId
-          .andThen(whenGTR(BigInt(Number.MAX_SAFE_INTEGER)))
+          .andThen((e) => whenGTR(BigInt(Number.MAX_SAFE_INTEGER))(e).mapError(String))
           .map(always('text'))
           .getOrElseValue('number')}
         min={String(store.minRuleId)}

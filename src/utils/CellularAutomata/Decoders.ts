@@ -11,6 +11,7 @@ import {
   whenByEQD,
   whenByGED,
   whenByLED,
+  whenGED,
 } from '../Extensions';
 import { fromZigZagCollection } from '../ZigZag';
 import { Automata, AutomataWithRuleId, Count, Neighbors } from './Types';
@@ -39,7 +40,8 @@ export const neighborDecoder: Decoder<number> = number.andThen(
 
 export const neighborsDecoder: Decoder<Neighbors> = array(neighborDecoder)
   .andThen((a) => new Decoder(() => fromArrayResult(a).mapError((e) => e.kind)))
-  .andThen(whenBetweenByD(minConsiderableNeighbors, maxConsiderableNeighbors, (n) => n.length));
+  .andThen(whenBetweenByD(minConsiderableNeighbors, maxConsiderableNeighbors, (n) => n.length))
+  .map((a) => a.sort());
 
 export const statesAndNeighborsPassMaxRuleCountCheck = <T extends StatesNeighbors>(
   a: T,
@@ -92,10 +94,13 @@ export const maxConsiderableRuleIdLength: number = Math.max(
     .map(Math.floor),
 );
 
+export const minRuleId: bigint = BigInt(0);
+
 // Decode a ruleId from a string
 export const ruleIdDecoder: Decoder<bigint> = string
   .andThen((s) => whenByLED(maxConsiderableRuleIdLength, (s: string) => s.length)(s))
-  .andThen(() => bigIntDecoder);
+  .andThen(() => bigIntDecoder)
+  .andThen(whenGED(minRuleId));
 
 export const neighborsPassesMaxCheck = <T extends StatesNeighbors>(a: T): Decoder<T> =>
   whenByLED(maxNeighbors(a.states), (a: T) => a.neighbors.length)(a);
@@ -110,8 +115,6 @@ export const minNeighbors = (states: Count, ruleId: bigint): Count => {
 
 export const neighborsPassesMinCheck = <T extends AutomataWithRuleId>(a: T): Decoder<T> =>
   whenByGED(minNeighbors(a.states, a.ruleId), (a: T) => a.neighbors.length)(a);
-
-export const minRuleId: bigint = BigInt(0);
 
 export const ruleIdPassesMinCheck = <T extends Pick<Automata, 'ruleId'>>(a: T): Decoder<T> =>
   whenByGED(minRuleId, (a: T) => a.ruleId)(a);
@@ -144,10 +147,10 @@ export const automataWithRuleIdDecoder: Decoder<Automata> = statesAndNeighborsDe
 
 export const safeAutomataCtor = (
   states: string,
-  neighbors: Array<number>,
+  neighbors: ReadonlyArray<number>,
   ruleId: string,
 ): Result<string, Automata> =>
-  ok<string, { ruleId: string; neighbors: Array<number> }>({ ruleId, neighbors })
+  ok<string, { ruleId: string; neighbors: ReadonlyArray<number> }>({ ruleId, neighbors })
     .assign('states', stringToNumberDecoder.decodeAny(states))
     .andThen((a) => automataWithRuleIdDecoder.decodeAny(a));
 
