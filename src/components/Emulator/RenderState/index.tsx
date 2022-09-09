@@ -14,7 +14,7 @@ const RenderState: React.FC<Props> = ({ store }) => {
   return (
     <OnlyOnClient>
       <div className={`flex`}>
-        <Configuring store={store} state={store.state} />
+        <Configuring store={store} />
         <Rules store={store} />
       </div>
       <div className={`transition-all ease-in-out delay-150 duration-300`}>

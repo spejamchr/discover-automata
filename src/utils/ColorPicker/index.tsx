@@ -15,11 +15,9 @@ export const makeColorPicker = (store: Store): ColorPicker => {
   const ls =
     states === 1 ? [50] : [...Array(states)].map((_, i) => i * lStepSize + buffer).reverse();
 
-  const colors = hues.map(
-    (h, i) => `hsl(${h}, ${store.state.displayInColor ? '90%' : '0%'}, ${ls[i]}%)`,
-  );
+  const colors = hues.map((h, i) => `hsl(${h}, ${store.displayInColor ? '90%' : '0%'}, ${ls[i]}%)`);
 
-  if (store.state.showStateLabels) {
+  if (store.showStateLabels) {
     const textColors = ls.map((l) => (l >= 50 ? 'black' : 'white'));
     return (state: State) => [colors[state % states], textColors[state % states]];
   } else {

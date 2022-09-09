@@ -1,26 +1,30 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { automataCtor, automataCtorWithRules, serialize } from '../../utils/CellularAutomata';
+import { automataCtor, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
-import { configuring, State } from './Types';
-import { ok, Result } from 'resulty';
+import { ok } from 'resulty';
 import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 import { windowGet } from '../../utils/WindowGet';
 import {
-  maxNeighbors,
-  maxRuleId,
-  maxStates,
-  minNeighbors,
+  maxRuleCount,
   minRuleId,
-  minStates,
-  neighborsDecoder,
-  ruleIdDecoder,
-  safeAutomataCtor,
   serializedAutomataDecoder,
-  statesAndNeighborsDecoder,
-  statesDecoder,
 } from '../../utils/CellularAutomata/Decoders';
 import { warn } from '@execonline-inc/logging';
+import { whenByLER } from '../../utils/Extensions';
+import {
+  automataWithRuleIdPassesMinMaxChecks,
+  calcMaxNeighbors,
+  calcMaxRuleId,
+  calcMaxStates,
+  calcMinNeighbors,
+  calcMinStates,
+  parseNeighbors,
+  parseRuleId,
+  parseStates,
+} from '../../utils/CellularAutomata/Parser';
+import { ConfigError, ConfigResult } from './Types';
+import { fromBaseBig } from '../../utils/IntBase';
 
 const firstAutomata = () =>
   ok<unknown, 'location'>('location')
@@ -38,12 +42,21 @@ const firstAutomata = () =>
     );
 
 class Store {
-  state: State = configuring(firstAutomata(), false, true);
+  automata: Automata = firstAutomata();
+  userStates: string = this.automata.states.toString();
+  userNeighbors: ReadonlyArray<number> = this.automata.neighbors.toArray();
+  userRuleId: string = this.automata.ruleId.toString();
+  showStateLabels: boolean = false;
+  displayInColor: boolean = true;
 
   constructor() {
     makeObservable(this, {
-      state: observable,
-      automata: computed,
+      userStates: observable,
+      userNeighbors: observable,
+      userRuleId: observable,
+      showStateLabels: observable,
+      displayInColor: observable,
+      automata: observable,
       setAutomata: action,
       setStates: action,
       setNeighbors: action,
@@ -71,84 +84,93 @@ class Store {
 
   private setAutomataIfNeeded = (): void => {
     this.parseAutomata.do((automata) => {
-      if (serialize(automata) !== serialize(this.state.automata)) {
+      if (serialize(automata) !== serialize(this.automata)) {
         this.setAutomata(automata);
       }
     });
   };
 
   setAutomata = (value: Automata): void => {
-    this.state = configuring(value, this.state.showStateLabels, this.state.displayInColor);
+    this.automata = value;
   };
 
-  get automata(): Automata {
-    return this.state.automata;
-  }
-
   setStates = (value: string): void => {
-    this.state.states = value;
+    this.userStates = value;
     this.setAutomataIfNeeded();
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
-    this.state.neighbors = value;
+    this.userNeighbors = value;
     this.setAutomataIfNeeded();
   };
 
   setRuleId = (value: string): void => {
-    this.state.ruleId = value;
+    this.userRuleId = value;
     this.setAutomataIfNeeded();
   };
 
   randomizeRules = (): void => {
     this.parseStatesAndNeighbors
-      .map((partial) => ({
-        ...partial,
-        rules: [...Array(partial.states ** partial.neighbors.length)].map(() =>
-          Math.round(Math.random() * (partial.states - 1)),
-        ),
-      }))
-      .andThen((o) => automataCtorWithRules(o).mapError((e) => e.kind))
-      .do(this.setAutomata);
+      .andThen((partial) =>
+        fromBaseBig({
+          kind: 'big-int-base',
+          base: partial.states,
+          digits: [...Array(partial.states ** partial.neighbors.length)].map(() =>
+            Math.round(Math.random() * (partial.states - 1)),
+          ),
+        }),
+      )
+      .map(String)
+      .do(this.setRuleId);
   };
 
   toggleShowStateLabels = (): void => {
-    this.state.showStateLabels = !this.state.showStateLabels;
+    this.showStateLabels = !this.showStateLabels;
   };
 
   toggleDisplayInColor = (): void => {
-    this.state.displayInColor = !this.state.displayInColor;
+    this.displayInColor = !this.displayInColor;
   };
 
-  get parseStates(): Result<string, number> {
-    return statesDecoder.decodeAny(this.state.states);
+  get parseStates(): ConfigResult<Count> {
+    return parseStates(this.userStates);
   }
 
-  get parseNeighbors(): Result<string, Neighbors> {
-    return neighborsDecoder.decodeAny(this.state.neighbors);
+  get parseNeighbors(): ConfigResult<Neighbors> {
+    return parseNeighbors(this.userNeighbors);
   }
 
-  get parseStatesAndNeighbors(): Result<string, { states: number; neighbors: Neighbors }> {
-    return statesAndNeighborsDecoder.decodeAny(this.state);
+  get parseStatesAndNeighbors(): ConfigResult<{ states: number; neighbors: Neighbors }> {
+    return ok<ConfigError, {}>({})
+      .assign('states', this.parseStates)
+      .assign('neighbors', this.parseNeighbors)
+      .andThen(whenByLER(maxRuleCount, (a) => a.states ** a.neighbors.length));
   }
 
-  get parseRuleId(): Result<string, bigint> {
-    return ruleIdDecoder.decodeAny(this.state.ruleId);
+  get parseRuleId(): ConfigResult<bigint> {
+    return parseRuleId(this.userRuleId);
   }
 
-  get parseAutomata(): Result<string, Automata> {
-    return safeAutomataCtor(this.state.states, this.state.neighbors, this.state.ruleId);
+  get parseAutomata(): ConfigResult<Automata> {
+    return this.parseStatesAndNeighbors
+      .assign('ruleId', this.parseRuleId)
+      .andThen((a) =>
+        this.maxRuleId.andThen((maxRuleId) =>
+          automataWithRuleIdPassesMinMaxChecks(this.maxStates, this.maxNeighbors, maxRuleId)(a),
+        ),
+      )
+      .map(automataCtor);
   }
 
-  get states(): Result<string, Count> {
+  get states(): ConfigResult<Count> {
     return this.parseAutomata.map((a) => a.states);
   }
 
-  get neighbors(): Result<string, Neighbors> {
+  get neighbors(): ConfigResult<Neighbors> {
     return this.parseAutomata.map((a) => a.neighbors);
   }
 
-  get ruleId(): Result<string, bigint> {
+  get ruleId(): ConfigResult<bigint> {
     return this.parseAutomata.map((a) => a.ruleId);
   }
 
@@ -156,37 +178,39 @@ class Store {
     return makeColorPicker(this);
   }
 
-  get minStates(): number {
-    return minStates(
-      this.parseNeighbors.getOrElseValue(this.automata.neighbors),
-      this.parseRuleId.getOrElseValue(this.automata.ruleId),
-    );
-  }
-
   get maxStates(): number {
-    return maxStates(this.parseNeighbors.getOrElseValue(this.automata.neighbors));
+    return calcMaxStates(this.parseNeighbors.getOrElseValue(this.automata.neighbors));
   }
 
-  get minNeighbors(): number {
-    return minNeighbors(
-      this.parseStates.getOrElseValue(this.automata.states),
-      this.parseRuleId.getOrElseValue(this.automata.ruleId),
-    );
+  get minStates(): number {
+    return calcMinStates({
+      max: this.maxStates,
+      neighbors: this.parseNeighbors.getOrElseValue(this.automata.neighbors),
+      ruleId: this.parseRuleId.getOrElseValue(this.automata.ruleId),
+    });
   }
 
   get maxNeighbors(): number {
-    return maxNeighbors(this.parseStates.getOrElseValue(this.automata.states));
+    return calcMaxNeighbors(this.parseStates.getOrElseValue(this.automata.states));
+  }
+
+  get minNeighbors(): number {
+    return calcMinNeighbors({
+      max: this.maxNeighbors,
+      states: this.parseStates.getOrElseValue(this.automata.states),
+      ruleId: this.parseRuleId.getOrElseValue(this.automata.ruleId),
+    });
   }
 
   get minRuleId(): bigint {
     return minRuleId;
   }
 
-  get maxRuleId(): Result<string, bigint> {
-    return maxRuleId(
-      this.parseStates.getOrElseValue(this.automata.states),
-      this.parseNeighbors.getOrElseValue(this.automata.neighbors),
-    );
+  get maxRuleId(): ConfigResult<bigint> {
+    return calcMaxRuleId({
+      states: this.parseStates.getOrElseValue(this.automata.states),
+      neighbors: this.parseNeighbors.getOrElseValue(this.automata.neighbors),
+    });
   }
 }
 

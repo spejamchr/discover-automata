@@ -5,36 +5,35 @@ import { ok } from 'resulty';
 import { Index } from '../../../../utils/CellularAutomata/Types';
 import { whenGTR } from '../../../../utils/Extensions';
 import Store from '../../Store';
-import { Configuring as State } from '../../Types';
 
 interface Props {
   store: Store;
-  state: State;
 }
 
-const isNeighborSelected = (state: State, index: Index): boolean => state.neighbors.includes(index);
+const isNeighborSelected = (store: Store, index: Index): boolean =>
+  store.userNeighbors.includes(index);
 
 const toggleNeighbor =
-  (store: Store, state: State, index: Index): React.MouseEventHandler<HTMLButtonElement> =>
+  (store: Store, index: Index): React.MouseEventHandler<HTMLButtonElement> =>
   (e) => {
     e.preventDefault();
     store.setNeighbors(
-      isNeighborSelected(state, index)
-        ? state.neighbors.filter((i) => i !== index)
-        : [...state.neighbors, index],
+      isNeighborSelected(store, index)
+        ? store.userNeighbors.filter((i) => i !== index)
+        : [...store.userNeighbors, index],
     );
   };
 
-const Configuring: React.FC<Props> = ({ store, state }) => (
+const Configuring: React.FC<Props> = ({ store }) => (
   <div className={`shrink-0`}>
     <div>
       <button onClick={store.toggleShowStateLabels}>
-        {store.state.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
+        {store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
       </button>
     </div>
     <div>
       <button onClick={store.toggleDisplayInColor}>
-        {store.state.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'}
+        {store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'}
       </button>
     </div>
     <label className={`block`}>
@@ -46,7 +45,7 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
         min="1" // Intentionally ignore the minStates value here
         max={store.maxStates}
         step="1"
-        value={store.states.map(String).getOrElseValue(state.states)}
+        value={store.states.map(String).getOrElseValue(store.userStates)}
         onChange={(e) => store.setStates(e.target.value)}
       />
       <button
@@ -74,10 +73,10 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
         <button
           className={`${
-            isNeighborSelected(state, i) ? 'border-green-300' : 'border-slate-300'
+            isNeighborSelected(store, i) ? 'border-green-300' : 'border-slate-300'
           } border-2 w-7 h-7 m-0.5 rounded`}
           key={i}
-          onClick={toggleNeighbor(store, state, i)}
+          onClick={toggleNeighbor(store, i)}
         >
           {i}
         </button>
@@ -113,13 +112,13 @@ const Configuring: React.FC<Props> = ({ store, state }) => (
       </span>
       <input
         type={store.ruleId
-          .andThen((e) => whenGTR(BigInt(Number.MAX_SAFE_INTEGER))(e).mapError(String))
+          .andThen(whenGTR(BigInt(Number.MAX_SAFE_INTEGER)))
           .map(always('text'))
           .getOrElseValue('number')}
         min={String(store.minRuleId)}
         max={store.maxRuleId.map(String).getOrElseValue('')}
         step="1"
-        value={store.ruleId.map(String).getOrElseValue(state.ruleId)}
+        value={store.ruleId.map(String).getOrElseValue(store.userRuleId)}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
       <button onClick={store.randomizeRules}>Randomize</button>
