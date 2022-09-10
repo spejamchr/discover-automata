@@ -86,10 +86,9 @@ export const maxNeighbors = (states: Count): Count => {
   const r = states ** max > maxRuleCount ? max - 1 : max;
   return Math.min(r, maxConsiderableNeighbors);
 };
-
 export const maxConsiderableRuleIdLength: number = Math.max(
-  ...[...Array(maxConsiderableStates - minConsiderableStates)]
-    .map((_, i) => i + minConsiderableStates + 1)
+  ...[...Array(maxConsiderableStates - minConsiderableStates + 1)]
+    .map((_, i) => i + minConsiderableStates)
     .map((s) => s ** maxNeighbors(s) * Math.log10(s))
     .map(Math.floor),
 );
@@ -119,10 +118,13 @@ export const neighborsPassesMinCheck = <T extends AutomataWithRuleId>(a: T): Dec
 export const ruleIdPassesMinCheck = <T extends Pick<Automata, 'ruleId'>>(a: T): Decoder<T> =>
   whenByGED(minRuleId, (a: T) => a.ruleId)(a);
 
-export const maxRuleId = (states: number, neighbors: Neighbors): Result<string, bigint> =>
-  bigPow(BigInt(states), states ** neighbors.length)
+export const calcMaxRuleId = (states: number, neighbors: number): Result<string, bigint> =>
+  bigPow(BigInt(states), states ** neighbors)
     .map((max) => max - BigInt(1))
     .mapError(() => 'Overflow error - values for states and neighbors are too large');
+
+export const maxRuleId = (states: number, neighbors: Neighbors): Result<string, bigint> =>
+  calcMaxRuleId(states, neighbors.length);
 
 export const ruleIdPassesMaxCheck = <T extends AutomataWithRuleId>(a: T): Decoder<T> =>
   new Decoder(() => maxRuleId(a.states, a.neighbors)).andThen((max) =>
@@ -174,3 +176,20 @@ export const serializedAutomataDecoder: Decoder<Automata> = string
   .andThen(([states, zigZagged, ruleId]) =>
     automataFromSerializedFields(states, zigZagged, ruleId),
   );
+
+export type StateNeighborStr = `<${string}:${string}>`;
+
+export const maxRuleIdPerValidStateNeighbor: ReadonlyMap<StateNeighborStr, bigint> = new Map(
+  [...Array(maxConsiderableStates - minConsiderableStates + 1)]
+    .map((_, i) => i + minConsiderableStates)
+    .flatMap((s) =>
+      [...Array(maxNeighbors(s) - minConsiderableNeighbors + 1)]
+        .map((_, i) => i + minConsiderableNeighbors)
+        .map((n) => [s, n] as const),
+    )
+    .map(([s, n]) => calcMaxRuleId(s, n).map<[StateNeighborStr, bigint]>((r) => [`<${s}:${n}>`, r]))
+    .reduce<Array<[StateNeighborStr, bigint]>>(
+      (a, r) => r.map((e) => [...a, e]).getOrElseValue(a),
+      [],
+    ),
+);

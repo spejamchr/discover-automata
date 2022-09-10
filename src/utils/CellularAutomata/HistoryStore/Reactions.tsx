@@ -5,14 +5,16 @@ import { assertNever } from '../../Assert';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
 
-class Reactions extends ReactionComponent<Store, State> {
-  tester = () => this.props.store.state;
-  effect = (state: State) => {
+class Reactions extends ReactionComponent<Store, State['kind']> {
+  tester = () => this.props.store.state.kind;
+  effect = () => {
+    const { state } = this.props.store;
     switch (state.kind) {
       case 'waiting':
         this.props.store.working(this.props.store.automata);
         break;
       case 'working':
+        console.log(`[SJC] working...`);
         const randState = () => Math.floor(Math.random() * state.automata.states);
         const firstCell = randState();
         const rest = [...Array(99)].map(randState);
