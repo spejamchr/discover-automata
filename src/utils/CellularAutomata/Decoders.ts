@@ -88,8 +88,8 @@ export const maxNeighbors = (states: Count): Count => {
 };
 
 export const maxConsiderableRuleIdLength: number = Math.max(
-  ...[...Array(maxConsiderableStates - minConsiderableStates)]
-    .map((_, i) => i + minConsiderableStates + 1)
+  ...[...Array(maxConsiderableStates - minConsiderableStates + 1)]
+    .map((_, i) => i + minConsiderableStates)
     .map((s) => s ** maxNeighbors(s) * Math.log10(s))
     .map(Math.floor),
 );
