@@ -17,7 +17,7 @@ const RenderState: React.FC<Props> = ({ store }) => {
         <Configuring store={store} />
         <Rules store={store} />
       </div>
-      <div className={`transition-all ease-in-out delay-150 duration-300`}>
+      <div className={`transition-all delay-150 duration-300 ease-in-out`}>
         <History emulatorStore={store} />
       </div>
     </OnlyOnClient>

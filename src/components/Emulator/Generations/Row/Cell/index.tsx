@@ -14,7 +14,7 @@ const Cell: React.FC<Props> = ({ state, colorPicker }) => {
   const [backgroundColor, color] = colorPicker(state);
   return (
     <span
-      className={`text-xs transition ease-in-out duration-500 flex items-center justify-center w-[1rem] h-[1rem] min-w-[1ch] font-mono`}
+      className={`flex h-[1rem] w-[1rem] min-w-[1ch] items-center justify-center font-mono text-xs transition duration-500 ease-in-out`}
       style={{ backgroundColor, color }}
     >
       {indices[state] || state}

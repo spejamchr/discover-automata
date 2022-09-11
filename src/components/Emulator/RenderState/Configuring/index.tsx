@@ -75,7 +75,7 @@ const Configuring: React.FC<Props> = ({ store }) => (
         <button
           className={`${
             isNeighborSelected(store, i) ? 'border-green-300' : 'border-slate-300'
-          } border-2 w-7 h-7 m-0.5 rounded`}
+          } m-0.5 h-7 w-7 rounded border-2`}
           key={i}
           onClick={toggleNeighbor(store, i)}
         >
