@@ -23,7 +23,7 @@ const Rules: React.FC<Props> = ({ store }) => {
     store.automata.neighbors.length,
   );
   return (
-    <div className={`flex flex-wrap content-start items-start overflow-y-auto`}>
+    <div className={`flex max-h-40 flex-wrap content-start items-start overflow-y-auto`}>
       {store.automata.rules
         .map((r, i) => (
           <Rule key={i} neighborStates={indexToNeighborStates(i)} state={r} store={store} />

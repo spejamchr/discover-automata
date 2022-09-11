@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import OnlyOnClient from '../../OnlyOnClient';
 import Store from '../Store';
+import ConfigureRuleId from './ConfigureRuleId';
 import Configuring from './Configuring';
 import History from './Configuring/History';
 import Rules from './Rules';
@@ -17,7 +18,8 @@ const RenderState: React.FC<Props> = ({ store }) => {
         <Configuring store={store} />
         <Rules store={store} />
       </div>
-      <div className={`transition-all delay-150 duration-300 ease-in-out`}>
+      <ConfigureRuleId store={store} />
+      <div className={`flex justify-center p-6 transition-all delay-150 duration-300 ease-in-out`}>
         <History emulatorStore={store} />
       </div>
     </OnlyOnClient>

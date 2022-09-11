@@ -38,7 +38,7 @@ const Configuring: React.FC<Props> = ({ store }) => (
       </button>
     </div>
     <label className={`block`}>
-      <span className={`block text-sm font-medium text-slate-700`}>
+      <span className={`block text-sm font-medium`}>
         States ({store.minStates} - {store.maxStates})
       </span>
       <input
@@ -68,7 +68,7 @@ const Configuring: React.FC<Props> = ({ store }) => (
     </label>
 
     <div>
-      <span className={`block text-sm font-medium text-slate-700`}>
+      <span className={`block text-sm font-medium`}>
         Neighbors ({store.minNeighbors} - {store.maxNeighbors})
       </span>
       {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
@@ -99,35 +99,6 @@ const Configuring: React.FC<Props> = ({ store }) => (
         Err: (e) => <span>{JSON.stringify(e)}</span>,
       })}
     </div>
-
-    <label className={`block`}>
-      <span className={`block text-sm font-medium text-slate-700`}>
-        Rule ID{' '}
-        {store.maxRuleId
-          .map((max) =>
-            max > BigInt(Number.MAX_SAFE_INTEGER)
-              ? `(maximum digits: ${String(max).length})`
-              : `(${String(store.minRuleId)} - ${String(max)})`,
-          )
-          .getOrElseValue('')}
-      </span>
-      <input
-        type={store.maxRuleId
-          .andThen(whenLER(BigInt(Number.MAX_SAFE_INTEGER)))
-          .map(always('number'))
-          .getOrElseValue('text')}
-        min={String(store.minRuleId)}
-        max={store.maxRuleId.map(String).getOrElseValue('')}
-        step="1"
-        value={store.userRuleId}
-        onChange={(e) => store.setRuleId(e.target.value)}
-      />
-      <button onClick={store.randomizeRules}>Randomize</button>
-      {store.ruleId.cata({
-        Ok: () => <></>,
-        Err: (e) => <span>{JSON.stringify(e)}</span>,
-      })}
-    </label>
   </div>
 );
 

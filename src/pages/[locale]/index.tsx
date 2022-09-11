@@ -9,7 +9,7 @@ export interface Props {
 
 const Home: NextPage<Props> = ({ locale }) => {
   return (
-    <div>
+    <div className={`w-full bg-slate-100 p-6 text-slate-700`}>
       <Head>
         <title>One-dimensional Cellular Automata</title>
         <meta name="description" content="Emulate 1-D cellular automata in the browser" />
