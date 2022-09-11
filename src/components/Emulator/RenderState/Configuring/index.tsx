@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ok } from 'resulty';
 import { Index } from '../../../../utils/CellularAutomata/Types';
 import { whenLER } from '../../../../utils/Extensions';
+import { shuffle } from '../../../../utils/Shuffle';
 import Store from '../../Store';
 
 interface Props {
@@ -87,7 +88,7 @@ const Configuring: React.FC<Props> = ({ store }) => (
             .map((max) => max - store.minNeighbors)
             .map((size) => Math.random() * size + store.minNeighbors)
             .map(Math.round)
-            .map((n) => [-3, -2, -1, 0, 1, 2, 3].sort(() => Math.random() - 0.5).slice(0, n))
+            .map((n) => shuffle([-3, -2, -1, 0, 1, 2, 3]).slice(0, n))
             .do(store.setNeighbors)
         }
       >
