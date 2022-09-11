@@ -25,7 +25,8 @@ const incrementResultState =
       .map((pow) => BigInt(((state + 1) % base) - state) * pow)
       .map((ruleDiff) => store.automata.ruleId + ruleDiff)
       .map(String)
-      .do(store.setRuleId);
+      .do(store.setRuleId)
+      .do(store.setAutomataIfNeeded);
   };
 
 const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (

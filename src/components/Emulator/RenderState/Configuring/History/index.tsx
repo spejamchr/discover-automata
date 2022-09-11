@@ -20,7 +20,7 @@ class History extends React.Component<Props> {
         <EmulatorReactions
           store={this.props.emulatorStore}
           historyStore={this.historyStore}
-          debounceDelay={300}
+          debounceDelay={600}
         />
         <Generations
           historyStore={this.historyStore}
