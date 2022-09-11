@@ -1,16 +1,15 @@
-import { serialize } from '../../../../../utils/CellularAutomata';
 import HistoryStore from '../../../../../utils/CellularAutomata/HistoryStore';
 import ReactionComponent from '../../../../../utils/ReactionComponent';
-import Store from '../../../Store';
+import Store, { UserAutomataPieces } from '../../../Store';
 
 interface Props {
   historyStore: HistoryStore;
 }
 
-class EmulatorReactions extends ReactionComponent<Store, string, Props> {
-  tester = () => serialize(this.props.store.automata);
+class EmulatorReactions extends ReactionComponent<Store, UserAutomataPieces, Props> {
+  tester = () => this.props.store.userAutomataPieces;
   effect = () => {
-    this.props.historyStore.working(this.props.store.automata);
+    this.props.store.setAutomataIfNeeded().do(this.props.historyStore.working);
   };
 }
 

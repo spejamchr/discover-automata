@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { ok } from 'resulty';
 import { Index } from '../../../../utils/CellularAutomata/Types';
-import { whenGTR } from '../../../../utils/Extensions';
+import { whenLER } from '../../../../utils/Extensions';
 import Store from '../../Store';
 
 interface Props {
@@ -111,14 +111,14 @@ const Configuring: React.FC<Props> = ({ store }) => (
           .getOrElseValue('')}
       </span>
       <input
-        type={store.ruleId
-          .andThen(whenGTR(BigInt(Number.MAX_SAFE_INTEGER)))
-          .map(always('text'))
-          .getOrElseValue('number')}
+        type={store.maxRuleId
+          .andThen(whenLER(BigInt(Number.MAX_SAFE_INTEGER)))
+          .map(always('number'))
+          .getOrElseValue('text')}
         min={String(store.minRuleId)}
         max={store.maxRuleId.map(String).getOrElseValue('')}
         step="1"
-        value={store.ruleId.map(String).getOrElseValue(store.userRuleId)}
+        value={store.userRuleId}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
       <button onClick={store.randomizeRules}>Randomize</button>

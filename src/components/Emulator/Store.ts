@@ -37,6 +37,12 @@ const firstAutomata = () =>
       }),
     );
 
+export interface UserAutomataPieces {
+  states: string;
+  neighbors: ReadonlyArray<number>;
+  ruleId: string;
+}
+
 class Store {
   automata: Automata = firstAutomata();
   userStates: string = this.automata.states.toString();
@@ -53,6 +59,8 @@ class Store {
       showStateLabels: observable,
       displayInColor: observable,
       automata: observable,
+      userAutomataPieces: computed,
+      setAutomataIfNeeded: action,
       setAutomata: action,
       setStates: action,
       setNeighbors: action,
@@ -78,8 +86,16 @@ class Store {
     });
   }
 
-  private setAutomataIfNeeded = (): void => {
-    this.parseAutomata.do((automata) => {
+  get userAutomataPieces(): UserAutomataPieces {
+    return {
+      states: this.userStates,
+      neighbors: this.userNeighbors,
+      ruleId: this.userRuleId,
+    };
+  }
+
+  setAutomataIfNeeded = (): ConfigResult<Automata> => {
+    return this.parseAutomata.do((automata) => {
       if (serialize(automata) !== serialize(this.automata)) {
         this.setAutomata(automata);
       }
@@ -92,17 +108,14 @@ class Store {
 
   setStates = (value: string): void => {
     this.userStates = value;
-    this.setAutomataIfNeeded();
   };
 
   setNeighbors = (value: ReadonlyArray<Index>): void => {
     this.userNeighbors = value;
-    this.setAutomataIfNeeded();
   };
 
   setRuleId = (value: string): void => {
     this.userRuleId = value;
-    this.setAutomataIfNeeded();
   };
 
   randomizeRules = (): void => {

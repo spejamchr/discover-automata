@@ -14,7 +14,6 @@ class Reactions extends ReactionComponent<Store, State['kind']> {
         this.props.store.working(this.props.store.automata);
         break;
       case 'working':
-        console.log(`[SJC] working...`);
         const randState = () => Math.floor(Math.random() * state.automata.states);
         const firstCell = randState();
         const rest = [...Array(99)].map(randState);
