@@ -5,10 +5,9 @@ import { assertNever } from '../../Assert';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
 
-class Reactions extends ReactionComponent<Store, State['kind']> {
-  tester = () => this.props.store.state.kind;
-  effect = () => {
-    const { state } = this.props.store;
+class Reactions extends ReactionComponent<Store, State> {
+  tester = () => this.props.store.state;
+  effect = (state: State) => {
     switch (state.kind) {
       case 'waiting':
         this.props.store.working(this.props.store.automata);
