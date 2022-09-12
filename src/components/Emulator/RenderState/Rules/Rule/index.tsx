@@ -3,6 +3,7 @@ import * as React from 'react';
 import { bigPow } from '../../../../../utils/BigIntExt';
 import { State } from '../../../../../utils/CellularAutomata/Types';
 import { fromBase } from '../../../../../utils/IntBase';
+import Button from '../../../../Button';
 import Cell from '../../../Generations/Row/Cell';
 import Store from '../../../Store';
 
@@ -30,7 +31,7 @@ const incrementResultState =
   };
 
 const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
-  <button
+  <Button
     className={`m-1 flex flex-col items-center`}
     onClick={incrementResultState(neighborStates, state, store)}
   >
@@ -40,7 +41,7 @@ const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
       ))}
     </span>
     <Cell state={state} colorPicker={store.colorPicker} />
-  </button>
+  </Button>
 );
 
 export default observer(Rule);

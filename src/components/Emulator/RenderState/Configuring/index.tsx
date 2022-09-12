@@ -1,10 +1,11 @@
-import { always } from '@kofno/piper';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { ok } from 'resulty';
+import { maxNeighborIndex, minNeighborIndex } from '../../../../utils/CellularAutomata/Decoders';
 import { Index } from '../../../../utils/CellularAutomata/Types';
-import { whenLER } from '../../../../utils/Extensions';
+import { makeColorPicker } from '../../../../utils/ColorPicker';
 import { shuffle } from '../../../../utils/Shuffle';
+import Button from '../../../Button';
 import Store from '../../Store';
 
 interface Props {
@@ -25,81 +26,89 @@ const toggleNeighbor =
     );
   };
 
-const Configuring: React.FC<Props> = ({ store }) => (
-  <div className={`shrink-0`}>
-    <div>
-      <button onClick={store.toggleShowStateLabels}>
-        {store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
-      </button>
-    </div>
-    <div>
-      <button onClick={store.toggleDisplayInColor}>
-        {store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'}
-      </button>
-    </div>
-    <label className={`block`}>
-      <span className={`block text-sm font-medium`}>
-        States ({store.minStates} - {store.maxStates})
-      </span>
-      <input
-        type="number"
-        min="1" // Intentionally ignore the minStates value here
-        max={store.maxStates}
-        step="1"
-        value={store.states.map(String).getOrElseValue(store.userStates)}
-        onChange={(e) => store.setStates(e.target.value)}
-      />
-      <button
-        onClick={() =>
-          ok(store.maxStates)
-            .map((max) => max - store.minStates)
-            .map((size) => Math.random() * size + store.minStates)
-            .map(Math.round)
-            .map(String)
-            .do(store.setStates)
-        }
-      >
-        Randomize
-      </button>
-      {store.states.cata({
-        Ok: () => <></>,
-        Err: (e) => <span>{JSON.stringify(e)}</span>,
-      })}
-    </label>
-
-    <div>
-      <span className={`block text-sm font-medium`}>
-        Neighbors ({store.minNeighbors} - {store.maxNeighbors})
-      </span>
-      {[-3, -2, -1, 0, 1, 2, 3].map((i) => (
-        <button
-          className={`${
-            isNeighborSelected(store, i) ? 'border-green-300' : 'border-slate-300'
-          } m-0.5 h-7 w-7 rounded border-2`}
-          key={i}
-          onClick={toggleNeighbor(store, i)}
+const Configuring: React.FC<Props> = ({ store }) => {
+  const colorPicker = makeColorPicker(store);
+  return (
+    <div className={`shrink-0`}>
+      <div>
+        <Button onClick={store.toggleShowStateLabels}>
+          {store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'}
+        </Button>
+      </div>
+      <div>
+        <Button onClick={store.toggleDisplayInColor}>
+          {store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'}
+        </Button>
+      </div>
+      <label className={`block`}>
+        <span className={`block text-sm font-medium`}>
+          States ({store.minStates} - {store.maxStates})
+        </span>
+        <input
+          type="number"
+          min="1" // Intentionally ignore the minStates value here
+          max={store.maxStates}
+          step="1"
+          value={store.states.map(String).getOrElseValue(store.userStates)}
+          onChange={(e) => store.setStates(e.target.value)}
+        />
+        <Button
+          onClick={() =>
+            ok(store.maxStates)
+              .map((max) => max - store.minStates)
+              .map((size) => Math.random() * size + store.minStates)
+              .map(Math.round)
+              .map(String)
+              .do(store.setStates)
+          }
         >
-          {i}
-        </button>
-      ))}
-      <button
-        onClick={() =>
-          ok(store.maxNeighbors)
-            .map((max) => max - store.minNeighbors)
-            .map((size) => Math.random() * size + store.minNeighbors)
-            .map(Math.round)
-            .map((n) => shuffle([-3, -2, -1, 0, 1, 2, 3]).slice(0, n))
-            .do(store.setNeighbors)
-        }
-      >
-        Randomize
-      </button>
-      {store.neighbors.cata({
-        Ok: () => <></>,
-        Err: (e) => <span>{JSON.stringify(e)}</span>,
-      })}
+          Randomize
+        </Button>
+        {store.states.cata({
+          Ok: () => <></>,
+          Err: (e) => <span>{JSON.stringify(e)}</span>,
+        })}
+      </label>
+
+      <div>
+        <span className={`block text-sm font-medium`}>
+          Neighbors ({store.minNeighbors} - {store.maxNeighbors})
+        </span>
+        {[...Array(maxNeighborIndex - minNeighborIndex + 1)]
+          .map((_, i) => i + minNeighborIndex)
+          .map((i) => (
+            <Button
+              style={{
+                borderColor: isNeighborSelected(store, i)
+                  ? colorPicker(store.automata.states - 1)[0]
+                  : undefined,
+              }}
+              className={`${isNeighborSelected(store, i) ? 'border-2' : null} h-8 w-8 p-0`}
+              key={i}
+              onClick={toggleNeighbor(store, i)}
+            >
+              {i}
+            </Button>
+          ))}
+        <Button
+          onClick={() =>
+            ok(store.maxNeighbors)
+              .map((max) => max - store.minNeighbors)
+              .map((size) => Math.random() * size + store.minNeighbors)
+              .map(Math.round)
+              .map((n) => shuffle([-3, -2, -1, 0, 1, 2, 3]).slice(0, n))
+              .do(store.setNeighbors)
+          }
+        >
+          Randomize
+        </Button>
+        {store.neighbors.cata({
+          Ok: () => <></>,
+          Err: (e) => <span>{JSON.stringify(e)}</span>,
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default observer(Configuring);

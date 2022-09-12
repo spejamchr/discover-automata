@@ -2,6 +2,7 @@ import { always } from '@kofno/piper';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { whenLER } from '../../../../utils/Extensions';
+import Button from '../../../Button';
 import Store from '../../Store';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const ConfigureRuleId: React.FC<Props> = ({ store }) => (
-  <div>
+  <span>
     <label className={`block`}>
       <span className={`block text-sm font-medium`}>
         Rule ID{' '}
@@ -40,13 +41,13 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
         value={store.userRuleId}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
-      <button onClick={store.randomizeRules}>Randomize</button>
+      <Button onClick={store.randomizeRules}>Randomize</Button>
       {store.ruleId.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,
       })}
     </label>
-  </div>
+  </span>
 );
 
 export default observer(ConfigureRuleId);
