@@ -5,12 +5,12 @@ export type ColorPicker = (state: State) => [string, string];
 
 export const makeColorPicker = (store: Store): ColorPicker => {
   const { states } = store.automata;
-  const minHueStepSize = 30;
-  const hueStepSize = Math.max(minHueStepSize, 90 / states);
-  const hueOffset = 185;
+  const hueStepSize = 60;
+  // Cycle every hour
+  const hueOffset = ((Date.now() * 360) / (1000 * 60 * 60) + hueStepSize * states) % 360;
   const hues = [...Array(states)].map((_, i) => (i * hueStepSize + hueOffset) % 360);
 
-  const buffer = 20;
+  const buffer = 15;
   const lStepSize = (100 - 2 * buffer) / (states - 1);
   const ls =
     states === 1 ? [50] : [...Array(states)].map((_, i) => i * lStepSize + buffer).reverse();
