@@ -31,7 +31,7 @@ const firstAutomata = () =>
     .andThen(windowGet)
     .map((l) => l.hash)
     .andThen(serializedAutomataDecoder.decodeAny)
-    .mapError((s) => `Error deserializing automata from hash: ${s}`)
+    .mapError((s) => `Error deserializing automata from hash: ${JSON.stringify(s)}`)
     .elseDo(warn)
     .getOrElse(() =>
       automataCtor({

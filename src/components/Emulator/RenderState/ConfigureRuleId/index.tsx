@@ -2,8 +2,10 @@ import { always } from '@kofno/piper';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { whenLER } from '../../../../utils/Extensions';
+import T from '../../../../utils/Locales/T';
 import Button from '../../../Button';
 import Store from '../../Store';
+import RuleIdSize from './RuleIdSize';
 
 interface Props {
   store: Store;
@@ -13,14 +15,7 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
   <span>
     <label className={`block`}>
       <span className={`block text-sm font-medium`}>
-        Rule ID{' '}
-        {store.maxRuleId
-          .map((max) =>
-            max > BigInt(Number.MAX_SAFE_INTEGER)
-              ? `(maximum digits: ${String(max).length})`
-              : `(${String(store.minRuleId)} - ${String(max)})`,
-          )
-          .getOrElseValue('')}
+        <T kind="Rule" /> <RuleIdSize store={store} />
       </span>
       <input
         className={`min-w-[248px] max-w-full font-mono transition-all duration-500 ease-in-out`}
@@ -41,7 +36,9 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
         value={store.userRuleId}
         onChange={(e) => store.setRuleId(e.target.value)}
       />
-      <Button onClick={store.randomizeRules}>Randomize</Button>
+      <Button onClick={store.randomizeRules}>
+        <T kind="Randomize" />
+      </Button>
       {store.ruleId.cata({
         Ok: () => <></>,
         Err: (e) => <span>{JSON.stringify(e)}</span>,
