@@ -220,10 +220,7 @@ class Store {
   }
 
   get maxRuleId(): ConfigResult<bigint> {
-    return calcMaxRuleId({
-      states: this.parseStates.getOrElseValue(this.automata.states),
-      neighbors: this.parseNeighbors.getOrElseValue(this.automata.neighbors),
-    });
+    return this.parseStatesAndNeighbors.andThen(calcMaxRuleId);
   }
 }
 
