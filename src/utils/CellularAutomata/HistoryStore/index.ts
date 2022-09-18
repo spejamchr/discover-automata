@@ -1,5 +1,6 @@
 import { just, Maybe, nothing } from 'maybeasy';
 import { makeObservable, computed, action, observable } from 'mobx';
+import { NonEmptyList } from 'nonempty-list';
 import { assertNever } from '../../Assert';
 import { Automata, Generation } from '../Types';
 import { State, ready, working, waiting } from './Types';
@@ -13,21 +14,18 @@ class HistoryStore {
       state: observable,
       working: action,
       ready: action,
+      calcNextGeneration: action,
       automata: computed,
       first: computed,
       generations: computed,
     });
   }
 
-  working = (automata: Automata): void => {
+  working = (automata: Automata, generations: NonEmptyList<Generation>): void => {
     switch (this.state.kind) {
       case 'waiting':
-        this.state = working(automata, []);
-        break;
       case 'ready':
-        // TODO: This doesn't currently run, because the store isn't reused
-        // between different automata
-        this.state = working(automata, this.state.generations);
+        this.state = working(automata, generations);
         break;
       case 'working':
         break;
@@ -36,13 +34,28 @@ class HistoryStore {
     }
   };
 
-  ready = (history: ReadonlyArray<Generation>): void => {
+  ready = (): void => {
     switch (this.state.kind) {
       case 'waiting':
       case 'ready':
         break;
       case 'working':
-        this.state = ready(this.automata, history);
+        this.state = ready(this.automata, this.state.generations);
+        break;
+      default:
+        assertNever(this.state);
+    }
+  };
+
+  calcNextGeneration = (calc: (generation: Generation) => Generation): void => {
+    switch (this.state.kind) {
+      case 'waiting':
+      case 'ready':
+        break;
+      case 'working':
+        this.state.generations = this.state.generations.concat([
+          calc(this.state.generations.toArray()[this.state.generations.length - 1]),
+        ]);
         break;
       default:
         assertNever(this.state);
@@ -56,10 +69,10 @@ class HistoryStore {
   get first(): Maybe<Generation> {
     switch (this.state.kind) {
       case 'waiting':
-      case 'working':
         return nothing();
+      case 'working':
       case 'ready':
-        return just(this.state.generations[0]);
+        return just(this.state.generations.first);
     }
   }
 
@@ -68,9 +81,8 @@ class HistoryStore {
       case 'waiting':
         return [];
       case 'working':
-        return this.state.previousGenerations;
       case 'ready':
-        return this.state.generations;
+        return this.state.generations.toArray();
     }
   }
 }

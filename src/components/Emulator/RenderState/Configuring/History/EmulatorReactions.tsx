@@ -9,7 +9,7 @@ interface Props {
 class EmulatorReactions extends ReactionComponent<Store, UserAutomataPieces, Props> {
   tester = () => this.props.store.userAutomataPieces;
   effect = () => {
-    this.props.store.setAutomataIfNeeded().do(this.props.historyStore.working);
+    this.props.store.setAutomataIfNeeded();
   };
 }
 

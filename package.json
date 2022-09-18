@@ -18,6 +18,7 @@
     "@execonline-inc/logging": "^6.2.1",
     "@execonline-inc/numbers": "^4.6.0",
     "@kofno/piper": "^4.3.0",
+    "clsx": "^1.2.1",
     "jsonous": "^7.4.0",
     "maybeasy": "^3.0.0",
     "mobx": "^6.6.1",

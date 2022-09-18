@@ -17,11 +17,7 @@ class History extends React.Component<Props> {
     return (
       <>
         <Reactions store={this.historyStore} fireImmediately />
-        <EmulatorReactions
-          store={this.props.emulatorStore}
-          historyStore={this.historyStore}
-          debounceDelay={600}
-        />
+        <EmulatorReactions store={this.props.emulatorStore} historyStore={this.historyStore} />
         <Generations
           historyStore={this.historyStore}
           colorPicker={this.props.emulatorStore.colorPicker}

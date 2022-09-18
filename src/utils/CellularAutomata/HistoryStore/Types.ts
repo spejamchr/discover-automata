@@ -1,3 +1,4 @@
+import { NonEmptyList } from 'nonempty-list';
 import { Automata, Generation } from '../Types';
 
 export interface Waiting {
@@ -8,13 +9,13 @@ export interface Waiting {
 export interface Working {
   kind: 'working';
   automata: Automata;
-  previousGenerations: ReadonlyArray<Generation>;
+  generations: NonEmptyList<Generation>;
 }
 
 export interface Ready {
   kind: 'ready';
   automata: Automata;
-  generations: ReadonlyArray<Generation>;
+  generations: NonEmptyList<Generation>;
 }
 
 export type State = Waiting | Ready | Working;
@@ -24,16 +25,13 @@ export const waiting = (automata: Automata): Waiting => ({
   automata,
 });
 
-export const working = (
-  automata: Automata,
-  previousGenerations: ReadonlyArray<Generation>,
-): Working => ({
+export const working = (automata: Automata, generations: NonEmptyList<Generation>): Working => ({
   kind: 'working',
   automata,
-  previousGenerations,
+  generations,
 });
 
-export const ready = (automata: Automata, generations: ReadonlyArray<Generation>): Ready => ({
+export const ready = (automata: Automata, generations: NonEmptyList<Generation>): Ready => ({
   kind: 'ready',
   automata,
   generations,

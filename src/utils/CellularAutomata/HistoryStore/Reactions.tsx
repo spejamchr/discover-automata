@@ -10,22 +10,19 @@ class Reactions extends ReactionComponent<Store, State> {
   effect = (state: State) => {
     switch (state.kind) {
       case 'waiting':
-        this.props.store.working(this.props.store.automata);
+        const randState = () => Math.floor(Math.random() * state.automata.states);
+        const firstGeneration = new NonEmptyList(randState(), [...Array(99)].map(randState));
+        this.props.store.working(this.props.store.automata, new NonEmptyList(firstGeneration, []));
         break;
       case 'working':
-        const randState = () => Math.floor(Math.random() * state.automata.states);
-        const firstCell = randState();
-        const rest = [...Array(99)].map(randState);
-        const first = new NonEmptyList(firstCell, rest);
-        const generations = [first];
-        const calcNextGen = nextCellsOnZero(this.props.store.automata);
-
-        for (let i = 0; i < 100; i++) {
-          generations.push(calcNextGen(generations[i]));
-        }
-        this.props.store.ready(generations);
+        this.props.store.calcNextGeneration(nextCellsOnZero(this.props.store.automata));
+        this.props.store.ready();
         break;
       case 'ready':
+        if (state.generations.length < 99) {
+          // Break the work into chunks so that we don't hog the thread
+          setTimeout(() => this.props.store.working(state.automata, state.generations), 5);
+        }
         break;
       default:
         assertNever(state);
