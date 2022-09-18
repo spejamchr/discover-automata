@@ -1,7 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import Emulator from '../../components/Emulator';
 import T from '../../utils/Locales/T';
 import {
   constrainToLocale,

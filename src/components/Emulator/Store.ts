@@ -2,7 +2,6 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { automataCtor, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import { ok } from 'resulty';
-import { NonEmptyList } from 'nonempty-list';
 import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
 import { windowGet } from '../../utils/WindowGet';
 import {
@@ -36,7 +35,7 @@ const firstAutomata = () =>
     .getOrElse(() =>
       automataCtor({
         states: 2,
-        neighbors: new NonEmptyList<number>(-1, [0, 1]),
+        neighbors: [-1, 0, 1],
         ruleId: BigInt(110),
       }),
     );
@@ -50,7 +49,7 @@ export interface UserAutomataPieces {
 class Store {
   automata: Automata = firstAutomata();
   userStates: string = this.automata.states.toString();
-  userNeighbors: ReadonlyArray<number> = this.automata.neighbors.toArray();
+  userNeighbors: ReadonlyArray<number> = this.automata.neighbors;
   userRuleId: string = this.automata.ruleId.toString();
   showStateLabels: boolean = false;
   displayInColor: boolean = true;
@@ -117,7 +116,7 @@ class Store {
       .do((automata) => {
         this.automata = automata;
         this.userStates = this.automata.states.toString();
-        this.userNeighbors = this.automata.neighbors.toArray();
+        this.userNeighbors = this.automata.neighbors;
         this.userRuleId = this.automata.ruleId.toString();
       });
   };

@@ -5,7 +5,6 @@ import { ok, Result } from 'resulty';
 import { automataCtor } from '.';
 import { bigIntDecoder, bigLog10, bigPow } from '../BigIntExt';
 import {
-  fromArrayResult,
   whenBetweenByD,
   whenBetweenD,
   whenByEQD,
@@ -24,7 +23,7 @@ export const maxRuleCount = 100;
 export const minConsiderableStates = 1;
 export const maxConsiderableStates = Math.floor(Math.sqrt(maxRuleCount));
 
-export const minConsiderableNeighbors = 1;
+export const minConsiderableNeighbors = 0;
 export const maxConsiderableNeighbors = Math.floor(Math.log2(maxRuleCount));
 
 export const minNeighborIndex = -3;
@@ -39,9 +38,8 @@ export const neighborDecoder: Decoder<number> = number.andThen(
 );
 
 export const neighborsDecoder: Decoder<Neighbors> = array(neighborDecoder)
-  .andThen((a) => new Decoder(() => fromArrayResult(a).mapError((e) => e.kind)))
   .andThen(whenBetweenByD(minConsiderableNeighbors, maxConsiderableNeighbors, (n) => n.length))
-  .map((a) => a.sort());
+  .map<Neighbors>((a) => a.sort());
 
 export const statesAndNeighborsPassMaxRuleCountCheck = <T extends StatesNeighbors>(
   a: T,
@@ -71,6 +69,12 @@ const testSNR = (states: number, neighbors: number, ruleId: bigint): boolean =>
   states ** neighbors * Math.log10(states) >= bigLog10(ruleId);
 
 export const minStates = (neighbors: Neighbors, ruleId: bigint): Count => {
+  if (neighbors.length === 0) {
+    return ruleId < BigInt(maxConsiderableStates)
+      ? Number(ruleId.toString()) + 1
+      : maxConsiderableStates;
+  }
+
   let min = minConsiderableStates;
   while (!testSNR(min, neighbors.length, ruleId)) {
     min++;

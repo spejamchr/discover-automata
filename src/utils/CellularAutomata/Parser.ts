@@ -2,14 +2,7 @@ import { parseIntR } from '@execonline-inc/numbers';
 import { ok } from 'resulty';
 import { ConfigResult } from '../../components/Emulator/Types';
 import { bigLog10, bigPow, parseBigIntR } from '../BigIntExt';
-import {
-  fromArrayResult,
-  whenBetweenByR,
-  whenBetweenR,
-  whenByGER,
-  whenByLER,
-  whenGER,
-} from '../Extensions';
+import { whenBetweenByR, whenBetweenR, whenByGER, whenByLER, whenGER } from '../Extensions';
 import {
   maxConsiderableNeighbors,
   maxConsiderableRuleIdLength,
@@ -36,8 +29,7 @@ export const parseStates = (userStates: string): ConfigResult<Count> =>
 export const parseNeighbors = (userNeighbors: ReadonlyArray<number>): ConfigResult<Neighbors> =>
   userNeighbors
     .map(whenBetweenR(minNeighborIndex, maxNeighborIndex))
-    .reduce((r, i) => r.andThen((a) => i.map((n) => [...a, n])), okC<ReadonlyArray<number>>([]))
-    .andThen(fromArrayResult)
+    .reduce((r, i) => r.andThen((a) => i.map((n) => [...a, n])), okC<Array<number>>([]))
     .andThen(whenBetweenByR(minConsiderableNeighbors, maxConsiderableNeighbors, (n) => n.length))
     .map((a) => a.sort());
 
@@ -54,6 +46,12 @@ export const calcMaxStates = (neighbors: Neighbors): number => {
 };
 
 export const calcMinStates = (a: { neighbors: Neighbors; ruleId: bigint; max: number }): number => {
+  if (a.neighbors.length === 0) {
+    return a.ruleId < BigInt(maxConsiderableStates)
+      ? Number(a.ruleId.toString()) + 1
+      : maxConsiderableStates;
+  }
+
   let min = minConsiderableStates;
   while (!testSNR(min, a.neighbors.length, a.ruleId)) {
     min++;

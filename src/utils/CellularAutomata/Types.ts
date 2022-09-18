@@ -5,7 +5,7 @@ export type Count = number;
 export type Index = number;
 
 export type Generation = NonEmptyList<State>;
-export type Neighbors = NonEmptyList<Index>;
+export type Neighbors = ReadonlyArray<Index>;
 export type Rules = ReadonlyArray<State>;
 
 export interface Automata {

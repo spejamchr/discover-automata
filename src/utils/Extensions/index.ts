@@ -1,7 +1,6 @@
 import { always, pipe } from '@kofno/piper';
 import Decoder, { succeed } from 'jsonous';
 import { just, Maybe, nothing } from 'maybeasy';
-import { fromArrayMaybe, NonEmptyList } from 'nonempty-list';
 import { err, ok, Result } from 'resulty';
 
 type Comparer = '<' | '<=' | '===' | '>' | '>=';
@@ -134,16 +133,3 @@ export const whenLTM = whenComparedM('<');
 export const whenLEM = whenComparedM('<=');
 
 export const whenBetweenM = (min: number, max: number) => pipe(whenBetweenR(min, max), fromResultM);
-
-export interface EmptyArrayError {
-  kind: 'empty-array-error';
-}
-
-export const emptyArrayError = (): EmptyArrayError => ({ kind: 'empty-array-error' });
-
-type NonEmptyListResult<T> = Result<EmptyArrayError, NonEmptyList<T>>;
-
-export const fromArrayResult = <T>(a: ReadonlyArray<T>): NonEmptyListResult<T> =>
-  fromArrayMaybe(a)
-    .map<NonEmptyListResult<T>>(ok)
-    .getOrElse(pipe<void, EmptyArrayError, NonEmptyListResult<T>>(emptyArrayError, err));

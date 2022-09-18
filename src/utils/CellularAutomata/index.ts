@@ -2,7 +2,6 @@ import { NumberParseFailure, parseIntR } from '@execonline-inc/numbers';
 import { NonEmptyList } from 'nonempty-list';
 import { ok, Result } from 'resulty';
 import { OverflowError, parseBigIntR } from '../BigIntExt';
-import { EmptyArrayError, fromArrayResult } from '../Extensions';
 import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
 import { fromZigZagCollection, toZigZagCollection } from '../ZigZag';
 import {
@@ -46,10 +45,10 @@ const calcNextCellOnZero =
       fromBase({
         kind: 'int-base',
         digits: automata.neighbors
+          .slice()
           .reverse()
           .map((n) => n + index)
-          .map((i) => cells[i] || 0)
-          .toArray(),
+          .map((i) => cells[i] || 0),
         base: automata.states,
       })
     ];
@@ -67,15 +66,9 @@ export const serialize = ({ states, neighbors, ruleId }: AutomataWithRuleId): st
 export const deserializeAutomata = (serialized: string): Result<string, Automata> => {
   const [states, zigZagged, ruleId] = serialized.split('.');
 
-  return ok<NumberParseFailure | EmptyArrayError, {}>({})
+  return ok<NumberParseFailure, {}>({})
     .assign('states', parseIntR(states))
-    .assign(
-      'neighbors',
-      ok<NumberParseFailure | EmptyArrayError, string>(zigZagged)
-        .andThen(parseIntR)
-        .map(fromZigZagCollection)
-        .andThen(fromArrayResult),
-    )
+    .assign('neighbors', parseIntR(zigZagged).map(fromZigZagCollection))
     .assign('ruleId', parseBigIntR(ruleId))
     .mapError((e) => e.kind)
     .map(automataCtor);
