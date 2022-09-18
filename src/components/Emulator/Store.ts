@@ -66,6 +66,7 @@ class Store {
       userAutomataPieces: computed,
       setAutomataIfNeeded: action,
       setAutomata: action,
+      setAutomataFromUrl: action,
       setStates: action,
       setNeighbors: action,
       setRuleId: action,
@@ -104,6 +105,21 @@ class Store {
         this.setAutomata(automata);
       }
     });
+  };
+
+  setAutomataFromUrl = (): void => {
+    ok<unknown, 'location'>('location')
+      .andThen(windowGet)
+      .map((l) => l.hash)
+      .andThen(serializedAutomataDecoder.decodeAny)
+      .mapError((s) => `Error deserializing automata from hash: ${JSON.stringify(s)}`)
+      .elseDo(warn)
+      .do((automata) => {
+        this.automata = automata;
+        this.userStates = this.automata.states.toString();
+        this.userNeighbors = this.automata.neighbors.toArray();
+        this.userRuleId = this.automata.ruleId.toString();
+      });
   };
 
   setAutomata = (value: Automata): void => {
