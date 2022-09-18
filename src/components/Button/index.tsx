@@ -5,9 +5,7 @@ interface Props
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
-  > {
-  children: React.ReactNode;
-}
+  > {}
 
 const Button: React.FC<Props> = ({ children, className, ...rest }) => (
   <button
