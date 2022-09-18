@@ -15,7 +15,7 @@ export interface Props {
   locale: Locale;
 }
 
-const Home: NextPage<Props> = ({ locale }) => {
+const Emulate: NextPage<Props> = ({ locale }) => {
   return (
     <TranslatorContext.Provider value={makeTranslator(locale)}>
       <div className={`min-h-screen w-full bg-slate-100 p-6 text-slate-700`}>
@@ -36,13 +36,14 @@ const Home: NextPage<Props> = ({ locale }) => {
           <h1 className={`pb-2 text-lg`}>
             <T kind={'One-dimensional Cellular Automata'} />
           </h1>
+          <Emulator />
         </main>
       </div>
     </TranslatorContext.Provider>
   );
 };
 
-export default Home;
+export default Emulate;
 
 export const getStaticPaths: GetStaticPaths = () => {
   const paths = locales.map((locale) => ({ params: { locale } }));
