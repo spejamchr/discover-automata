@@ -19,6 +19,7 @@ export const pt: Translations = {
   "Rule": "Regra",
   "Showing state labels": "Mostrando rótulos de estado",
   "States": "Estados",
+  "Transition Patterns": "Padrões de Transição",
   "Value is too long to parse; character length must be less [...]": "O valor é muito longo para analisar; comprimento de caractere deve ser menor ou igual a:",
   "Value must be a number": "O valor deve ser um número",
   "Value should be equal to:": "O valor deve ser igual a:",

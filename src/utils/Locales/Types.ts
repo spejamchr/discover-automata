@@ -30,6 +30,7 @@ const plainTextTranlations = [
   'Showing state labels',
   'States',
   'Value is too long to parse; character length must be less [...]',
+  'Transition Patterns',
   'Value must be a number',
   'Value should be equal to:',
   'Value should be greater than or equal to:',
