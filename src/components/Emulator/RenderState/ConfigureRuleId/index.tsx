@@ -1,9 +1,11 @@
 import { always } from '@kofno/piper';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { whenLER } from '../../../../utils/Extensions';
 import T from '../../../../utils/Locales/T';
 import Button from '../../../Button';
+import ValidationError from '../../../ValidationError';
 import Store from '../../Store';
 import RuleIdSize from './RuleIdSize';
 
@@ -18,10 +20,14 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
         <T kind="Rule" /> <RuleIdSize store={store} />
       </span>
     </label>
-    <span className={`flex max-w-full items-center transition-all duration-500 ease-in-out`}>
+    <span className={`flex max-w-full items-center`}>
       <input
         id="rule"
-        className={`min-w-[248px] font-mono`}
+        className={clsx(`min-w-[248px] rounded font-mono transition-all duration-500 ease-in-out`, {
+          'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200': store.validRule
+            .map(always(false))
+            .getOrElseValue(true),
+        })}
         style={{
           width: `${Math.max(
             store.maxRuleId.map((r) => r.toString().length).getOrElseValue(12) + 6,
@@ -42,10 +48,7 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
         <T kind="Randomize" />
       </Button>
     </span>
-    {store.ruleId.cata({
-      Ok: () => <></>,
-      Err: (e) => <span>{JSON.stringify(e)}</span>,
-    })}
+    <ValidationError errorable={store.validRule} />
   </span>
 );
 

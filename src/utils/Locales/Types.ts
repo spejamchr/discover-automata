@@ -23,10 +23,17 @@ const plainTextTranlations = [
   'Hiding state labels',
   'Neighbors',
   'One-dimensional Cellular Automata',
+  'Overflow Error: please use smaller numbers',
   'Randomize',
   'Rule',
   'Showing state labels',
   'States',
+  'Value must be a number',
+  'Value should be equal to:',
+  'Value should be greater than or equal to:',
+  'Value should be greater than:',
+  'Value should be less than or equal to:',
+  'Value should be less than:',
   'maximum digits:',
 ] as const;
 

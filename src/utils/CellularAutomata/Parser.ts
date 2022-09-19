@@ -1,6 +1,6 @@
 import { parseIntR } from '@execonline-inc/numbers';
 import { ok } from 'resulty';
-import { ConfigResult } from '../../components/Emulator/Types';
+import { ConfigError, ConfigResult } from '../../components/Emulator/Types';
 import { bigLog10, bigPow, parseBigIntR } from '../BigIntExt';
 import { whenBetweenByR, whenBetweenR, whenByGER, whenByLER, whenGER } from '../Extensions';
 import {
@@ -33,9 +33,22 @@ export const parseNeighbors = (userNeighbors: ReadonlyArray<number>): ConfigResu
     .andThen(whenBetweenByR(minConsiderableNeighbors, maxConsiderableNeighbors, (n) => n.length))
     .map((a) => a.sort());
 
+export interface StringTooLongError {
+  kind: 'string-too-long-error';
+  length: number;
+  max: number;
+}
+
+export const stringTooLongError = (str: string, max: number): StringTooLongError => ({
+  kind: 'string-too-long-error',
+  length: str.length,
+  max,
+});
+
 export const parseRuleId = (userRuleId: string): ConfigResult<bigint> =>
   okC(userRuleId)
     .andThen(whenByLER(maxConsiderableRuleIdLength, (s) => s.length))
+    .mapError<ConfigError>(() => stringTooLongError(userRuleId, maxConsiderableRuleIdLength))
     .andThen(parseBigIntR)
     .andThen(whenGER(minRuleId));
 

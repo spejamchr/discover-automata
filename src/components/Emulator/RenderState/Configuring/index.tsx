@@ -1,3 +1,5 @@
+import { always } from '@kofno/piper';
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { ok } from 'resulty';
@@ -11,6 +13,7 @@ import { makeColorPicker } from '../../../../utils/ColorPicker';
 import T from '../../../../utils/Locales/T';
 import { shuffle } from '../../../../utils/Shuffle';
 import Button from '../../../Button';
+import ValidationError from '../../../ValidationError';
 import Store from '../../Store';
 
 interface Props {
@@ -50,6 +53,10 @@ const Configuring: React.FC<Props> = ({ store }) => {
           <T kind="States" /> ({store.minStates} - {store.maxStates})
         </span>
         <input
+          className={clsx(`min-w-[248px] rounded font-mono`, {
+            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
+              store.validStates.map(always(false)).getOrElseValue(true),
+          })}
           type="number"
           min={minConsiderableStates}
           max={store.maxStates}
@@ -69,10 +76,7 @@ const Configuring: React.FC<Props> = ({ store }) => {
         >
           <T kind="Randomize" />
         </Button>
-        {store.states.cata({
-          Ok: () => <></>,
-          Err: (e) => <span>{JSON.stringify(e)}</span>,
-        })}
+        <ValidationError errorable={store.validStates} />
       </label>
 
       <div>
@@ -88,7 +92,10 @@ const Configuring: React.FC<Props> = ({ store }) => {
                   ? colorPicker(store.automata.states - 1)[0]
                   : undefined,
               }}
-              className={`${isNeighborSelected(store, i) ? 'border-2' : null} h-8 w-8 p-0`}
+              className={clsx(`h-8 w-8 p-0`, {
+                'border-2': isNeighborSelected(store, i),
+                'bg-rose-200': store.validNeighbors.map(always(false)).getOrElseValue(true),
+              })}
               key={i}
               onClick={toggleNeighbor(store, i)}
             >
@@ -107,10 +114,7 @@ const Configuring: React.FC<Props> = ({ store }) => {
         >
           <T kind="Randomize" />
         </Button>
-        {store.neighbors.cata({
-          Ok: () => <></>,
-          Err: (e) => <span>{JSON.stringify(e)}</span>,
-        })}
+        <ValidationError errorable={store.validNeighbors} />
       </div>
     </div>
   );

@@ -10,7 +10,14 @@ import {
   serializedAutomataDecoder,
 } from '../../utils/CellularAutomata/Decoders';
 import { warn } from '@execonline-inc/logging';
-import { whenByLER } from '../../utils/Extensions';
+import {
+  whenBetweenByR,
+  whenBetweenR,
+  whenByEQR,
+  whenByLER,
+  whenEQR,
+  whenGER,
+} from '../../utils/Extensions';
 import {
   automataWithRuleIdPassesMinMaxChecks,
   calcMaxNeighbors,
@@ -82,6 +89,9 @@ class Store {
       parseNeighbors: computed,
       parseStatesAndNeighbors: computed,
       parseRuleId: computed,
+      validStates: computed,
+      validNeighbors: computed,
+      validRule: computed,
       states: computed,
       neighbors: computed,
       ruleId: computed,
@@ -168,6 +178,22 @@ class Store {
     return parseNeighbors(this.userNeighbors);
   }
 
+  get validStates(): ConfigResult<Count> {
+    return this.parseStates.andThen(
+      this.minStates === this.maxStates
+        ? whenEQR(this.minStates)
+        : whenBetweenR(this.minStates, this.maxStates),
+    );
+  }
+
+  get validNeighbors(): ConfigResult<Neighbors> {
+    return this.parseNeighbors.andThen(
+      this.minNeighbors === this.maxNeighbors
+        ? whenByEQR(this.minNeighbors, (n) => n.length)
+        : whenBetweenByR(this.minNeighbors, this.maxNeighbors, (n) => n.length),
+    );
+  }
+
   get parseStatesAndNeighbors(): ConfigResult<{ states: number; neighbors: Neighbors }> {
     return ok<ConfigError, {}>({})
       .assign('states', this.parseStates)
@@ -177,6 +203,14 @@ class Store {
 
   get parseRuleId(): ConfigResult<bigint> {
     return parseRuleId(this.userRuleId);
+  }
+
+  get validRule(): ConfigResult<bigint> {
+    return this.parseRuleId.andThen(
+      this.maxRuleId
+        .map((max) => (minRuleId === max ? whenEQR(minRuleId) : whenBetweenR(minRuleId, max)))
+        .getOrElse(() => whenGER(minRuleId)),
+    );
   }
 
   get parseAutomata(): ConfigResult<Automata> {

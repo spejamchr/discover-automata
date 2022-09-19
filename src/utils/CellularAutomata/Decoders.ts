@@ -95,6 +95,7 @@ export const maxConsiderableRuleIdLength: number = Math.max(
   ...[...Array(maxConsiderableStates - minConsiderableStates + 1)]
     .map((_, i) => i + minConsiderableStates)
     .map((s) => s ** maxNeighbors(s) * Math.log10(s))
+    .map((n) => 1.1 * n) // Give some buffer room
     .map(Math.floor),
 );
 
