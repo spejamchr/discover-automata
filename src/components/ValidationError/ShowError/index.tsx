@@ -47,8 +47,7 @@ const ShowError: React.FC<Props> = ({ error }) => {
     case 'string-too-long-error':
       return (
         <ErrorMsg>
-          Value is too long to parse, its character length must be less than or equal to:{' '}
-          {error.max}
+          <T kind="Value is too long to parse; character length must be less [...]" /> {error.max}
         </ErrorMsg>
       );
   }

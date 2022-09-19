@@ -15,11 +15,9 @@ interface Props {
 const RenderState: React.FC<Props> = ({ store }) => {
   return (
     <OnlyOnClient>
-      <div className={`flex`}>
-        <Configuring store={store} />
-        <Rules store={store} />
-      </div>
+      <Configuring store={store} />
       <ConfigureRuleId store={store} />
+      <Rules store={store} />
       <div className={`flex justify-center p-6 transition-all delay-150 duration-300 ease-in-out`}>
         <History key={serialize(store.automata)} emulatorStore={store} />
       </div>

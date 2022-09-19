@@ -16,6 +16,7 @@ const localeDecoder: Decoder<Locale> = oneOf([
 
 export const constrainToLocale = assertIs(localeDecoder);
 
+// Keep these lines less than 70 characters long
 const plainTextTranlations = [
   'Displaying in color',
   'Displaying in grayscale',
@@ -28,6 +29,7 @@ const plainTextTranlations = [
   'Rule',
   'Showing state labels',
   'States',
+  'Value is too long to parse; character length must be less [...]',
   'Value must be a number',
   'Value should be equal to:',
   'Value should be greater than or equal to:',

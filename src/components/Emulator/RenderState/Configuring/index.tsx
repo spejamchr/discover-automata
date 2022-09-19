@@ -37,47 +37,47 @@ const toggleNeighbor =
 const Configuring: React.FC<Props> = ({ store }) => {
   const colorPicker = makeColorPicker(store);
   return (
-    <div className={`shrink-0`}>
-      <div>
-        <Button onClick={store.toggleShowStateLabels}>
-          <T kind={store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'} />
-        </Button>
-      </div>
-      <div>
-        <Button onClick={store.toggleDisplayInColor}>
-          <T kind={store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'} />
-        </Button>
-      </div>
-      <label className={`block`}>
-        <span className={`block text-sm font-medium`}>
-          <T kind="States" /> ({store.minStates} - {store.maxStates})
+    <>
+      <div className={clsx(`flex shrink-0 items-center justify-between`)}>
+        <label className={`block`}>
+          <span className={`block text-sm font-medium`}>
+            <T kind="States" /> ({store.minStates} - {store.maxStates})
+          </span>
+          <input
+            className={clsx(`min-w-[248px] rounded font-mono`, {
+              'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
+                store.validStates.map(always(false)).getOrElseValue(true),
+            })}
+            type="number"
+            min={minConsiderableStates}
+            max={store.maxStates}
+            step="1"
+            value={store.states.map(String).getOrElseValue(store.userStates)}
+            onChange={(e) => store.setStates(e.target.value)}
+          />
+          <Button
+            onClick={() =>
+              ok(store.maxStates)
+                .map((max) => max - store.minStates)
+                .map((size) => Math.random() * size + store.minStates)
+                .map(Math.round)
+                .map(String)
+                .do(store.setStates)
+            }
+          >
+            <T kind="Randomize" />
+          </Button>
+          <ValidationError errorable={store.validStates} />
+        </label>
+        <span>
+          <Button onClick={store.toggleShowStateLabels}>
+            <T kind={store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'} />
+          </Button>
+          <Button onClick={store.toggleDisplayInColor}>
+            <T kind={store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'} />
+          </Button>
         </span>
-        <input
-          className={clsx(`min-w-[248px] rounded font-mono`, {
-            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
-              store.validStates.map(always(false)).getOrElseValue(true),
-          })}
-          type="number"
-          min={minConsiderableStates}
-          max={store.maxStates}
-          step="1"
-          value={store.states.map(String).getOrElseValue(store.userStates)}
-          onChange={(e) => store.setStates(e.target.value)}
-        />
-        <Button
-          onClick={() =>
-            ok(store.maxStates)
-              .map((max) => max - store.minStates)
-              .map((size) => Math.random() * size + store.minStates)
-              .map(Math.round)
-              .map(String)
-              .do(store.setStates)
-          }
-        >
-          <T kind="Randomize" />
-        </Button>
-        <ValidationError errorable={store.validStates} />
-      </label>
+      </div>
 
       <div>
         <span className={`block text-sm font-medium`}>
@@ -116,7 +116,7 @@ const Configuring: React.FC<Props> = ({ store }) => {
         </Button>
         <ValidationError errorable={store.validNeighbors} />
       </div>
-    </div>
+    </>
   );
 };
 
