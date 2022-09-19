@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import T from '../../utils/Locales/T';
+import Explanation from '../../components/Explanation';
 import {
   constrainToLocale,
   Locale,
@@ -32,9 +32,7 @@ const Home: NextPage<Props> = ({ locale }) => {
         </TranslatorContext.Consumer>
 
         <main>
-          <h1 className={`pb-2 text-lg`}>
-            <T kind={'One-dimensional Cellular Automata'} />
-          </h1>
+          <Explanation />
         </main>
       </div>
     </TranslatorContext.Provider>
