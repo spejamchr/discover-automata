@@ -1,10 +1,12 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { bigPow } from '../../../../../utils/BigIntExt';
-import { State } from '../../../../../utils/CellularAutomata/Types';
+import { Neighbors, State } from '../../../../../utils/CellularAutomata/Types';
 import { fromBase } from '../../../../../utils/IntBase';
+import { range } from '../../../../../utils/Range';
 import Button from '../../../../Button';
 import Cell from '../../../Generations/Row/Cell';
+import EmptyCell from '../../../Generations/Row/EmptyCell';
 import Store from '../../../Store';
 
 interface Props {
@@ -30,17 +32,33 @@ const incrementResultState =
       .do(store.setAutomataIfNeeded);
   };
 
+const neighborRange = (neighbors: Neighbors): Array<number> =>
+  range(Math.min(0, Math.min(...neighbors)), Math.max(0, Math.max(...neighbors)));
+
 const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
   <Button
     className={`m-1 flex flex-col items-center`}
     onClick={incrementResultState(neighborStates, state, store)}
   >
     <span className={`flex`}>
-      {neighborStates.map((s, i) => (
-        <Cell key={i} state={s} colorPicker={store.colorPicker} />
-      ))}
+      {neighborRange(store.automata.neighbors).map((i) => {
+        const ni = store.automata.neighbors.indexOf(i);
+        if (ni === -1) {
+          return <EmptyCell className="rounded-md border border-white" key={i} />;
+        } else {
+          return <Cell key={i} state={neighborStates[ni]} colorPicker={store.colorPicker} />;
+        }
+      })}
     </span>
-    <Cell state={state} colorPicker={store.colorPicker} />
+    <span className={`flex`}>
+      {neighborRange(store.automata.neighbors).map((i) => {
+        if (i === 0) {
+          return <Cell state={state} colorPicker={store.colorPicker} />;
+        } else {
+          return <EmptyCell key={i} />;
+        }
+      })}
+    </span>
   </Button>
 );
 
