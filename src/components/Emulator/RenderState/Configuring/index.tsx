@@ -37,14 +37,15 @@ const toggleNeighbor =
 const Configuring: React.FC<Props> = ({ store }) => {
   const colorPicker = makeColorPicker(store);
   return (
-    <>
-      <div className={clsx(`flex shrink-0 items-center justify-between`)}>
-        <label className={`block`}>
-          <span className={`block text-sm font-medium`}>
+    <div className={clsx(`flex shrink-0 flex-wrap items-center justify-between`)}>
+      <span className={clsx(`flex`)}>
+        <span>
+          <label htmlFor="states" className={`block text-sm font-medium`}>
             <T kind="States" /> ({store.minStates} - {store.maxStates})
-          </span>
+          </label>
           <input
-            className={clsx(`min-w-[248px] rounded font-mono`, {
+            id="states"
+            className={clsx('w-[10ch] rounded font-mono', {
               'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
                 store.validStates.map(always(false)).getOrElseValue(true),
             })}
@@ -68,55 +69,56 @@ const Configuring: React.FC<Props> = ({ store }) => {
             <T kind="Randomize" />
           </Button>
           <ValidationError errorable={store.validStates} />
-        </label>
-        <span>
-          <Button onClick={store.toggleShowStateLabels}>
-            <T kind={store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'} />
-          </Button>
-          <Button onClick={store.toggleDisplayInColor}>
-            <T kind={store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'} />
-          </Button>
         </span>
-      </div>
 
-      <div>
-        <span className={`block text-sm font-medium`}>
-          <T kind="Neighbors" /> ({store.minNeighbors} - {store.maxNeighbors})
+        <span className="ml-12">
+          <span className={`block text-sm font-medium`}>
+            <T kind="Neighbors" /> ({store.minNeighbors} - {store.maxNeighbors})
+          </span>
+          {[...Array(maxNeighborIndex - minNeighborIndex + 1)]
+            .map((_, i) => i + minNeighborIndex)
+            .map((i) => (
+              <Button
+                style={{
+                  borderColor: isNeighborSelected(store, i)
+                    ? colorPicker(store.automata.states - 1)[0]
+                    : undefined,
+                }}
+                className={clsx(`h-8 w-8 p-0`, {
+                  'border-2': isNeighborSelected(store, i),
+                  'bg-rose-200': store.validNeighbors.map(always(false)).getOrElseValue(true),
+                })}
+                key={i}
+                onClick={toggleNeighbor(store, i)}
+              >
+                {i}
+              </Button>
+            ))}
+          <Button
+            onClick={() =>
+              ok(store.maxNeighbors)
+                .map((max) => max - store.minNeighbors)
+                .map((size) => Math.random() * size + store.minNeighbors)
+                .map(Math.round)
+                .map((n) => shuffle([-3, -2, -1, 0, 1, 2, 3]).slice(0, n))
+                .do(store.setNeighbors)
+            }
+          >
+            <T kind="Randomize" />
+          </Button>
+          <ValidationError errorable={store.validNeighbors} />
         </span>
-        {[...Array(maxNeighborIndex - minNeighborIndex + 1)]
-          .map((_, i) => i + minNeighborIndex)
-          .map((i) => (
-            <Button
-              style={{
-                borderColor: isNeighborSelected(store, i)
-                  ? colorPicker(store.automata.states - 1)[0]
-                  : undefined,
-              }}
-              className={clsx(`h-8 w-8 p-0`, {
-                'border-2': isNeighborSelected(store, i),
-                'bg-rose-200': store.validNeighbors.map(always(false)).getOrElseValue(true),
-              })}
-              key={i}
-              onClick={toggleNeighbor(store, i)}
-            >
-              {i}
-            </Button>
-          ))}
-        <Button
-          onClick={() =>
-            ok(store.maxNeighbors)
-              .map((max) => max - store.minNeighbors)
-              .map((size) => Math.random() * size + store.minNeighbors)
-              .map(Math.round)
-              .map((n) => shuffle([-3, -2, -1, 0, 1, 2, 3]).slice(0, n))
-              .do(store.setNeighbors)
-          }
-        >
-          <T kind="Randomize" />
+      </span>
+
+      <span>
+        <Button onClick={store.toggleShowStateLabels}>
+          <T kind={store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'} />
         </Button>
-        <ValidationError errorable={store.validNeighbors} />
-      </div>
-    </>
+        <Button onClick={store.toggleDisplayInColor}>
+          <T kind={store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'} />
+        </Button>
+      </span>
+    </div>
   );
 };
 
