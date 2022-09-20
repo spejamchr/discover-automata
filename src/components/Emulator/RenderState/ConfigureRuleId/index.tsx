@@ -15,14 +15,14 @@ interface Props {
 
 const ConfigureRuleId: React.FC<Props> = ({ store }) => (
   <span>
-    <label className={`block`} htmlFor="rule">
+    <label className={`block`} htmlFor="ruleInput">
       <span className={`block text-sm font-medium`}>
-        <T kind="Rule" /> <RuleIdSize store={store} />
+        <T kind="Rule Number" /> <RuleIdSize store={store} />
       </span>
     </label>
     <span className={`flex max-w-full items-center`}>
       <input
-        id="rule"
+        id="ruleInput"
         className={clsx(`min-w-[248px] rounded font-mono transition-all duration-500 ease-in-out`, {
           'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200': store.validRule
             .map(always(false))

@@ -8,7 +8,7 @@ import Store from './Store';
 interface Props {}
 
 class Emulator extends React.Component<Props> {
-  store = new Store();
+  store = new Store(false, true);
 
   componentDidMount(): void {
     windowGet('addEventListener').do((fn) => fn('popstate', this.store.setAutomataFromUrl));

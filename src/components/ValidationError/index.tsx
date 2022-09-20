@@ -1,5 +1,5 @@
 import { always } from '@kofno/piper';
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { ConfigResult } from '../Emulator/Types';
 import ShowError from './ShowError';
 

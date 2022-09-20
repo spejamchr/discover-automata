@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { ComparerError } from '../../../utils/Extensions';
 import T from '../../../utils/Locales/T';
 import { TranslationKey } from '../../../utils/Locales/Types';

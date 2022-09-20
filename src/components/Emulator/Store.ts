@@ -54,14 +54,20 @@ export interface UserAutomataPieces {
 }
 
 class Store {
-  automata: Automata = firstAutomata();
-  userStates: string = this.automata.states.toString();
-  userNeighbors: ReadonlyArray<number> = this.automata.neighbors;
-  userRuleId: string = this.automata.ruleId.toString();
-  showStateLabels: boolean = false;
-  displayInColor: boolean = true;
+  automata: Automata;
+  userStates: string;
+  userNeighbors: ReadonlyArray<number>;
+  userRuleId: string;
 
-  constructor() {
+  constructor(
+    public showStateLabels: boolean,
+    public displayInColor: boolean,
+    automata?: Automata,
+  ) {
+    this.automata = automata || firstAutomata();
+    this.userStates = this.automata.states.toString();
+    this.userNeighbors = this.automata.neighbors;
+    this.userRuleId = this.automata.ruleId.toString();
     makeObservable(this, {
       userStates: observable,
       userNeighbors: observable,
