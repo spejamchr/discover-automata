@@ -21,6 +21,8 @@ const comparerErrorMsg = (error: ComparerError): TranslationKey => {
       return 'Value should be greater than or equal to:';
     case '===':
       return 'Value should be equal to:';
+    case '!==':
+      return 'Value must not be equal to:';
   }
 };
 

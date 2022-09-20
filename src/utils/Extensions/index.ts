@@ -3,9 +3,10 @@ import Decoder, { succeed } from 'jsonous';
 import { just, Maybe, nothing } from 'maybeasy';
 import { err, ok, Result } from 'resulty';
 
-type Comparer = '<' | '<=' | '===' | '>' | '>=';
+type Comparer = '<' | '<=' | '===' | '!==' | '>' | '>=';
 
-export type Int = Number | BigInt;
+// using `number | bigint | string` here breaks things. I don't understand why.
+export type Int = Number | BigInt | String;
 
 export interface ComparerError {
   kind: 'comparer-error';
@@ -22,6 +23,8 @@ const comparison = <T extends Int>(comparer: Comparer, target: T, value: T): boo
       return value <= target;
     case '===':
       return value === target;
+    case '!==':
+      return value !== target;
     case '>':
       return value > target;
     case '>=':
@@ -45,6 +48,7 @@ const whenComparedR =
 export const whenLTR = whenComparedR('<');
 export const whenLER = whenComparedR('<=');
 export const whenEQR = whenComparedR('===');
+export const whenNER = whenComparedR('!==');
 export const whenGTR = whenComparedR('>');
 export const whenGER = whenComparedR('>=');
 
@@ -66,6 +70,7 @@ const whenComparedByR =
 export const whenByLTR = whenComparedByR('<');
 export const whenByLER = whenComparedByR('<=');
 export const whenByEQR = whenComparedByR('===');
+export const whenByNER = whenComparedByR('!==');
 export const whenByGTR = whenComparedByR('>');
 export const whenByGER = whenComparedByR('>=');
 
@@ -90,6 +95,7 @@ const whenComparedD =
 export const whenLTD = whenComparedD('<');
 export const whenLED = whenComparedD('<=');
 export const whenEQD = whenComparedD('===');
+export const whenNED = whenComparedD('!==');
 export const whenGTD = whenComparedD('>');
 export const whenGED = whenComparedD('>=');
 
@@ -112,6 +118,7 @@ const whenComparedByD =
 export const whenByLTD = whenComparedByD('<');
 export const whenByLED = whenComparedByD('<=');
 export const whenByEQD = whenComparedByD('===');
+export const whenByNED = whenComparedByD('!==');
 export const whenByGTD = whenComparedByD('>');
 export const whenByGED = whenComparedByD('>=');
 
@@ -129,6 +136,7 @@ const whenComparedM =
 export const whenGTM = whenComparedM('>');
 export const whenGEM = whenComparedM('>=');
 export const whenEQM = whenComparedM('===');
+export const whenNEM = whenComparedM('!==');
 export const whenLTM = whenComparedM('<');
 export const whenLEM = whenComparedM('<=');
 

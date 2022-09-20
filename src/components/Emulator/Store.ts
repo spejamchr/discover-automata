@@ -35,7 +35,7 @@ import { fromBaseBig } from '../../utils/IntBase';
 const firstAutomata = () =>
   ok<unknown, 'location'>('location')
     .andThen(windowGet)
-    .map((l) => l.hash)
+    .map((l) => l.hash || '#2.7.110')
     .andThen(serializedAutomataDecoder.decodeAny)
     .mapError((s) => `Error deserializing automata from hash: ${JSON.stringify(s)}`)
     .elseDo(warn)
@@ -119,7 +119,7 @@ class Store {
   setAutomataFromUrl = (): void => {
     ok<unknown, 'location'>('location')
       .andThen(windowGet)
-      .map((l) => l.hash)
+      .map((l) => l.hash || '#2.7.110')
       .andThen(serializedAutomataDecoder.decodeAny)
       .mapError((s) => `Error deserializing automata from hash: ${JSON.stringify(s)}`)
       .elseDo(warn)

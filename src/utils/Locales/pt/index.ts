@@ -22,6 +22,7 @@ export const pt: Translations = {
   "Transition Patterns": "Padrões de Transição",
   "Value is too long to parse; character length must be less [...]": "O valor é muito longo para analisar; comprimento de caractere deve ser menor ou igual a:",
   "Value must be a number": "O valor deve ser um número",
+  "Value must not be equal to:": "O valor não deve ser igual a:",
   "Value should be equal to:": "O valor deve ser igual a:",
   "Value should be greater than or equal to:": "O valor deve ser maior ou igual a:",
   "Value should be greater than:": "O valor deve ser maior que:",

@@ -44,7 +44,7 @@ const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
       {neighborRange(store.automata.neighbors).map((i) => {
         const ni = store.automata.neighbors.indexOf(i);
         if (ni === -1) {
-          return <EmptyCell className="rounded-md border border-white" key={i} />;
+          return <EmptyCell key={i} className="rounded-md border border-white" />;
         } else {
           return <Cell key={i} state={neighborStates[ni]} colorPicker={store.colorPicker} />;
         }
@@ -53,7 +53,7 @@ const Rule: React.FC<Props> = ({ neighborStates, state, store }) => (
     <span className={`flex`}>
       {neighborRange(store.automata.neighbors).map((i) => {
         if (i === 0) {
-          return <Cell state={state} colorPicker={store.colorPicker} />;
+          return <Cell key={i} state={state} colorPicker={store.colorPicker} />;
         } else {
           return <EmptyCell key={i} />;
         }
