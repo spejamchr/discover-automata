@@ -37,8 +37,8 @@ class Explanation extends React.Component<Props> {
         <p>
           <T
             kind="Read on, or skip straight to <link>the Emulator</link>."
-            link={(content) => (
-              <Link href={'emulate'}>
+            link={(content, t) => (
+              <Link href={`/${t.locale}/emulate`}>
                 <a>{content}</a>
               </Link>
             )}

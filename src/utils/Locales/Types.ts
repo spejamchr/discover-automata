@@ -66,7 +66,7 @@ interface PlainTextTranslation {
 
 export type PlainTextKey = PlainTextTranslation['kind'];
 
-export type PlainTextTranslator = (kind: PlainTextKey) => string;
+export type PlainTextTranslator = ((kind: PlainTextKey) => string) & { locale: Locale };
 
 type Replacer = React.ReactElement;
 
@@ -122,10 +122,11 @@ const allTranslations: AllTranslations = {
   pt,
 };
 
-const makePlainTextTranslator =
-  (locale: Locale): PlainTextTranslator =>
-  (kind) =>
-    allTranslations[locale][kind];
+const makePlainTextTranslator = (locale: Locale): PlainTextTranslator => {
+  const plainTextTranslator = (kind: PlainTextKey) => allTranslations[locale][kind];
+  plainTextTranslator.locale = locale;
+  return plainTextTranslator;
+};
 
 const replaceString =
   (tag: string, replacer: Replacer) =>
