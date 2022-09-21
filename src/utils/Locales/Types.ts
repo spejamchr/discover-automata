@@ -1,7 +1,8 @@
 import { stringLiteral } from '@execonline-inc/decoders';
 import Decoder, { oneOf } from 'jsonous';
-import React from 'react';
+import * as React from 'react';
 import { assertIs } from '../Assert';
+import { range } from '../Range';
 import { en } from './en';
 import { pt } from './pt';
 
@@ -54,12 +55,65 @@ const plainTextTranlations = [
   `Value should be less than:`,
   `What's this all about?`,
   `When using a (good) video game emulator, the video game [...]`,
+  `https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life`,
   `maximum digits:`,
 ] as const;
 
-export type TranslationKey = typeof plainTextTranlations[number];
+interface PlainTextTranslation {
+  kind: typeof plainTextTranlations[number];
+  translation: string;
+}
 
-export type Translations = { [K in TranslationKey]: string };
+export type PlainTextKey = PlainTextTranslation['kind'];
+
+export type PlainTextTranslator = (kind: PlainTextKey) => string;
+
+type Replacer = React.ReactElement;
+
+type Replacement<key extends string> = `{{${key}}}`;
+
+type Replaces<key extends string> = `${string}${Replacement<key>}${string}`;
+
+type Tagger = (node: React.ReactNode, t: PlainTextTranslator) => Replacer;
+
+type Tagged<key extends string> = `<${key}>${string}</${key}>`;
+
+type Tags<key extends string> = `${string}${Tagged<key>}${string}`;
+
+// Keep these lines less than 70 characters long and sorted by kind
+type ParameterizedTranslation =
+  | {
+      kind: 'Cellular automata are a kind of zero-player game [...]';
+      link: Tagger;
+      translation: Tags<'link'>;
+    }
+  | {
+      kind: 'In general, there are <link>many, many types of [...]';
+      link: Tagger;
+      translation: Tags<'link'>;
+    }
+  | {
+      kind: 'Once the number of states and the neighborhood [...]';
+      tag: Tagger;
+      nextState: Replacer;
+      translation: Replaces<'nextState'> & Tags<'tag'>;
+    }
+  | {
+      kind: 'Read on, or skip straight to <link>the Emulator</link>.';
+      link: Tagger;
+      translation: Tags<'link'>;
+    }
+  | {
+      kind: 'This representation of the transition rules as a [...]';
+      link: Tagger;
+      translation: Tags<'link'>;
+    };
+
+type PlainTextTranslations = { [K in PlainTextTranslation['kind']]: string };
+
+type ParameterizedTranslations = { [K in ParameterizedTranslation as K['kind']]: K['translation'] };
+
+export type Translations = PlainTextTranslations & ParameterizedTranslations;
 
 type AllTranslations = { [L in Locale]: Translations };
 
@@ -68,22 +122,151 @@ const allTranslations: AllTranslations = {
   pt,
 };
 
-export interface TProps {
-  kind: TranslationKey;
-}
+const makePlainTextTranslator =
+  (locale: Locale): PlainTextTranslator =>
+  (kind) =>
+    allTranslations[locale][kind];
 
-export type TComponent = React.FC<TProps> & { fn: (kind: TranslationKey) => string };
+const replaceString =
+  (tag: string, replacer: Replacer) =>
+  (replaceable: string | Replacer): Array<string | Replacer> => {
+    if (typeof replaceable === 'object') return [replaceable];
+    const strings = replaceable.split(`{{${tag}}}`);
+    return range(strings.length * 2 - 1).map((i) => (i % 2 === 0 ? strings[i / 2] : replacer));
+  };
 
-const translate = (locale: Locale) => {
-  const translations = allTranslations[locale];
-  return (kind: TranslationKey): string => translations[kind];
+const doReplace = (
+  tag: string,
+  replaceable: ReadonlyArray<string | Replacer>,
+  replacer: Replacer,
+): Array<string | Replacer> => {
+  return replaceable.flatMap(replaceString(tag, replacer));
 };
 
-export const makeTranslator = <L extends Locale>(locale: L): TComponent => {
-  const fn = translate(locale);
-  const Translator = ({ kind }: TProps) => React.createElement(React.Fragment, null, fn(kind));
+// Argh! So imperative!
+const doTag = (
+  tag: string,
+  tagged: ReadonlyArray<string | Replacer>,
+  fn: Tagger,
+  t: PlainTextTranslator,
+) => {
+  const first: Array<string | Replacer> = [];
+  const body: Array<string | Replacer> = [];
+  const last: Array<string | Replacer> = [];
+
+  const open = `<${tag}>`;
+  const close = `</${tag}>`;
+
+  let i = 0;
+  while (i < tagged.length) {
+    const e = tagged[i];
+    i++;
+    if (typeof e === 'string') {
+      if (e.indexOf(open) === -1) {
+        first.push(e);
+      } else {
+        const [p, ...ms] = e.split(open);
+        first.push(p);
+        const m = ms.join('');
+        if (m.indexOf(close) === -1) {
+          body.push(m);
+        } else {
+          const [b, ...l] = m.split(close);
+          body.push(b);
+          last.push(l.join(''));
+        }
+        break;
+      }
+    } else {
+      first.push(e);
+    }
+  }
+
+  if (last.length === 0) {
+    while (i < tagged.length) {
+      const e = tagged[i];
+      i++;
+      if (typeof e === 'string') {
+        if (e.indexOf(close) === -1) {
+          body.push(e);
+        } else {
+          const [b, ...l] = e.split(close);
+          body.push(b);
+          last.push(l.join(''));
+          break;
+        }
+      } else {
+        body.push(e);
+      }
+    }
+  }
+
+  while (i < tagged.length) {
+    last.push(tagged[i]);
+    i++;
+  }
+
+  const element = fn(React.createElement(React.Fragment, {}, ...body), t);
+
+  return [...first, element, ...last];
+};
+
+const parameterizeTranslation = (
+  locale: Locale,
+  arg: ParameterizedTranslation,
+): React.ReactNode => {
+  const plainTextTranslator = makePlainTextTranslator(locale);
+  switch (arg.kind) {
+    case 'Cellular automata are a kind of zero-player game [...]':
+    case 'In general, there are <link>many, many types of [...]':
+    case 'Read on, or skip straight to <link>the Emulator</link>.':
+    case 'This representation of the transition rules as a [...]': {
+      const tagged = doTag('link', [arg.translation], arg.link, plainTextTranslator);
+      return React.createElement(React.Fragment, {}, ...tagged);
+    }
+    case 'Once the number of states and the neighborhood [...]': {
+      const replaced = doReplace('nextState', [arg.translation], arg.nextState);
+      const tagged = doTag('tag', replaced, arg.tag, plainTextTranslator);
+      return React.createElement(React.Fragment, {}, ...tagged);
+    }
+  }
+};
+
+type PlainTextProps = Omit<PlainTextTranslation, 'translation'>;
+
+type ParameterizedProps2 = {
+  [K in ParameterizedTranslation as K['kind']]: Omit<K, 'translation'>;
+};
+type ParameterizedProps = ParameterizedProps2[keyof ParameterizedProps2];
+
+const isPlainTextArg = (arg: { kind: string }): arg is PlainTextProps => {
+  return plainTextTranlations.find((t) => t === arg.kind) !== undefined;
+};
+
+export type TranslationProps = PlainTextProps | ParameterizedProps;
+
+function translate(locale: Locale, arg: ParameterizedProps): React.ReactNode;
+function translate(locale: Locale, arg: PlainTextProps): string;
+function translate(locale: Locale, arg: TranslationProps) {
+  if (isPlainTextArg(arg)) {
+    return allTranslations[locale][arg.kind];
+  } else {
+    return parameterizeTranslation(locale, {
+      ...arg,
+      translation: allTranslations[locale][arg.kind],
+    } as ParameterizedTranslation); // DANGER using as...
+  }
+}
+
+export const makeTranslator = <L extends Locale>(locale: L) => {
+  const Translator = (args: TranslationProps): React.ReactElement => {
+    if (isPlainTextArg(args)) {
+      return React.createElement(React.Fragment, null, translate(locale, args));
+    }
+    return React.createElement(React.Fragment, null, translate(locale, args));
+  };
   Translator.displayName = `Translator[${locale}]`;
-  Translator.fn = fn;
+  Translator.fn = (kind: PlainTextKey): string => allTranslations[locale][kind];
   return Translator;
 };
 

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { ComparerError } from '../../../utils/Extensions';
 import T from '../../../utils/Locales/T';
-import { TranslationKey } from '../../../utils/Locales/Types';
+import { PlainTextKey } from '../../../utils/Locales/Types';
 import { ConfigError } from '../../Emulator/Types';
 import ErrorMsg from './ErrorMsg';
 
@@ -9,7 +9,7 @@ interface Props {
   error: ConfigError;
 }
 
-const comparerErrorMsg = (error: ComparerError): TranslationKey => {
+const comparerErrorMsg = (error: ComparerError): PlainTextKey => {
   switch (error.comparer) {
     case '<':
       return 'Value should be less than:';

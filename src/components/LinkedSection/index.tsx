@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import React from 'react';
-import { TranslationKey, TranslatorContext } from '../../utils/Locales/Types';
+import { PlainTextKey, TranslatorContext } from '../../utils/Locales/Types';
 
 type Heading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
 
 interface Props {
   h: Heading;
-  kind: TranslationKey;
+  kind: PlainTextKey;
 }
 
 const textToId = (text: string): string => text.replaceAll(/\s+/g, '_').toLowerCase();

@@ -35,20 +35,25 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          Read on, or skip straight to{' '}
-          <Link href={'emulate'}>
-            <a>the Emulator</a>
-          </Link>
-          .
+          <T
+            kind="Read on, or skip straight to <link>the Emulator</link>."
+            link={(content) => (
+              <Link href={'emulate'}>
+                <a>{content}</a>
+              </Link>
+            )}
+          />
         </p>
 
         <LinkedSection h="h2" kind="One-dimensional Cellular Automata" />
 
         <p>
-          Cellular automata are a kind of zero-player game played on a "universe" of tiled "cells."
-          Each automaton has its own configuration, and can evolve a universe through many
-          generations. The most well-known cellular automaton is probably{' '}
-          <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life</a>.
+          <T
+            kind="Cellular automata are a kind of zero-player game [...]"
+            link={(content, t) => (
+              <a href={t('https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life')}>{content}</a>
+            )}
+          />
         </p>
 
         <p>
@@ -111,11 +116,10 @@ class Explanation extends React.Component<Props> {
         </span>
 
         <p>
-          In general, there are{' '}
-          <a href="https://cell-auto.com/neighbourhood/">many, many types of neighborhoods</a> that
-          can be used to create cellular automata (including neighboorhoods that can change with
-          time). However, neighborhoods used on this site are limited to a selection of the current
-          cell and several of its closest neighbors on each side.
+          <T
+            kind="In general, there are <link>many, many types of [...]"
+            link={(content) => <a href="https://cell-auto.com/neighbourhood/">{content}</a>}
+          />
         </p>
 
         <Neighbors store={this.store} />
@@ -123,11 +127,11 @@ class Explanation extends React.Component<Props> {
         <LinkedSection h="h3" kind="Transition Rules" />
 
         <p>
-          Once the number of states and the neighborhood have been selected, the transition rules
-          must be determined. For every possible combination of states in the given neighborhood,
-          the resulting states must be chosen. As an example, here is the transition rule saying
-          that if all of a cell's neighbors are <code>0</code> then the cell should become{' '}
-          <code>{this.store.automata.rules[0]}</code>:
+          <T
+            kind="Once the number of states and the neighborhood [...]"
+            tag={(content) => <code>{content}</code>}
+            nextState={<code>{this.store.automata.rules[0]}</code>}
+          />
         </p>
 
         <Rule ruleIndex={0} state={this.store.automata.rules[0]} store={this.store} />
@@ -141,8 +145,12 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          (The encoding for the transition rules as a "rule number" uses the{' '}
-          <a href="https://en.wikipedia.org/wiki/Wolfram_code">Wolfram Code</a>.)
+          (
+          <T
+            kind="This representation of the transition rules as a [...]"
+            link={(content) => <a href="https://en.wikipedia.org/wiki/Wolfram_code">{content}</a>}
+          />
+          )
         </p>
 
         <LinkedSection h="h2" kind="Emulation" />
