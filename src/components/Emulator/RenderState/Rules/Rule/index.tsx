@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { bigPow } from '../../../../../utils/BigIntExt';
 import { Neighbors, State } from '../../../../../utils/CellularAutomata/Types';
+import { whenNEM } from '../../../../../utils/Extensions';
 import { toBase } from '../../../../../utils/IntBase';
 import { range } from '../../../../../utils/Range';
 import Button from '../../../../Button';
@@ -48,23 +49,34 @@ const Rule: React.FC<Props> = ({ ruleIndex, state, store }) => {
       onClick={incrementResultState(ruleIndex, state, store)}
     >
       <span className={`flex`}>
-        {neighborRange(store.automata.neighbors).map((i) => {
-          const ni = store.automata.neighbors.indexOf(i);
-          if (ni === -1) {
-            return <EmptyCell key={i} className="rounded-md border border-white" />;
-          } else {
-            return <Cell key={i} state={neighborStates[ni]} colorPicker={store.colorPicker} />;
-          }
-        })}
+        {neighborRange(store.automata.neighbors).map((i) =>
+          whenNEM(-1)(store.automata.neighbors.indexOf(i))
+            .map((ni) => (
+              <span className="m-0.5 border border-black">
+                <Cell key={i} state={neighborStates[ni]} colorPicker={store.colorPicker} />
+              </span>
+            ))
+            .getOrElse(() => (
+              <span className="m-0.5 border border-transparent">
+                <EmptyCell key={i} className="rounded-md border border-white" />
+              </span>
+            )),
+        )}
       </span>
       <span className={`flex`}>
-        {neighborRange(store.automata.neighbors).map((i) => {
-          if (i === 0) {
-            return <Cell key={i} state={state} colorPicker={store.colorPicker} />;
-          } else {
-            return <EmptyCell key={i} />;
-          }
-        })}
+        {neighborRange(store.automata.neighbors).map((i) =>
+          whenNEM(0)(i)
+            .map(() => (
+              <span className="m-0.5 border border-transparent">
+                <EmptyCell key={i} />
+              </span>
+            ))
+            .getOrElse(() => (
+              <span className="m-0.5 border border-black">
+                <Cell key={0} state={state} colorPicker={store.colorPicker} />
+              </span>
+            )),
+        )}
       </span>
     </Button>
   );
