@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
 import React from 'react';
@@ -5,6 +6,7 @@ import { automataCtor } from '../../utils/CellularAutomata';
 import T from '../../utils/Locales/T';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Row/Cell';
+import EmptyCell from '../Emulator/Generations/Row/EmptyCell';
 import EmulatorReactions from '../Emulator/RenderState/Configuring/History/EmulatorReactions';
 import Neighbors from '../Emulator/RenderState/Configuring/Neighbors';
 import Rule from '../Emulator/RenderState/Rules/Rule';
@@ -90,6 +92,11 @@ class Explanation extends React.Component<Props> {
         <span className="flex">
           {range(40).map((i) => (
             <Cell
+              className={clsx('lg:flex', {
+                hidden: i > 17,
+                'sm:flex': i < 30,
+                'md:flex': i < 38,
+              })}
               key={i}
               state={[1, 6, 7, 8, 13, 15, 18, 19, 22, 29, 30, 32, 36].indexOf(i) === -1 ? 0 : 1}
               colorPicker={this.store.colorPicker}
@@ -110,9 +117,29 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <span className="flex">
-          <Cell key={-1} state={0} colorPicker={this.store.colorPicker} />
-          <Cell key={0} state={0} colorPicker={this.store.colorPicker} />
-          <Cell key={1} state={0} colorPicker={this.store.colorPicker} />
+          {range(18).map((i) => (
+            <EmptyCell
+              key={i}
+              className={clsx('rounded-md border border-white bg-slate-300 lg:flex', {
+                hidden: i > 6,
+                'sm:flex': i < 13,
+                'md:flex': i < 17,
+              })}
+            />
+          ))}
+          <Cell state={0} colorPicker={this.store.colorPicker} />
+          <Cell state={0} colorPicker={this.store.colorPicker} />
+          <Cell state={0} colorPicker={this.store.colorPicker} />
+          {range(19).map((i) => (
+            <EmptyCell
+              key={i}
+              className={clsx('rounded-md border border-white bg-slate-300 lg:flex', {
+                hidden: i > 7,
+                'sm:flex': i < 14,
+                'md:flex': i < 18,
+              })}
+            />
+          ))}
         </span>
 
         <p>
