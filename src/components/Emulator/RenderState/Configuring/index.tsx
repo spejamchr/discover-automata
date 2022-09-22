@@ -14,7 +14,7 @@ const Configuring: React.FC<Props> = ({ store }) => {
   return (
     <div className={clsx(`flex shrink-0 flex-wrap items-center justify-between`)}>
       <span className={clsx(`flex`)}>
-        <States store={store} />
+        <States className="min-w-[17rem]" store={store} />
         <Neighbors store={store} className="ml-12" />
       </span>
 
