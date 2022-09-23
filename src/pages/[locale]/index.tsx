@@ -17,24 +17,22 @@ export interface Props {
 const Home: NextPage<Props> = ({ locale }) => {
   return (
     <TranslatorContext.Provider value={makeTranslator(locale)}>
-      <div className={`min-h-screen w-full bg-slate-100 p-6 text-slate-700`}>
-        <TranslatorContext.Consumer>
-          {(T) => (
-            <Head>
-              <title>{T.fn('One-dimensional Cellular Automata')}</title>
-              <meta
-                name="description"
-                content={T.fn('Emulate 1D cellular automata in the browser')}
-              />
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-          )}
-        </TranslatorContext.Consumer>
+      <TranslatorContext.Consumer>
+        {(T) => (
+          <Head>
+            <title>{T.fn('One-dimensional Cellular Automata')}</title>
+            <meta
+              name="description"
+              content={T.fn('Emulate 1D cellular automata in the browser')}
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+        )}
+      </TranslatorContext.Consumer>
 
-        <main>
-          <Explanation />
-        </main>
-      </div>
+      <main>
+        <Explanation />
+      </main>
     </TranslatorContext.Provider>
   );
 };

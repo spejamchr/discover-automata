@@ -22,8 +22,8 @@ const LinkedSection: React.FC<Props> = ({ h, kind }) => (
         { id, className: 'group -ml-4 pl-4' },
         <>
           <Link href={`#${id}`}>
-            <a className="absolute -ml-8 flex items-center justify-center border-0 no-underline opacity-0 transition group-hover:opacity-100">
-              &nbsp;<div className="text-[70%]">¶</div>&nbsp;
+            <a className="absolute -ml-[1.75ch] cursor-pointer font-extrabold no-underline opacity-0 transition-opacity group-hover:opacity-100">
+              &nbsp;{'#'}&nbsp;
             </a>
           </Link>
           {text}

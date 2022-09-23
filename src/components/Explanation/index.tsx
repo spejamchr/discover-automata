@@ -27,7 +27,7 @@ class Explanation extends React.Component<Props> {
 
   render() {
     return (
-      <div className="prose mx-12 mb-72">
+      <div className="prose mx-2 mb-72 pt-10 sm:mx-12">
         <EmulatorReactions store={this.store} />
 
         <LinkedSection h="h1" kind="What's this all about?" />
@@ -92,10 +92,9 @@ class Explanation extends React.Component<Props> {
         <span className="flex">
           {range(40).map((i) => (
             <Cell
-              className={clsx('lg:flex', {
-                hidden: i > 17,
-                'sm:flex': i < 30,
-                'md:flex': i < 38,
+              className={clsx('md:flex', {
+                hidden: i > 21,
+                'sm:flex': i < 34,
               })}
               key={i}
               state={[1, 6, 7, 8, 13, 15, 18, 19, 22, 29, 30, 32, 36].indexOf(i) === -1 ? 0 : 1}
@@ -120,10 +119,9 @@ class Explanation extends React.Component<Props> {
           {range(18).map((i) => (
             <EmptyCell
               key={i}
-              className={clsx('rounded-md border border-white bg-slate-300 lg:flex', {
-                hidden: i > 6,
-                'sm:flex': i < 13,
-                'md:flex': i < 17,
+              className={clsx('rounded-md border border-white bg-slate-300 md:flex', {
+                hidden: i > 8,
+                'sm:flex': i < 15,
               })}
             />
           ))}
@@ -133,10 +131,9 @@ class Explanation extends React.Component<Props> {
           {range(19).map((i) => (
             <EmptyCell
               key={i}
-              className={clsx('rounded-md border border-white bg-slate-300 lg:flex', {
-                hidden: i > 7,
-                'sm:flex': i < 14,
-                'md:flex': i < 18,
+              className={clsx('rounded-md border border-white bg-slate-300 md:flex', {
+                hidden: i > 9,
+                'sm:flex': i < 16,
               })}
             />
           ))}
@@ -181,6 +178,14 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <LinkedSection h="h2" kind="Emulation" />
+
+        <p>
+          <T kind="Once the automaton is configured, this site emulates it by [...]" />
+        </p>
+
+        <p>
+          <T kind="Go here to use the emulator." />
+        </p>
 
         <p>
           <T kind='I called this an "emulator" instead of a "simulator," [...]' />
