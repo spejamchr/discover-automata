@@ -52,12 +52,12 @@ const Rule: React.FC<Props> = ({ ruleIndex, state, store }) => {
         {neighborRange(store.automata.neighbors).map((i) =>
           whenNEM(-1)(store.automata.neighbors.indexOf(i))
             .map((ni) => (
-              <span className="m-0.5 border border-black">
+              <span key={i} className="m-0.5 border border-black">
                 <Cell key={i} state={neighborStates[ni]} colorPicker={store.colorPicker} />
               </span>
             ))
             .getOrElse(() => (
-              <span className="m-0.5 border border-transparent">
+              <span key={i} className="m-0.5 border border-transparent">
                 <EmptyCell key={i} className="rounded-md border border-white" />
               </span>
             )),
@@ -67,12 +67,12 @@ const Rule: React.FC<Props> = ({ ruleIndex, state, store }) => {
         {neighborRange(store.automata.neighbors).map((i) =>
           whenNEM(0)(i)
             .map(() => (
-              <span className="m-0.5 border border-transparent">
+              <span key={i} className="m-0.5 border border-transparent">
                 <EmptyCell key={i} />
               </span>
             ))
             .getOrElse(() => (
-              <span className="m-0.5 border border-black">
+              <span key={i} className="m-0.5 border border-black">
                 <Cell key={0} state={state} colorPicker={store.colorPicker} />
               </span>
             )),

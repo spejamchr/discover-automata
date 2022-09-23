@@ -12,6 +12,7 @@ import Neighbors from '../Emulator/RenderState/Configuring/Neighbors';
 import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import Togglers from '../Emulator/Togglers';
+import LanguagePicker from '../LanguagePicker';
 import LinkedSection from '../LinkedSection';
 import LocaleLink from '../LocaleLink';
 
@@ -31,7 +32,10 @@ class Explanation extends React.Component<Props> {
       <div className="prose mx-2 mb-72 pt-10 sm:mx-12">
         <EmulatorReactions store={this.store} />
 
-        <LinkedSection h="h1" kind="What's this all about?" />
+        <span className="flex flex-wrap items-start justify-between">
+          <LinkedSection h="h1" kind="What's this all about?" />
+          <LanguagePicker currentPath={'/'} />
+        </span>
 
         <p>
           <T kind="I wanted to make some fun designs, and had just read about [...]" />

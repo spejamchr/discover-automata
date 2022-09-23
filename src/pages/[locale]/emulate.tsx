@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import Emulator from '../../components/Emulator';
+import LanguagePicker from '../../components/LanguagePicker';
 import LocaleLink from '../../components/LocaleLink';
 import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
 import T from '../../utils/Locales/T';
@@ -27,14 +28,17 @@ const Emulate: NextPage<Props> = ({ locale }) => {
         </WithTFns>
 
         <main>
-          <span className="flex flex-wrap items-end justify-between">
+          <span className="flex flex-wrap items-start justify-between">
             <h1 className={`pb-2 pr-4 text-lg`}>
               <T kind={'One-dimensional Cellular Automata'} />
             </h1>
-            <LocaleLink href="/" className="pb-2">
+            <LanguagePicker currentPath="/emulate" />
+          </span>
+          <div className="pb-4">
+            <LocaleLink href="/">
               <T kind="What's this all about?" />
             </LocaleLink>
-          </span>
+          </div>
           <Emulator />
         </main>
       </div>

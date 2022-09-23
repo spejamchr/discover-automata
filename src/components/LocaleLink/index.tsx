@@ -1,26 +1,22 @@
-import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import Link from 'next/link';
-import { LocaleContext } from '../../utils/Locales/Types';
+import { forwardRef } from 'react';
+import { Locale, LocaleContext } from '../../utils/Locales/Types';
+import TheLink from './TheLink';
 
-interface Props extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface Props extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  locale?: Locale;
   href: string;
-  children: React.ReactNode;
 }
 
-const LocaleLink: React.FC<Props> = ({ href, children, className, ...rest }) => (
-  <LocaleContext.Consumer>
-    {({ locale }) => {
-      const hrefWithLocale = href[0] === '/' ? `/${locale}${href}` : href;
-      return (
-        <Link href={hrefWithLocale}>
-          <a className={clsx(className, 'font-medium underline')} {...rest}>
-            {children}
-          </a>
-        </Link>
-      );
-    }}
-  </LocaleContext.Consumer>
-);
+const LocaleLink = forwardRef<HTMLAnchorElement, Props>((props, ref) => {
+  const { locale, href, ...rest } = props;
+  return locale !== undefined ? (
+    <TheLink locale={locale} href={href} {...rest} ref={ref} />
+  ) : (
+    <LocaleContext.Consumer>
+      {({ locale }) => <TheLink locale={locale} href={href} {...rest} ref={ref} />}
+    </LocaleContext.Consumer>
+  );
+});
 
 export default observer(LocaleLink);

@@ -17,6 +17,7 @@
     "@execonline-inc/decoders": "^6.4.0",
     "@execonline-inc/logging": "^6.2.1",
     "@execonline-inc/numbers": "^4.6.0",
+    "@headlessui/react": "^1.7.2",
     "@kofno/piper": "^4.3.0",
     "clsx": "^1.2.1",
     "jsonous": "^7.4.0",
