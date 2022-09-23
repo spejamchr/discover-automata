@@ -51,6 +51,7 @@ export const pt: Translations = {
   "Value should be less than:": "O valor deve ser menor que:",
   "What's this all about?": "O que é isso tudo?",
   "When using a (good) video game emulator, the video game [...]": "Ao usar um (bom) emulador de videogame, o videogame não sabe que está sendo executado em um emulador, porque o emulador se comporta exatamente como o sistema que está emulando.",
+  "native-locale-name": "Português",
   "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life": "https://pt.wikipedia.org/wiki/Jogo_da_vida",
   "maximum digits:": "dígitos máximos:",
 };

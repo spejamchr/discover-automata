@@ -57,6 +57,7 @@ const plainTextTranlations = [
   `Value should be less than:`,
   `What's this all about?`,
   `When using a (good) video game emulator, the video game [...]`,
+  `native-locale-name`,
   `https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life`,
   `maximum digits:`,
 ] as const;

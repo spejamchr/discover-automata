@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { Menu } from '@headlessui/react';
-import { LocaleContext, locales } from '../../../utils/Locales/Types';
+import { LocaleContext, locales, translate } from '../../../utils/Locales/Types';
 import LocaleLink from '../../LocaleLink';
 import clsx from 'clsx';
 
@@ -24,8 +24,8 @@ const Picker: React.FC<Props> = ({ currentPath }) => {
                   locale === currentLocale ? (
                     <div key={locale}>
                       <Menu.Item key={locale} disabled>
-                        <span className="flex w-full justify-between px-4 py-2 text-left text-sm font-extrabold leading-5 opacity-50">
-                          {locale}
+                        <span className="flex w-full justify-between px-4 py-2 text-left text-sm leading-5 opacity-75">
+                          {translate(locale, { kind: 'native-locale-name' })}
                         </span>
                       </Menu.Item>
                     </div>
@@ -41,7 +41,7 @@ const Picker: React.FC<Props> = ({ currentPath }) => {
                             )}
                             href={currentPath}
                           >
-                            {locale}
+                            {translate(locale, { kind: 'native-locale-name' })}
                           </LocaleLink>
                         )}
                       </Menu.Item>
