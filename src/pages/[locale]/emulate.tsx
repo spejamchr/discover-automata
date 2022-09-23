@@ -1,8 +1,8 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
 import Emulator from '../../components/Emulator';
+import LocaleLink from '../../components/LocaleLink';
 import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
 import T from '../../utils/Locales/T';
 import { constrainToLocale, Locale, locales } from '../../utils/Locales/Types';
@@ -31,11 +31,9 @@ const Emulate: NextPage<Props> = ({ locale }) => {
             <h1 className={`pb-2 pr-4 text-lg`}>
               <T kind={'One-dimensional Cellular Automata'} />
             </h1>
-            <Link href={`/${locale}`}>
-              <a className="pb-2 font-medium underline">
-                <T kind="What's this all about?" />
-              </a>
-            </Link>
+            <LocaleLink href="/" className="pb-2">
+              <T kind="What's this all about?" />
+            </LocaleLink>
           </span>
           <Emulator />
         </main>
