@@ -27,7 +27,7 @@ export const en: Translations = {
   "In this simulation, you can set the number of states the [...]": "In this simulation, you can set the number of states the cellular automaton has. You can also choose whether the simulation draws the states using grayscale or colors, and whether the number labels are shown or hidden.",
   "Neighbors": "Neighbors",
   "Next generation": "Next generation",
-  "Once the automaton is configured, this site emulates it by [...]": "Once the automaton is configured, this site emulates it by generating a random initial generation and then drawing out many children generations.",
+  "Once the automaton is configured, this site emulates it by [...]": "Once the automaton is configured, this site emulates it by generating a random initial generation and then drawing many children generations.",
   "Once the number of states and the neighborhood [...]": "Once the number of states and the neighborhood have been selected, the transition rules must be determined. For every possible combination of states in the given neighborhood, the resulting states must be chosen. As an example, here is the transition rule saying that if all of a cell's neighbors are <tag>0</tag> then the cell should become {{nextState}}:",
   "One-dimensional Cellular Automata": "One-dimensional Cellular Automata",
   "One-dimensional cellular automata (1DCA) are a kind of [...]": "One-dimensional cellular automata (1DCA) are a kind of cellular automata where the tiling is 1D; we can think of it as a line of squares. This makes the many generations of a 1DCA easy to draw: we can draw all the generation lines one after another to form a rectangle.",
