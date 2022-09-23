@@ -3,14 +3,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import Emulator from '../../components/Emulator';
+import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
 import T from '../../utils/Locales/T';
-import {
-  constrainToLocale,
-  Locale,
-  locales,
-  makeTranslator,
-  TranslatorContext,
-} from '../../utils/Locales/Types';
+import { constrainToLocale, Locale, locales } from '../../utils/Locales/Types';
+import WithTFns from '../../utils/Locales/WithTFns';
 
 export interface Props {
   locale: Locale;
@@ -18,20 +14,17 @@ export interface Props {
 
 const Emulate: NextPage<Props> = ({ locale }) => {
   return (
-    <TranslatorContext.Provider value={makeTranslator(locale)}>
+    <LocaleContextProvider locale={locale}>
       <div className={`min-h-screen w-full bg-slate-100 p-6 text-slate-700`}>
-        <TranslatorContext.Consumer>
-          {(T) => (
+        <WithTFns>
+          {({ t }) => (
             <Head>
-              <title>{T.fn('One-dimensional Cellular Automata')}</title>
-              <meta
-                name="description"
-                content={T.fn('Emulate 1D cellular automata in the browser')}
-              />
+              <title>{t('One-dimensional Cellular Automata')}</title>
+              <meta name="description" content={t('Emulate 1D cellular automata in the browser')} />
               <link rel="icon" href="/favicon.ico" />
             </Head>
           )}
-        </TranslatorContext.Consumer>
+        </WithTFns>
 
         <main>
           <span className="flex flex-wrap items-end justify-between">
@@ -47,7 +40,7 @@ const Emulate: NextPage<Props> = ({ locale }) => {
           <Emulator />
         </main>
       </div>
-    </TranslatorContext.Provider>
+    </LocaleContextProvider>
   );
 };
 

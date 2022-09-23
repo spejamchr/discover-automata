@@ -2,13 +2,9 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import Explanation from '../../components/Explanation';
-import {
-  constrainToLocale,
-  Locale,
-  locales,
-  makeTranslator,
-  TranslatorContext,
-} from '../../utils/Locales/Types';
+import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
+import { constrainToLocale, Locale, locales } from '../../utils/Locales/Types';
+import WithTFns from '../../utils/Locales/WithTFns';
 
 export interface Props {
   locale: Locale;
@@ -16,24 +12,21 @@ export interface Props {
 
 const Home: NextPage<Props> = ({ locale }) => {
   return (
-    <TranslatorContext.Provider value={makeTranslator(locale)}>
-      <TranslatorContext.Consumer>
-        {(T) => (
+    <LocaleContextProvider locale={locale}>
+      <WithTFns>
+        {({ t }) => (
           <Head>
-            <title>{T.fn('One-dimensional Cellular Automata')}</title>
-            <meta
-              name="description"
-              content={T.fn('Emulate 1D cellular automata in the browser')}
-            />
+            <title>{t('One-dimensional Cellular Automata')}</title>
+            <meta name="description" content={t('Emulate 1D cellular automata in the browser')} />
             <link rel="icon" href="/favicon.ico" />
           </Head>
         )}
-      </TranslatorContext.Consumer>
+      </WithTFns>
 
       <main>
         <Explanation />
       </main>
-    </TranslatorContext.Provider>
+    </LocaleContextProvider>
   );
 };
 

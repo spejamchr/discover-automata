@@ -1,7 +1,7 @@
-import { TranslatorContext, TranslationProps } from './Types';
+import { TranslationProps, LocaleContext } from './Types';
 
 const T: React.FC<TranslationProps> = (arg) => (
-  <TranslatorContext.Consumer>{(Translator) => <Translator {...arg} />}</TranslatorContext.Consumer>
+  <LocaleContext.Consumer>{({ Translator }) => <Translator {...arg} />}</LocaleContext.Consumer>
 );
 
 export default T;

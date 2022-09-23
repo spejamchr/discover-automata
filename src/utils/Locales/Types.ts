@@ -76,7 +76,7 @@ type Replacement<key extends string> = `{{${key}}}`;
 
 type Replaces<key extends string> = `${string}${Replacement<key>}${string}`;
 
-type Tagger = (node: React.ReactNode, t: PlainTextTranslator) => Replacer;
+type Tagger = (node: React.ReactNode) => Replacer;
 
 type Tagged<key extends string> = `<${key}>${string}</${key}>`;
 
@@ -124,12 +124,6 @@ const allTranslations: AllTranslations = {
   pt,
 };
 
-const makePlainTextTranslator = (locale: Locale): PlainTextTranslator => {
-  const plainTextTranslator = (kind: PlainTextKey) => allTranslations[locale][kind];
-  plainTextTranslator.locale = locale;
-  return plainTextTranslator;
-};
-
 const replaceString =
   (tag: string, replacer: Replacer) =>
   (replaceable: string | Replacer): Array<string | Replacer> => {
@@ -147,12 +141,7 @@ const doReplace = (
 };
 
 // Argh! So imperative!
-const doTag = (
-  tag: string,
-  tagged: ReadonlyArray<string | Replacer>,
-  fn: Tagger,
-  t: PlainTextTranslator,
-) => {
+const doTag = (tag: string, tagged: ReadonlyArray<string | Replacer>, fn: Tagger) => {
   const first: Array<string | Replacer> = [];
   const body: Array<string | Replacer> = [];
   const last: Array<string | Replacer> = [];
@@ -209,27 +198,23 @@ const doTag = (
     i++;
   }
 
-  const element = fn(React.createElement(React.Fragment, {}, ...body), t);
+  const element = fn(React.createElement(React.Fragment, {}, ...body));
 
   return [...first, element, ...last];
 };
 
-const parameterizeTranslation = (
-  locale: Locale,
-  arg: ParameterizedTranslation,
-): React.ReactNode => {
-  const plainTextTranslator = makePlainTextTranslator(locale);
+const parameterizeTranslation = (arg: ParameterizedTranslation): React.ReactNode => {
   switch (arg.kind) {
     case 'Cellular automata are a kind of zero-player game [...]':
     case 'In general, there are <link>many, many types of [...]':
     case 'Read on, or skip straight to <link>the Emulator</link>.':
     case 'This representation of the transition rules as a [...]': {
-      const tagged = doTag('link', [arg.translation], arg.link, plainTextTranslator);
+      const tagged = doTag('link', [arg.translation], arg.link);
       return React.createElement(React.Fragment, {}, ...tagged);
     }
     case 'Once the number of states and the neighborhood [...]': {
       const replaced = doReplace('nextState', [arg.translation], arg.nextState);
-      const tagged = doTag('tag', replaced, arg.tag, plainTextTranslator);
+      const tagged = doTag('tag', replaced, arg.tag);
       return React.createElement(React.Fragment, {}, ...tagged);
     }
   }
@@ -240,7 +225,8 @@ type PlainTextProps = Omit<PlainTextTranslation, 'translation'>;
 type ParameterizedProps2 = {
   [K in ParameterizedTranslation as K['kind']]: Omit<K, 'translation'>;
 };
-type ParameterizedProps = ParameterizedProps2[keyof ParameterizedProps2];
+
+export type ParameterizedProps = ParameterizedProps2[keyof ParameterizedProps2];
 
 const isPlainTextArg = (arg: { kind: string }): arg is PlainTextProps => {
   return plainTextTranlations.find((t) => t === arg.kind) !== undefined;
@@ -248,13 +234,13 @@ const isPlainTextArg = (arg: { kind: string }): arg is PlainTextProps => {
 
 export type TranslationProps = PlainTextProps | ParameterizedProps;
 
-function translate(locale: Locale, arg: ParameterizedProps): React.ReactNode;
-function translate(locale: Locale, arg: PlainTextProps): string;
-function translate(locale: Locale, arg: TranslationProps) {
+export function translate(locale: Locale, arg: ParameterizedProps): React.ReactNode;
+export function translate(locale: Locale, arg: PlainTextProps): string;
+export function translate(locale: Locale, arg: TranslationProps) {
   if (isPlainTextArg(arg)) {
     return allTranslations[locale][arg.kind];
   } else {
-    return parameterizeTranslation(locale, {
+    return parameterizeTranslation({
       ...arg,
       translation: allTranslations[locale][arg.kind],
     } as ParameterizedTranslation); // DANGER using as...
@@ -269,8 +255,15 @@ export const makeTranslator = <L extends Locale>(locale: L) => {
     return React.createElement(React.Fragment, null, translate(locale, args));
   };
   Translator.displayName = `Translator[${locale}]`;
-  Translator.fn = (kind: PlainTextKey): string => allTranslations[locale][kind];
   return Translator;
 };
 
-export const TranslatorContext = React.createContext(makeTranslator('en'));
+export interface LocaleContextArgs {
+  locale: Locale;
+  Translator: ReturnType<typeof makeTranslator>;
+}
+
+export const LocaleContext = React.createContext<LocaleContextArgs>({
+  locale: 'en',
+  Translator: makeTranslator('en'),
+});

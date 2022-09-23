@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
-import Link from 'next/link';
 import React from 'react';
 import { automataCtor } from '../../utils/CellularAutomata';
 import T from '../../utils/Locales/T';
+import WithTFns from '../../utils/Locales/WithTFns';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Row/Cell';
 import EmptyCell from '../Emulator/Generations/Row/EmptyCell';
@@ -13,6 +13,7 @@ import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import Togglers from '../Emulator/Togglers';
 import LinkedSection from '../LinkedSection';
+import LocaleLink from '../LocaleLink';
 
 interface Props {}
 
@@ -39,11 +40,7 @@ class Explanation extends React.Component<Props> {
         <p>
           <T
             kind="Read on, or skip straight to <link>the Emulator</link>."
-            link={(content, t) => (
-              <Link href={`/${t.locale}/emulate`}>
-                <a>{content}</a>
-              </Link>
-            )}
+            link={(content) => <LocaleLink href="/emulate">{content}</LocaleLink>}
           />
         </p>
 
@@ -52,8 +49,12 @@ class Explanation extends React.Component<Props> {
         <p>
           <T
             kind="Cellular automata are a kind of zero-player game [...]"
-            link={(content, t) => (
-              <a href={t('https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life')}>{content}</a>
+            link={(content) => (
+              <WithTFns>
+                {({ t }) => (
+                  <a href={t('https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life')}>{content}</a>
+                )}
+              </WithTFns>
             )}
           />
         </p>
@@ -184,7 +185,9 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <T kind="Go here to use the emulator." />
+          <LocaleLink href="/emulate">
+            <T kind="Go here to use the emulator." />
+          </LocaleLink>
         </p>
 
         <p>
