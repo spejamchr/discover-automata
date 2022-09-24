@@ -30,7 +30,7 @@ const plainTextTranlations = [
   `Displaying in grayscale`,
   `Each cell in a cellular automata can be in one of several [...]`,
   `Emulate 1D cellular automata in the browser`,
-  `Emulation`,
+  `Emulator`,
   `First generation`,
   `Go here to use the emulator.`,
   `Hiding state labels`,
@@ -60,9 +60,9 @@ const plainTextTranlations = [
   `Value should be less than:`,
   `What's this all about?`,
   `When using a (good) video game emulator, the video game [...]`,
-  `native-locale-name`,
   `https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life`,
   `maximum digits:`,
+  `native-locale-name`,
 ] as const;
 
 interface PlainTextTranslation {

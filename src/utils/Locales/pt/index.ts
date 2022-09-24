@@ -17,7 +17,7 @@ export const pt: Translations = {
   "Displaying in grayscale": "Exibindo em escala de cinza",
   "Each cell in a cellular automata can be in one of several [...]": "Cada célula em um autômato celular pode estar em um dos vários estados, na maioria das vezes representado como um número (como 0 ou 1) ou uma cor (como preto ou branco).",
   "Emulate 1D cellular automata in the browser": "Emular autômatos celulares 1D no navegador",
-  "Emulation": "Emulação",
+  "Emulator": "Emulador",
   "First generation": "Primeira geração",
   "Go here to use the emulator.": "Acesse aqui para usar o emulador.",
   "Hiding state labels": "Ocultando rótulos de estado",

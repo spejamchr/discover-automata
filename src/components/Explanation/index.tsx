@@ -30,7 +30,7 @@ class Explanation extends React.Component<Props> {
 
   render() {
     return (
-      <div className="prose mx-2 mb-72 pt-10 sm:mx-12">
+      <div className="prose mx-2 mb-72 sm:mx-12">
         <EmulatorReactions store={this.store} />
 
         <LinkedSection h="h1" kind="What's this all about?" />
@@ -188,7 +188,7 @@ class Explanation extends React.Component<Props> {
           )
         </p>
 
-        <LinkedSection h="h2" kind="Emulation" />
+        <LinkedSection h="h2" kind="Emulator" />
 
         <p>
           <T kind="Once the automaton is configured, this site emulates it by [...]" />

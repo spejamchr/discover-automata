@@ -17,7 +17,7 @@ export const en: Translations = {
   "Displaying in grayscale": "Displaying in grayscale",
   "Each cell in a cellular automata can be in one of several [...]": "Each cell in a cellular automata can be in one of several states, most often represented as a number (like 0 or 1) or a color (like black or white).",
   "Emulate 1D cellular automata in the browser": "Emulate 1D cellular automata in the browser",
-  "Emulation": "Emulation",
+  "Emulator": "Emulator",
   "First generation": "First generation",
   "Go here to use the emulator.": "Go here to use the emulator.",
   "Hiding state labels": "Hiding state labels",
@@ -51,7 +51,7 @@ export const en: Translations = {
   "Value should be less than:": "Value should be less than:",
   "What's this all about?": "What's this all about?",
   "When using a (good) video game emulator, the video game [...]": "When using a (good) video game emulator, the video game can't tell it's running on an emulator, because the emulator behaves exactly like the system it is emulating.",
-  "native-locale-name": "English",
   "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life": "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
   "maximum digits:": "maximum digits:",
+  "native-locale-name": "English",
 };
