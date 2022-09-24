@@ -36,12 +36,12 @@ const Emulate: NextPage<Props> = ({ locale }) => {
               <h1 className={`pb-2 pr-4 text-lg`}>
                 <T kind={'One-dimensional Cellular Automata'} />
               </h1>
+              <LanguagePicker currentPath="/emulate" />
             </span>
-            <div className="flex flex-wrap-reverse justify-between">
+            <div className="pb-4">
               <LocaleLink href="/">
                 <T kind="What's this all about?" />
               </LocaleLink>
-              <LanguagePicker currentPath="/emulate" />
             </div>
             <Emulator />
           </main>
