@@ -10,10 +10,9 @@ export const locales = ['en', 'pt'] as const;
 
 export type Locale = typeof locales[number];
 
-const localeDecoder: Decoder<Locale> = oneOf([
-  stringLiteral<Locale>('en'),
-  stringLiteral<Locale>('pt'),
-]);
+export const defaultLocale: Locale = 'en';
+
+const localeDecoder: Decoder<Locale> = oneOf(locales.map(stringLiteral));
 
 export const constrainToLocale = assertIs(localeDecoder);
 
@@ -265,6 +264,6 @@ export interface LocaleContextArgs {
 }
 
 export const LocaleContext = React.createContext<LocaleContextArgs>({
-  locale: 'en',
-  Translator: makeTranslator('en'),
+  locale: defaultLocale,
+  Translator: makeTranslator(defaultLocale),
 });
