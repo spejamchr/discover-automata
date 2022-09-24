@@ -16,22 +16,24 @@ export interface Props {
 const Emulate: NextPage<Props> = ({ locale }) => {
   return (
     <LocaleContextProvider locale={locale}>
-      <div className={`mb-72 mt-10 min-h-screen w-full bg-slate-100 px-2 text-slate-700`}>
-        <div>
-          <WithTFns>
-            {({ t }) => (
-              <Head>
-                <title>{t('One-dimensional Cellular Automata')}</title>
-                <meta
-                  name="description"
-                  content={t('Emulate 1D cellular automata in the browser')}
-                />
-                <link rel="icon" href="/favicon.ico" />
-              </Head>
-            )}
-          </WithTFns>
+      <main>
+        <div
+          className={`mb-72 mt-10 min-h-screen w-full bg-slate-100 px-2 text-slate-700 sm:px-12`}
+        >
+          <div>
+            <WithTFns>
+              {({ t }) => (
+                <Head>
+                  <title>{t('One-dimensional Cellular Automata')}</title>
+                  <meta
+                    name="description"
+                    content={t('Emulate 1D cellular automata in the browser')}
+                  />
+                  <link rel="icon" href="/favicon.ico" />
+                </Head>
+              )}
+            </WithTFns>
 
-          <main>
             <span className="flex flex-wrap items-start justify-between">
               <h1 className={`pb-2 pr-4 text-lg`}>
                 <T kind={'One-dimensional Cellular Automata'} />
@@ -44,9 +46,9 @@ const Emulate: NextPage<Props> = ({ locale }) => {
               </LocaleLink>
             </div>
             <Emulator />
-          </main>
+          </div>
         </div>
-      </div>
+      </main>
     </LocaleContextProvider>
   );
 };
