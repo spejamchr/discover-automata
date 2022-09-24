@@ -27,6 +27,8 @@ const simpleAutomaton = automataCtor({
 class Explanation extends React.Component<Props> {
   store = new Store(true, false, simpleAutomaton);
 
+  mainColor = () => this.store.colorPicker(0)[0];
+
   render() {
     return (
       <div className="prose mx-2 mb-72 pt-10 sm:mx-12">
@@ -43,8 +45,16 @@ class Explanation extends React.Component<Props> {
 
         <p>
           <T
-            kind="Read on, or skip straight to <link>the Emulator</link>."
-            link={(content) => <LocaleLink href="/emulate">{content}</LocaleLink>}
+            kind="Read on, or skip straight to <link>the emulator</link>."
+            link={(content) => (
+              <LocaleLink
+                style={{ backgroundColor: this.mainColor() }}
+                className="p-1"
+                href="/emulate"
+              >
+                {content}
+              </LocaleLink>
+            )}
           />
         </p>
 
@@ -189,7 +199,11 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <LocaleLink href="/emulate">
+          <LocaleLink
+            style={{ backgroundColor: this.mainColor() }}
+            className="p-1 transition-colors"
+            href="/emulate"
+          >
             <T kind="Go here to use the emulator." />
           </LocaleLink>
         </p>

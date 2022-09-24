@@ -102,7 +102,7 @@ type ParameterizedTranslation =
       translation: Replaces<'nextState'> & Tags<'tag'>;
     }
   | {
-      kind: 'Read on, or skip straight to <link>the Emulator</link>.';
+      kind: 'Read on, or skip straight to <link>the emulator</link>.';
       link: Tagger;
       translation: Tags<'link'>;
     }
@@ -208,7 +208,7 @@ const parameterizeTranslation = (arg: ParameterizedTranslation): React.ReactNode
   switch (arg.kind) {
     case 'Cellular automata are a kind of zero-player game [...]':
     case 'In general, there are <link>many, many types of [...]':
-    case 'Read on, or skip straight to <link>the Emulator</link>.':
+    case 'Read on, or skip straight to <link>the emulator</link>.':
     case 'This representation of the transition rules as a [...]': {
       const tagged = doTag('link', [arg.translation], arg.link);
       return React.createElement(React.Fragment, {}, ...tagged);

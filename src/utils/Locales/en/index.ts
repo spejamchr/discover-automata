@@ -33,7 +33,7 @@ export const en: Translations = {
   "One-dimensional cellular automata (1DCA) are a kind of [...]": "One-dimensional cellular automata (1DCA) are a kind of cellular automata where the tiling is 1D; we can think of it as a line of squares. This makes the many generations of a 1DCA easy to draw: we can draw all the generation lines one after another to form a rectangle.",
   "Overflow Error: please use smaller numbers": "Overflow Error: please use smaller numbers",
   "Randomize": "Randomize",
-  "Read on, or skip straight to <link>the Emulator</link>.": "Read on, or skip straight to <link>the Emulator</link>.",
+  "Read on, or skip straight to <link>the emulator</link>.": "Read on, or skip straight to <link>the emulator</link>.",
   "Rule Number": "Rule Number",
   "Showing state labels": "Showing state labels",
   "States": "States",

@@ -33,7 +33,7 @@ export const pt: Translations = {
   "One-dimensional cellular automata (1DCA) are a kind of [...]": "Autômatos celulares unidimensionais (AC1D) são um tipo de autômatos celulares onde o ladrilho é 1D; podemos pensar nisso como uma linha de quadrados. Isso torna as muitas gerações de um AC1D fáceis de desenhar: podemos desenhar todas as linhas de geração uma após a outra para formar um retângulo.",
   "Overflow Error: please use smaller numbers": "Erro de estouro: use números menores",
   "Randomize": "Randomize",
-  "Read on, or skip straight to <link>the Emulator</link>.": "Continue lendo ou pule direto para <link>o Emulador</link>.",
+  "Read on, or skip straight to <link>the emulator</link>.": "Continue lendo ou pule direto para <link>o emulador</link>.",
   "Rule Number": "Número da regra",
   "Showing state labels": "Mostrando rótulos de estado",
   "States": "Estados",
