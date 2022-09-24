@@ -9,6 +9,7 @@ import Button from '../../../../Button';
 import ErrorStyled from '../../../../ErrorStyled';
 import Ranged from '../../../../Ranged';
 import Store from '../../../Store';
+import ExampleStates from './ExampleStates';
 
 interface Props {
   store: Store;
@@ -25,10 +26,10 @@ const States: React.FC<Props> = ({ store, className }) => {
         </ErrorStyled>
         )
       </label>
-      <span className="flex max-w-full items-start">
+      <span className="mb-1 flex max-w-full items-start">
         <input
           id="statesInput"
-          className={clsx('mr-1 mb-1 h-10 w-48 rounded font-mono', {
+          className={clsx('mr-1 h-10 w-48 rounded font-mono', {
             'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
               store.validStates.map(always(false)).getOrElseValue(true),
           })}
@@ -51,6 +52,7 @@ const States: React.FC<Props> = ({ store, className }) => {
         >
           <T kind="Randomize" />
         </Button>
+        <ExampleStates store={store} />
       </span>
     </span>
   );
