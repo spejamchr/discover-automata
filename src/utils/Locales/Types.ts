@@ -1,5 +1,6 @@
 import { stringLiteral } from '@execonline-inc/decoders';
 import Decoder, { oneOf } from 'jsonous';
+import { just, Maybe, nothing } from 'maybeasy';
 import * as React from 'react';
 import { assertIs } from '../Assert';
 import { range } from '../Range';
@@ -13,6 +14,9 @@ export type Locale = typeof locales[number];
 export const defaultLocale: Locale = 'en';
 
 const localeDecoder: Decoder<Locale> = oneOf(locales.map(stringLiteral));
+
+export const whenLocale = (s: string): Maybe<Locale> =>
+  localeDecoder.decodeAny(s).map(just).getOrElse(nothing);
 
 export const constrainToLocale = assertIs(localeDecoder);
 

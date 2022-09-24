@@ -3,12 +3,11 @@ import { Menu } from '@headlessui/react';
 import { LocaleContext, locales, translate } from '../../../utils/Locales/Types';
 import LocaleLink from '../../LocaleLink';
 import clsx from 'clsx';
+import { currentLocalePath, localePathToPath, withLocale } from '../../../utils/LocalePath';
 
-interface Props {
-  currentPath: string;
-}
+interface Props {}
 
-const Picker: React.FC<Props> = ({ currentPath }) => {
+const Picker: React.FC<Props> = () => {
   return (
     <Menu.Items>
       <span className="relative">
@@ -38,7 +37,10 @@ const Picker: React.FC<Props> = ({ currentPath }) => {
                               'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 no-underline',
                               { 'bg-slate-300': active },
                             )}
-                            href={currentPath}
+                            href={currentLocalePath()
+                              .map(withLocale(locale))
+                              .map(localePathToPath)
+                              .getOrElseValue('/')}
                           >
                             {nativeLocale}
                           </LocaleLink>

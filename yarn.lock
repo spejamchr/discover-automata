@@ -53,6 +53,19 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@execonline-inc/collections@^10.3.1":
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/@execonline-inc/collections/-/collections-10.3.1.tgz#8992848528670df63fa5a9df748a5c9289cf988b"
+  integrity sha512-DgTuJaOqzVQhYuT256F7ucGedYUGtFtIsxG93venzom0ai/IZcqDoB87VhioLcRh77pAMHDV7qMdGyFL3dlk+w==
+  dependencies:
+    "@execonline-inc/maybe-adapter" "^4.4.1"
+    "@kofno/piper" "^4.3.0"
+    ajaxian "^4.4.0"
+    jsonous "^7.3.0"
+    maybeasy "^3.0.0"
+    resulty "^5.0.0"
+    taskarian "^5.1.0"
+
 "@execonline-inc/decoders@^6.4.0":
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/@execonline-inc/decoders/-/decoders-6.4.0.tgz#e57203418831d95d61b5fb04847f42cb4e249f6d"
@@ -93,6 +106,18 @@
     ajaxian "^4.4.0"
     jsonous "^7.3.0"
     logging "^3.2.0"
+    maybeasy "^3.0.0"
+    resulty "^5.0.0"
+    taskarian "^5.1.0"
+
+"@execonline-inc/maybe-adapter@^4.4.1":
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/@execonline-inc/maybe-adapter/-/maybe-adapter-4.4.1.tgz#24aa466cdabc6aff14a8a8b910a068e2bf07d06c"
+  integrity sha512-C1oT1JujGWV1mkgEE0nDEG3qbcByEXc/2IoyuiBwX7kT71Y2x3F9b1xL0H4EkadyKcT5qDOCxdzo4bzkejhP/g==
+  dependencies:
+    "@kofno/piper" "^4.3.0"
+    ajaxian "^4.4.0"
+    jsonous "^7.3.0"
     maybeasy "^3.0.0"
     resulty "^5.0.0"
     taskarian "^5.1.0"
