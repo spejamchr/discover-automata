@@ -12,7 +12,7 @@ interface Props {
 
 const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => (
   <div
-    className={clsx('min-h-screen transition-opacity duration-300 ease-linear', {
+    className={clsx('min-h-screen overflow-x-hidden transition-opacity duration-300 ease-linear', {
       'opacity-0': historyStore.generations.length < 10,
       'opacity-50': historyStore.generations.length < 30,
     })}

@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import { LocaleContext, ParameterizedProps, PlainTextKey, translate } from './Types';
+import { Locale, LocaleContext, ParameterizedProps, PlainTextKey, translate } from './Types';
 
 interface ChildArgs {
+  locale: Locale;
   t: (key: PlainTextKey) => string;
   p: (key: ParameterizedProps) => React.ReactNode;
 }
@@ -16,7 +17,7 @@ const WithTFns: React.FC<Props> = ({ children }) => {
       {({ locale }) => {
         const t = (kind: PlainTextKey): string => translate(locale, { kind });
         const p = (arg: ParameterizedProps) => translate(locale, arg);
-        return children({ t, p });
+        return children({ locale, t, p });
       }}
     </LocaleContext.Consumer>
   );

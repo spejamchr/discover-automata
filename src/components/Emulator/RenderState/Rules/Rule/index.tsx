@@ -45,7 +45,7 @@ const Rule: React.FC<Props> = ({ ruleIndex, state, store }) => {
   );
   return (
     <Button
-      className={`m-1 flex flex-col items-center`}
+      className={`mt-1 mr-1 flex flex-col items-center`}
       onClick={incrementResultState(ruleIndex, state, store)}
     >
       <span className={`flex`}>

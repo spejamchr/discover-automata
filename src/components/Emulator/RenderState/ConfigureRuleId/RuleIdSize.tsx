@@ -1,6 +1,8 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import T from '../../../../utils/Locales/T';
+import ErrorStyled from '../../../ErrorStyled';
+import Ranged from '../../../Ranged';
 import Store from '../../Store';
 
 interface Props {
@@ -10,13 +12,17 @@ interface Props {
 const RuleIdSize: React.FC<Props> = ({ store }) =>
   store.maxRuleId
     .map((max) =>
-      max > BigInt(Number.MAX_SAFE_INTEGER) ? (
+      max.toString().length > 24 ? (
         <>
           (<T kind="maximum digits:" /> {String(max).length})
         </>
       ) : (
         <>
-          ({store.minRuleId.toString()} - {max.toString()})
+          (
+          <ErrorStyled result={store.validRule}>
+            <Ranged low={store.minRuleId.toString()} high={max.toString()} />
+          </ErrorStyled>
+          )
         </>
       ),
     )

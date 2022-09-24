@@ -10,10 +10,10 @@ interface Props {
 
 const Rules: React.FC<Props> = ({ store }) => {
   return (
-    <details>
+    <details className="mb-2">
       <summary
         className={
-          'm-1 cursor-pointer rounded bg-slate-300 p-2 transition hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900'
+          'mt-1 cursor-pointer rounded bg-slate-300 p-2 transition hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900'
         }
       >
         <T kind={'Transition Rules'} />

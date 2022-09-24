@@ -6,7 +6,8 @@ import { ok } from 'resulty';
 import { minConsiderableStates } from '../../../../../utils/CellularAutomata/Decoders';
 import T from '../../../../../utils/Locales/T';
 import Button from '../../../../Button';
-import ValidationError from '../../../../ValidationError';
+import ErrorStyled from '../../../../ErrorStyled';
+import Ranged from '../../../../Ranged';
 import Store from '../../../Store';
 
 interface Props {
@@ -18,11 +19,15 @@ const States: React.FC<Props> = ({ store, className }) => {
   return (
     <span className={clsx(className)}>
       <label htmlFor="statesInput" className={`block text-sm font-medium`}>
-        <T kind="States" /> ({store.minStates} - {store.maxStates})
+        <T kind="States" /> (
+        <ErrorStyled result={store.validStates}>
+          <Ranged low={store.minStates} high={store.maxStates} />
+        </ErrorStyled>
+        )
       </label>
       <input
         id="statesInput"
-        className={clsx('w-[10ch] rounded font-mono', {
+        className={clsx('mr-1 mb-1 h-10 w-48 rounded font-mono', {
           'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200': store.validStates
             .map(always(false))
             .getOrElseValue(true),
@@ -46,7 +51,6 @@ const States: React.FC<Props> = ({ store, className }) => {
       >
         <T kind="Randomize" />
       </Button>
-      <ValidationError errorable={store.validStates} />
     </span>
   );
 };

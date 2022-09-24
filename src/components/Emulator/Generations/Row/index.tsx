@@ -11,7 +11,7 @@ interface Props {
 
 const Row: React.FC<Props> = ({ row, colorPicker }) => {
   return (
-    <div className={`flex`}>
+    <div className={`flex w-fit`}>
       {row.toArray().map((s, i) => (
         <Cell key={i} state={s} colorPicker={colorPicker} />
       ))}

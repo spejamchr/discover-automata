@@ -12,7 +12,7 @@ const Button: React.FC<Props> = ({ children, className, ...rest }) => (
   <button
     className={clsx(
       className,
-      `m-1 rounded bg-slate-300 p-2 transition hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900`,
+      `rounded bg-slate-300 p-2 transition hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900`,
     )}
     {...rest}
   >

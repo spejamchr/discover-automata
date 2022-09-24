@@ -12,20 +12,19 @@ const Picker: React.FC<Props> = ({ currentPath }) => {
   return (
     <Menu.Items>
       <span className="relative">
-        <div
-          className={'absolute top-full right-0 m-1 w-fit min-w-[6rem] rounded bg-slate-200 p-2'}
-        >
+        <div className={'absolute top-full right-0 w-fit rounded bg-slate-200'}>
           <LocaleContext.Consumer>
             {({ locale: currentLocale }) =>
               locales
-                .slice()
+                .map((l) => [translate(l, { kind: 'native-locale-name' }), l] as const)
+                .map(([a, l]) => [a.toLowerCase(), a, l] as const)
                 .sort()
-                .map((locale) =>
+                .map(([_, nativeLocale, locale]) =>
                   locale === currentLocale ? (
                     <div key={locale}>
                       <Menu.Item key={locale} disabled>
                         <span className="flex w-full justify-between px-4 py-2 text-left text-sm leading-5 opacity-75">
-                          {translate(locale, { kind: 'native-locale-name' })}
+                          {nativeLocale}
                         </span>
                       </Menu.Item>
                     </div>
@@ -41,7 +40,7 @@ const Picker: React.FC<Props> = ({ currentPath }) => {
                             )}
                             href={currentPath}
                           >
-                            {translate(locale, { kind: 'native-locale-name' })}
+                            {nativeLocale}
                           </LocaleLink>
                         )}
                       </Menu.Item>

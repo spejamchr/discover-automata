@@ -16,31 +16,36 @@ export interface Props {
 const Emulate: NextPage<Props> = ({ locale }) => {
   return (
     <LocaleContextProvider locale={locale}>
-      <div className={`min-h-screen w-full bg-slate-100 p-6 text-slate-700`}>
-        <WithTFns>
-          {({ t }) => (
-            <Head>
-              <title>{t('One-dimensional Cellular Automata')}</title>
-              <meta name="description" content={t('Emulate 1D cellular automata in the browser')} />
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-          )}
-        </WithTFns>
+      <div className={`mb-72 mt-10 min-h-screen w-full bg-slate-100 px-2 text-slate-700`}>
+        <div>
+          <WithTFns>
+            {({ t }) => (
+              <Head>
+                <title>{t('One-dimensional Cellular Automata')}</title>
+                <meta
+                  name="description"
+                  content={t('Emulate 1D cellular automata in the browser')}
+                />
+                <link rel="icon" href="/favicon.ico" />
+              </Head>
+            )}
+          </WithTFns>
 
-        <main>
-          <span className="flex flex-wrap items-start justify-between">
-            <h1 className={`pb-2 pr-4 text-lg`}>
-              <T kind={'One-dimensional Cellular Automata'} />
-            </h1>
-            <LanguagePicker currentPath="/emulate" />
-          </span>
-          <div className="pb-4">
-            <LocaleLink href="/">
-              <T kind="What's this all about?" />
-            </LocaleLink>
-          </div>
-          <Emulator />
-        </main>
+          <main>
+            <span className="flex flex-wrap items-start justify-between">
+              <h1 className={`pb-2 pr-4 text-lg`}>
+                <T kind={'One-dimensional Cellular Automata'} />
+              </h1>
+            </span>
+            <div className="flex flex-wrap-reverse justify-between">
+              <LocaleLink href="/">
+                <T kind="What's this all about?" />
+              </LocaleLink>
+              <LanguagePicker currentPath="/emulate" />
+            </div>
+            <Emulator />
+          </main>
+        </div>
       </div>
     </LocaleContextProvider>
   );

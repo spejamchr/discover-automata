@@ -18,7 +18,7 @@ const RenderState: React.FC<Props> = ({ store }) => {
       <Configuring store={store} />
       <ConfigureRuleId store={store} />
       <Rules store={store} />
-      <div className={`flex justify-center p-6 transition-all delay-150 duration-300 ease-in-out`}>
+      <div className={`flex justify-center transition-all delay-150 duration-300 ease-in-out`}>
         <History key={serialize(store.automata)} emulatorStore={store} />
       </div>
     </OnlyOnClient>

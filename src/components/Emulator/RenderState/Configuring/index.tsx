@@ -12,10 +12,10 @@ interface Props {
 
 const Configuring: React.FC<Props> = ({ store }) => {
   return (
-    <div className={clsx(`flex shrink-0 flex-wrap items-center justify-between`)}>
-      <span className={clsx(`flex`)}>
-        <States className="min-w-[17rem]" store={store} />
-        <Neighbors store={store} className="ml-12" />
+    <div className={clsx(`flex shrink-0 flex-wrap-reverse items-center justify-between`)}>
+      <span className={clsx(`flex flex-col`)}>
+        <States className="mr-12 min-w-[17rem]" store={store} />
+        <Neighbors store={store} className="mr-12" />
       </span>
 
       <Togglers store={store} />
