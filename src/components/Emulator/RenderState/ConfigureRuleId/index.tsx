@@ -14,8 +14,8 @@ interface Props {
 
 const ConfigureRuleId: React.FC<Props> = ({ store }) => (
   <span>
-    <label className={`block`} htmlFor="ruleInput">
-      <span className={`block text-sm font-medium`}>
+    <label htmlFor="ruleInput">
+      <span className={`text-sm font-medium`}>
         <T kind="Rule Number" /> <RuleIdSize store={store} />
       </span>
     </label>

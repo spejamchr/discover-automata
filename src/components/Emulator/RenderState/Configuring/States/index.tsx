@@ -18,39 +18,40 @@ interface Props {
 const States: React.FC<Props> = ({ store, className }) => {
   return (
     <span className={clsx(className)}>
-      <label htmlFor="statesInput" className={`block text-sm font-medium`}>
+      <label htmlFor="statesInput" className={`text-sm font-medium`}>
         <T kind="States" /> (
         <ErrorStyled result={store.validStates}>
           <Ranged low={store.minStates} high={store.maxStates} />
         </ErrorStyled>
         )
       </label>
-      <input
-        id="statesInput"
-        className={clsx('mr-1 mb-1 h-10 w-48 rounded font-mono', {
-          'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200': store.validStates
-            .map(always(false))
-            .getOrElseValue(true),
-        })}
-        type="number"
-        min={minConsiderableStates}
-        max={store.maxStates}
-        step="1"
-        value={store.states.map(String).getOrElseValue(store.userStates)}
-        onChange={(e) => store.setStates(e.target.value)}
-      />
-      <Button
-        onClick={() =>
-          ok(store.maxStates)
-            .map((max) => max - store.minStates)
-            .map((size) => Math.random() * size + store.minStates)
-            .map(Math.round)
-            .map(String)
-            .do(store.setStates)
-        }
-      >
-        <T kind="Randomize" />
-      </Button>
+      <span className="flex max-w-full items-start">
+        <input
+          id="statesInput"
+          className={clsx('mr-1 mb-1 h-10 w-48 rounded font-mono', {
+            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
+              store.validStates.map(always(false)).getOrElseValue(true),
+          })}
+          type="number"
+          min={minConsiderableStates}
+          max={store.maxStates}
+          step="1"
+          value={store.states.map(String).getOrElseValue(store.userStates)}
+          onChange={(e) => store.setStates(e.target.value)}
+        />
+        <Button
+          onClick={() =>
+            ok(store.maxStates)
+              .map((max) => max - store.minStates)
+              .map((size) => Math.random() * size + store.minStates)
+              .map(Math.round)
+              .map(String)
+              .do(store.setStates)
+          }
+        >
+          <T kind="Randomize" />
+        </Button>
+      </span>
     </span>
   );
 };
