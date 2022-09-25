@@ -5,9 +5,10 @@ import * as React from 'react';
 import { assertIs } from '../Assert';
 import { range } from '../Range';
 import { en } from './en';
+import { ja } from './ja';
 import { pt } from './pt';
 
-export const locales = ['en', 'pt'] as const;
+export const locales = ['en', 'ja', 'pt'] as const;
 
 export type Locale = typeof locales[number];
 
@@ -118,6 +119,7 @@ type AllTranslations = { [L in Locale]: Translations };
 
 const allTranslations: AllTranslations = {
   en,
+  ja,
   pt,
 };
 
