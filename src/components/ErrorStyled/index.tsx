@@ -16,7 +16,8 @@ const ErrorStyled: React.FC<Props> = ({ result, children, className, okClass, er
     className={clsx(
       className,
       result.map(always(true)).getOrElseValue(false) && okClass,
-      result.map(always(false)).getOrElseValue(true) && `${errClass} text-rose-600`,
+      result.map(always(false)).getOrElseValue(true) &&
+        `${errClass} text-rose-600 dark:text-rose-500`,
     )}
   >
     {children}

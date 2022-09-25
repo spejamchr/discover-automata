@@ -48,14 +48,13 @@ const Neighbors: React.FC<Props> = ({ store, className }) => {
             .map((_, i) => i + minNeighborIndex)
             .map((i) => (
               <Button
-                style={{
-                  borderColor: isNeighborSelected(store, i)
-                    ? store.colorPicker(store.automata.states - 1)[0]
-                    : undefined,
-                }}
-                className={clsx(`mb-1 mr-1 h-10 w-10 p-0`, {
-                  'border-2': isNeighborSelected(store, i),
-                  'bg-rose-200': store.validNeighbors.map(always(false)).getOrElseValue(true),
+                className={clsx('mb-1 mr-1 h-10 w-10 p-0', {
+                  border: isNeighborSelected(store, i),
+                  'border-rose-600 bg-rose-200 hover:bg-rose-300 active:bg-rose-400 dark:border-rose-300 dark:bg-rose-900 dark:hover:bg-rose-800 dark:active:bg-rose-700':
+                    store.validNeighbors.map(always(false)).getOrElseValue(true),
+                  'border-slate-700 dark:border-slate-300': store.validNeighbors
+                    .map(always(true))
+                    .getOrElseValue(false),
                 })}
                 key={i}
                 onClick={toggleNeighbor(store, i)}

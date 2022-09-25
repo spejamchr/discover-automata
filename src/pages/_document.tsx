@@ -4,7 +4,7 @@ function Document() {
   return (
     <Html>
       <Head />
-      <body className="bg-slate-100">
+      <body className="bg-slate-100 dark:bg-slate-800">
         <Main />
         <NextScript />
       </body>

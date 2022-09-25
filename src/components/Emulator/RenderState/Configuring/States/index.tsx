@@ -29,8 +29,8 @@ const States: React.FC<Props> = ({ store, className }) => {
       <span className="mb-1 flex max-w-full items-start">
         <input
           id="statesInput"
-          className={clsx('mr-1 h-10 w-48 rounded font-mono', {
-            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200':
+          className={clsx('mr-1 h-10 w-48 rounded font-mono dark:bg-slate-700', {
+            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200 dark:border-rose-300 dark:focus:border-rose-400 dark:focus:ring-rose-900':
               store.validStates.map(always(false)).getOrElseValue(true),
           })}
           type="number"

@@ -1,11 +1,14 @@
+import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 
-interface Props {}
+interface Props {
+  className?: string;
+}
 
-const Globe: React.FC<Props> = () => (
+const Globe: React.FC<Props> = ({ className }) => (
   // From https://www.svgrepo.com/svg/309663/globe
   <svg
-    className="w-5"
+    className={clsx(className, 'w-5')}
     viewBox="0 0 24 24"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"

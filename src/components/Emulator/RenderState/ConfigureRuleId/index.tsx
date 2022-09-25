@@ -23,11 +23,10 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
       <input
         id="ruleInput"
         className={clsx(
-          `mr-1 mb-1 h-10 min-w-[12rem] rounded font-mono transition-all duration-500 ease-in-out`,
+          'mr-1 mb-1 h-10 min-w-[12rem] rounded font-mono transition-[width] duration-500 ease-in-out dark:bg-slate-700',
           {
-            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200': store.validRule
-              .map(always(false))
-              .getOrElseValue(true),
+            'border-rose-600 focus:border-rose-500 focus:ring focus:ring-rose-200 dark:border-rose-300 dark:focus:border-rose-400 dark:focus:ring-rose-900':
+              store.validRule.map(always(false)).getOrElseValue(true),
           },
         )}
         style={{

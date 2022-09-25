@@ -4,7 +4,7 @@ import LanguagePicker from '../LanguagePicker';
 interface Props {}
 
 const TitleBar: React.FC<Props> = () => (
-  <div className="mb-4 flex items-center justify-between bg-slate-200 px-12 py-2">
+  <div className="mb-4 flex items-center justify-between bg-slate-200 px-12 py-2 text-slate-800 dark:bg-slate-700 dark:text-slate-100">
     <span className="text-xl font-extralight">Discover Automata</span>
     <LanguagePicker />
   </div>

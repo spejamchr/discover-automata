@@ -26,11 +26,9 @@ const simpleAutomaton = automataCtor({
 class Explanation extends React.Component<Props> {
   store = new Store(true, false, simpleAutomaton);
 
-  mainColor = () => this.store.colorPicker(0)[0];
-
   render() {
     return (
-      <div className="prose mx-2 mb-72 sm:mx-12">
+      <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
 
         <LinkedSection h="h1" kind="What's this all about?" />
@@ -44,8 +42,7 @@ class Explanation extends React.Component<Props> {
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
               <LocaleLink
-                style={{ backgroundColor: this.mainColor() }}
-                className="p-1"
+                className="-m-1 -mr-2 rounded bg-blue-200 p-1 pr-2 dark:bg-violet-900"
                 href="/emulate"
               >
                 {content}
@@ -78,7 +75,10 @@ class Explanation extends React.Component<Props> {
             {range(3).map((r) => (
               <tr key={r}>
                 {range(5).map((i) => (
-                  <td key={i} className="h-8 w-8 border border-black text-center" />
+                  <td
+                    key={i}
+                    className="h-8 w-8 border border-slate-700 text-center dark:border-slate-300"
+                  />
                 ))}
                 <td className="pl-2">
                   (<T kind={r === 0 ? 'First generation' : 'Next generation'} />)
@@ -130,10 +130,13 @@ class Explanation extends React.Component<Props> {
           {range(18).map((i) => (
             <EmptyCell
               key={i}
-              className={clsx('rounded-md border border-white bg-slate-300 md:flex', {
-                hidden: i > 8,
-                'sm:flex': i < 15,
-              })}
+              className={clsx(
+                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-300 dark:bg-slate-700 md:flex',
+                {
+                  hidden: i > 8,
+                  'sm:flex': i < 15,
+                },
+              )}
             />
           ))}
           <Cell state={0} colorPicker={this.store.colorPicker} />
@@ -142,10 +145,13 @@ class Explanation extends React.Component<Props> {
           {range(19).map((i) => (
             <EmptyCell
               key={i}
-              className={clsx('rounded-md border border-white bg-slate-300 md:flex', {
-                hidden: i > 9,
-                'sm:flex': i < 16,
-              })}
+              className={clsx(
+                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-300 dark:bg-slate-700 md:flex',
+                {
+                  hidden: i > 9,
+                  'sm:flex': i < 16,
+                },
+              )}
             />
           ))}
         </span>
@@ -195,11 +201,7 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <LocaleLink
-            style={{ backgroundColor: this.mainColor() }}
-            className="p-1 transition-colors"
-            href="/emulate"
-          >
+          <LocaleLink className="rounded bg-blue-200 p-2 dark:bg-violet-900" href="/emulate">
             <T kind="Go here to use the emulator." />
           </LocaleLink>
         </p>
