@@ -7,7 +7,7 @@ export type ColorPicker = (state: State) => [string, string];
 
 const calcHues = (store: Store) => {
   const { states } = store.automata;
-  const hueOffset = 140;
+  const hueOffset = 180;
 
   if (!store.displayInColor) {
     return range(states).map(always(hueOffset));

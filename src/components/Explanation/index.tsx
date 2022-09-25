@@ -43,17 +43,13 @@ class Explanation extends React.Component<Props> {
           <T
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
-              <span className="relative">
+              <span className="relative dark:contrast-125 dark:hue-rotate-[120deg] dark:invert">
                 <span
                   style={{ backgroundColor }}
-                  className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 dark:hue-rotate-180 dark:invert"
+                  className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6"
                   aria-hidden
                 />
-                <LocaleLink
-                  style={{ color }}
-                  className="relative dark:hue-rotate-180 dark:invert"
-                  href="/emulate"
-                >
+                <LocaleLink style={{ color }} className="relative " href="/emulate">
                   {content}
                 </LocaleLink>
               </span>
@@ -211,17 +207,13 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <span className="relative">
+          <span className="relative dark:contrast-125 dark:hue-rotate-[120deg] dark:invert">
             <span
               style={{ backgroundColor }}
-              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 dark:hue-rotate-180 dark:invert"
+              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12"
               aria-hidden
             />
-            <LocaleLink
-              style={{ color }}
-              className="relative dark:hue-rotate-180 dark:invert"
-              href="/emulate"
-            >
+            <LocaleLink style={{ color }} className="relative" href="/emulate">
               <T kind="Go here to use the emulator." />
             </LocaleLink>
           </span>
