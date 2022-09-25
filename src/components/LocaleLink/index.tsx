@@ -19,4 +19,6 @@ const LocaleLink = forwardRef<HTMLAnchorElement, Props>((props, ref) => {
   );
 });
 
+LocaleLink.displayName = 'LocaleLink';
+
 export default observer(LocaleLink);

@@ -26,4 +26,6 @@ const TheLink = forwardRef<HTMLAnchorElement, Props>((props, ref) => {
   );
 });
 
+TheLink.displayName = 'TheLink';
+
 export default observer(TheLink);
