@@ -13,6 +13,7 @@ export const pt: Translations = {
   "Cellular automata are a kind of zero-player game [...]": "Autômatos celulares são uma espécie de jogo de zero jogadores jogado em um \"universo\" de \"células\" ladrilhadas. Cada autômato tem sua própria configuração, e pode evoluir um universo através de muitas gerações. O autômato celular mais conhecido é provavelmente o <link>Jogo da Vida de Conway</link>.",
   "Clicking the rule changes the resulting state.": "Clicar na regra altera o estado resultante.",
   "Configuration": "Configuração",
+  "Discover Automata": "Descubra autômatos",
   "Displaying in color": "Exibindo em cores",
   "Displaying in grayscale": "Exibindo em escala de cinza",
   "Each cell in a cellular automata can be in one of several [...]": "Cada célula em um autômato celular pode estar em um dos vários estados, na maioria das vezes representado como um número (como 0 ou 1) ou uma cor (como preto ou branco).",
@@ -43,7 +44,7 @@ export const pt: Translations = {
   "Transition Rules": "Regras de Transição",
   "What's this all about?": "O que é isso tudo?",
   "When using a (good) video game emulator, the video game [...]": "Ao usar um (bom) emulador de videogame, o videogame não sabe que está sendo executado em um emulador, porque o emulador se comporta exatamente como o sistema que está emulando.",
-  "native-locale-name": "Português",
   "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life": "https://pt.wikipedia.org/wiki/Jogo_da_vida",
   "maximum digits:": "dígitos máximos:",
+  "native-locale-name": "Português",
 };

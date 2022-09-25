@@ -13,6 +13,7 @@ export const en: Translations = {
   "Cellular automata are a kind of zero-player game [...]": "Cellular automata are a kind of zero-player game played on a \"universe\" of tiled \"cells.\" Each automaton has its own configuration, and can evolve a universe through many generations. The most well-known cellular automaton is probably <link>Conway's Game of Life</link>.",
   "Clicking the rule changes the resulting state.": "Clicking the rule changes the resulting state.",
   "Configuration": "Configuration",
+  "Discover Automata": "Discover Automata",
   "Displaying in color": "Displaying in color",
   "Displaying in grayscale": "Displaying in grayscale",
   "Each cell in a cellular automata can be in one of several [...]": "Each cell in a cellular automata can be in one of several states, most often represented as a number (like 0 or 1) or a color (like black or white).",

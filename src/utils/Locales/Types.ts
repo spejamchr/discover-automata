@@ -25,6 +25,7 @@ const plainTextTranlations = [
   `A simple example of a neighborhood is the current cell and [...]`,
   `A weather simulation can be used for predictions, but [...]`,
   `Clicking the rule changes the resulting state.`,
+  `Discover Automata`,
   `Configuration`,
   `Displaying in color`,
   `Displaying in grayscale`,
