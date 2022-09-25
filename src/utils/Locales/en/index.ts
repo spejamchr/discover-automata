@@ -8,10 +8,12 @@ import { Translations } from '../Types';
 // - Sort entries alphabetically
 // - Use a comma on the last line
 export const en: Translations = {
+  "(Clicking the rule changes the resulting state.)": "(Clicking the rule changes the resulting state.)",
+  "(First generation)": "(First generation)",
+  "(Next generation)": "(Next generation)",
   "A simple example of a neighborhood is the current cell and [...]": "A simple example of a neighborhood is the current cell and its two immediate neighbors, such as:",
   "A weather simulation can be used for predictions, but [...]": "A weather simulation can be used for predictions, but doesn't perfectly match reality.",
   "Cellular automata are a kind of zero-player game [...]": "Cellular automata are a kind of zero-player game played on a \"universe\" of tiled \"cells.\" Each automaton has its own configuration, and can evolve a universe through many generations. The most well-known cellular automaton is probably <link>Conway's Game of Life</link>.",
-  "Clicking the rule changes the resulting state.": "Clicking the rule changes the resulting state.",
   "Configuration": "Configuration",
   "Discover Automata": "Discover Automata",
   "Displaying in color": "Displaying in color",
@@ -19,7 +21,6 @@ export const en: Translations = {
   "Each cell in a cellular automata can be in one of several [...]": "Each cell in a cellular automata can be in one of several states, most often represented as a number (like 0 or 1) or a color (like black or white).",
   "Emulate 1D cellular automata in the browser": "Emulate 1D cellular automata in the browser",
   "Emulator": "Emulator",
-  "First generation": "First generation",
   "Go here to use the emulator.": "Go here to use the emulator.",
   "Hiding state labels": "Hiding state labels",
   "I called this an \"emulator\" instead of a \"simulator,\" [...]": "I called this an \"emulator\" instead of a \"simulator,\" because simulators tend to approximate the thing the simulate, while the goal of an emulator is to recreate the behavior of the thing they emulate exactly.",
@@ -27,7 +28,6 @@ export const en: Translations = {
   "In general, there are <link>many, many types of [...]": "In general, there are <link>many, many types of neighborhoods</link> that can be used to create cellular automata (including neighboorhoods that can change with time). However, neighborhoods used on this site are limited to a selection of the current cell and several of its closest neighbors on each side.",
   "In this simulation, you can set the number of states the [...]": "In this simulation, you can set the number of states the cellular automaton has. You can also choose whether the simulation draws the states using grayscale or colors, and whether the number labels are shown or hidden.",
   "Neighbors": "Neighbors",
-  "Next generation": "Next generation",
   "Once the automaton is configured, this site emulates it by [...]": "Once the automaton is configured, this site emulates it by generating a random initial generation and then drawing many children generations.",
   "Once the number of states and the neighborhood [...]": "Once the number of states and the neighborhood have been selected, the transition rules must be determined. For every possible combination of states in the given neighborhood, the resulting states must be chosen. As an example, here is the transition rule saying that if all of a cell's neighbors are <tag>0</tag> then the cell should become {{nextState}}:",
   "One-dimensional Cellular Automata": "One-dimensional Cellular Automata",

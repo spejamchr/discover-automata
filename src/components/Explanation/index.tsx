@@ -87,7 +87,7 @@ class Explanation extends React.Component<Props> {
                   />
                 ))}
                 <td className="pl-2">
-                  (<T kind={r === 0 ? 'First generation' : 'Next generation'} />)
+                  <T kind={r === 0 ? '(First generation)' : '(Next generation)'} />
                 </td>
               </tr>
             ))}
@@ -184,7 +184,7 @@ class Explanation extends React.Component<Props> {
         <Rule ruleIndex={0} state={this.store.automata.rules[0]} store={this.store} />
 
         <legend>
-          (<T kind="Clicking the rule changes the resulting state." />)
+          <T kind="(Clicking the rule changes the resulting state.)" />
         </legend>
 
         <p>
