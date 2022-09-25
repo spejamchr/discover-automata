@@ -24,9 +24,11 @@ const simpleAutomaton = automataCtor({
 });
 
 class Explanation extends React.Component<Props> {
-  store = new Store(true, false, simpleAutomaton);
+  store = new Store(true, true, simpleAutomaton);
 
   render() {
+    const backgroundColor = this.store.colorPicker(0)[0];
+    const color = this.store.colorPicker(1)[0];
     return (
       <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
@@ -41,12 +43,20 @@ class Explanation extends React.Component<Props> {
           <T
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
-              <LocaleLink
-                className="-m-1 -mr-2 rounded bg-blue-200 p-1 pr-2 dark:bg-violet-900"
-                href="/emulate"
-              >
-                {content}
-              </LocaleLink>
+              <span className="relative">
+                <span
+                  style={{ backgroundColor }}
+                  className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 dark:hue-rotate-180 dark:invert"
+                  aria-hidden
+                />
+                <LocaleLink
+                  style={{ color }}
+                  className="relative dark:hue-rotate-180 dark:invert"
+                  href="/emulate"
+                >
+                  {content}
+                </LocaleLink>
+              </span>
             )}
           />
         </p>
@@ -131,7 +141,7 @@ class Explanation extends React.Component<Props> {
             <EmptyCell
               key={i}
               className={clsx(
-                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-300 dark:bg-slate-700 md:flex',
+                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-900 dark:bg-slate-700 md:flex',
                 {
                   hidden: i > 8,
                   'sm:flex': i < 15,
@@ -146,7 +156,7 @@ class Explanation extends React.Component<Props> {
             <EmptyCell
               key={i}
               className={clsx(
-                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-300 dark:bg-slate-700 md:flex',
+                'rounded-md border border-slate-50 bg-slate-300 dark:border-slate-900 dark:bg-slate-700 md:flex',
                 {
                   hidden: i > 9,
                   'sm:flex': i < 16,
@@ -201,9 +211,20 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <LocaleLink className="rounded bg-blue-200 p-2 dark:bg-violet-900" href="/emulate">
-            <T kind="Go here to use the emulator." />
-          </LocaleLink>
+          <span className="relative">
+            <span
+              style={{ backgroundColor }}
+              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 dark:hue-rotate-180 dark:invert"
+              aria-hidden
+            />
+            <LocaleLink
+              style={{ color }}
+              className="relative dark:hue-rotate-180 dark:invert"
+              href="/emulate"
+            >
+              <T kind="Go here to use the emulator." />
+            </LocaleLink>
+          </span>
         </p>
 
         <p>

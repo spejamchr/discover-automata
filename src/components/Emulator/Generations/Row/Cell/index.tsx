@@ -18,7 +18,7 @@ const Cell: React.FC<Props> = ({ state, colorPicker, className }) => {
     <span
       className={clsx(
         className,
-        'flex h-[1rem] w-[1rem] min-w-[1ch] items-center justify-center font-mono text-xs transition duration-500 ease-in-out',
+        'flex h-[1rem] w-[1rem] min-w-[1ch] items-center justify-center font-mono text-xs dark:hue-rotate-180 dark:invert',
       )}
       style={{ backgroundColor, color }}
     >
