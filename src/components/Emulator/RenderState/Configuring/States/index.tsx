@@ -26,7 +26,7 @@ const States: React.FC<Props> = ({ store, className }) => {
         </ErrorStyled>
         )
       </label>
-      <span className="mb-1 flex max-w-full items-start">
+      <span className="mb-1 flex max-w-full flex-wrap items-start">
         <input
           id="statesInput"
           className={clsx('mr-1 h-10 w-48 rounded font-mono dark:bg-slate-700', {
@@ -41,6 +41,7 @@ const States: React.FC<Props> = ({ store, className }) => {
           onChange={(e) => store.setStates(e.target.value)}
         />
         <Button
+          className="mr-1"
           onClick={() =>
             ok(store.maxStates)
               .map((max) => max - store.minStates)

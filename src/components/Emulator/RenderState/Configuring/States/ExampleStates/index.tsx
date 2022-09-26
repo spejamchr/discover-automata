@@ -9,7 +9,7 @@ interface Props {
 
 const ExampleStates: React.FC<Props> = ({ store }) => (
   <span
-    className={`ml-1 mt-[3px] box-content flex max-w-[5rem] flex-wrap border border-slate-700 bg-slate-300 dark:border-slate-500 dark:bg-slate-600`}
+    className={`mt-[3px] box-content flex max-w-[5rem] flex-wrap border border-slate-700 bg-slate-300 dark:border-slate-500 dark:bg-slate-600`}
   >
     {range(store.automata.states).map((i) => (
       <Cell key={i} state={i} colorPicker={store.colorPicker} />
