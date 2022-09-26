@@ -2,10 +2,7 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import HistoryStore from '../../../utils/CellularAutomata/HistoryStore';
-import {
-  visibleEmulationWidth,
-  negBufferWidth,
-} from '../../../utils/CellularAutomata/HistoryStore/Reactions';
+import { negBufferWidth } from '../../../utils/CellularAutomata/HistoryStore/Reactions';
 import { ColorPicker } from '../../../utils/ColorPicker';
 import Row from './Row';
 
@@ -16,6 +13,7 @@ interface Props {
 
 const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => {
   const negBuffer = negBufferWidth(historyStore);
+  const width = Math.min(historyStore.visibleEmulationWidth, historyStore.showableEmulationWidth);
   return (
     <div
       className={clsx(
@@ -29,7 +27,7 @@ const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => {
       {historyStore.generations.map((g, i) => (
         <Row
           key={i}
-          row={g.toArray().slice(negBuffer, negBuffer + visibleEmulationWidth)}
+          row={g.toArray().slice(negBuffer, negBuffer + width)}
           colorPicker={colorPicker}
         />
       ))}

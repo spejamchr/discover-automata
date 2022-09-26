@@ -7,11 +7,16 @@ import { State, ready, working, waiting } from './Types';
 
 class HistoryStore {
   state: State;
+  visibleEmulationWidth: number = 20; // The bit the user's window is wide enough to see
+  showableEmulationWidth: number = 20; // The bit we have calculated and can show the user
 
   constructor(automata: Automata) {
     this.state = waiting(automata);
     makeObservable(this, {
       state: observable,
+      visibleEmulationWidth: observable,
+      showableEmulationWidth: observable,
+      setVisibleEmulationWidth: action,
       working: action,
       ready: action,
       calcNextGeneration: action,
@@ -20,6 +25,14 @@ class HistoryStore {
       generations: computed,
     });
   }
+
+  setVisibleEmulationWidth = (width: number) => {
+    this.visibleEmulationWidth = width;
+  };
+
+  setShowableEmulationWidth = (width: number) => {
+    this.showableEmulationWidth = width;
+  };
 
   working = (automata: Automata, generations: NonEmptyList<Generation>): void => {
     switch (this.state.kind) {

@@ -8,15 +8,28 @@ import EmulatorReactions from './EmulatorReactions';
 
 interface Props {
   emulatorStore: Store;
+  visibleEmulationWidth: number;
 }
 
 class History extends React.Component<Props> {
   historyStore = new HistoryStore(this.props.emulatorStore.automata);
 
+  componentDidMount(): void {
+    this.historyStore.setVisibleEmulationWidth(this.props.visibleEmulationWidth);
+  }
+
+  componentDidUpdate(): void {
+    this.historyStore.setVisibleEmulationWidth(this.props.visibleEmulationWidth);
+  }
+
   render() {
     return (
       <>
-        <Reactions store={this.historyStore} fireImmediately />
+        <Reactions
+          store={this.historyStore}
+          fireImmediately
+          visibleEmulationWidth={this.props.visibleEmulationWidth}
+        />
         <EmulatorReactions store={this.props.emulatorStore} />
         <Generations
           historyStore={this.historyStore}

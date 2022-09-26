@@ -7,7 +7,6 @@ import { range } from '../../Range';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
 
-export const visibleEmulationWidth = 100;
 export const emulationGenerations = 60;
 
 const negSpeedOfLight = (store: HistoryStore): number => Math.min(0, ...store.automata.neighbors);
@@ -19,16 +18,21 @@ export const negBufferWidth = (store: HistoryStore): number =>
 export const posBufferWidth = (store: HistoryStore): number =>
   emulationGenerations * posSpeedOfLight(store);
 
-class Reactions extends ReactionComponent<HistoryStore, State> {
+interface Props {
+  visibleEmulationWidth: number;
+}
+
+class Reactions extends ReactionComponent<HistoryStore, State, Props> {
   tester = () => this.props.store.state;
   effect = (state: State) => {
     switch (state.kind) {
       case 'waiting':
+        this.props.store.setShowableEmulationWidth(this.props.visibleEmulationWidth);
         const randState = () => Math.floor(Math.random() * state.automata.states);
 
         const negBuffer = range(negBufferWidth(this.props.store)).map(always(0));
         const posBuffer = range(posBufferWidth(this.props.store)).map(always(0));
-        const randGen = range(visibleEmulationWidth).map(randState);
+        const randGen = range(this.props.visibleEmulationWidth).map(randState);
         const firstGenerationA = negBuffer.concat(randGen).concat(posBuffer);
 
         const firstGeneration = new NonEmptyList(firstGenerationA[0], firstGenerationA.slice(1));
