@@ -27,8 +27,8 @@ class Explanation extends React.Component<Props> {
   store = new Store(true, true, simpleAutomaton);
 
   render() {
-    const backgroundColor = this.store.colorPicker(0)[0];
-    const color = this.store.colorPicker(1)[0];
+    const backgroundColor = this.store.colorPicker(1)[0];
+    const color = this.store.colorPicker(0)[0];
     return (
       <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
@@ -43,7 +43,7 @@ class Explanation extends React.Component<Props> {
           <T
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
-              <span className="relative dark:contrast-125 dark:hue-rotate-[120deg] dark:invert">
+              <span className="relative dark:contrast-125 dark:hue-rotate-[180deg] dark:invert">
                 <span
                   style={{ backgroundColor }}
                   className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6"
@@ -207,7 +207,7 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <span className="relative dark:contrast-125 dark:hue-rotate-[120deg] dark:invert">
+          <span className="relative dark:contrast-125 dark:hue-rotate-[180deg] dark:invert">
             <span
               style={{ backgroundColor }}
               className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12"
