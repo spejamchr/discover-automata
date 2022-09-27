@@ -40,7 +40,9 @@ class Reactions extends ReactionComponent<HistoryStore, State, Props> {
         this.props.store.working(this.props.store.automata, new NonEmptyList(firstGeneration, []));
         break;
       case 'working':
-        this.props.store.calcNextGeneration(nextCellsOnZero(this.props.store.automata));
+        for (let i = 0; i < 4; i++) {
+          this.props.store.calcNextGeneration(nextCellsOnZero(this.props.store.automata));
+        }
         this.props.store.ready();
         break;
       case 'ready':
