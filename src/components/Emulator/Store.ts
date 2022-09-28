@@ -2,7 +2,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { automataCtor, serialize } from '../../utils/CellularAutomata';
 import { Automata, Count, Index, Neighbors } from '../../utils/CellularAutomata/Types';
 import { ok } from 'resulty';
-import { ColorPicker, makeColorPicker } from '../../utils/ColorPicker';
+import { ColorPicker, defaultStartingHue, makeColorPicker } from '../../utils/ColorPicker';
 import { windowGet } from '../../utils/WindowGet';
 import {
   maxRuleCount,
@@ -59,6 +59,7 @@ class Store {
   userStates: string;
   userNeighbors: ReadonlyArray<number>;
   userRuleId: string;
+  startingHue: number;
 
   constructor(
     public showStateLabels: boolean,
@@ -69,12 +70,14 @@ class Store {
     this.userStates = this.automata.states.toString();
     this.userNeighbors = this.automata.neighbors;
     this.userRuleId = this.automata.ruleId.toString();
+    this.startingHue = defaultStartingHue;
     makeObservable(this, {
       userStates: observable,
       userNeighbors: observable,
       userRuleId: observable,
       showStateLabels: observable,
       displayInColor: observable,
+      startingHue: observable,
       automata: observable,
       userAutomataPieces: computed,
       setAutomataIfNeeded: action,
@@ -86,6 +89,7 @@ class Store {
       randomizeRules: action,
       toggleShowStateLabels: action,
       toggleDisplayInColor: action,
+      setStartingHue: action,
       minStates: computed,
       maxStates: computed,
       minNeighbors: computed,
@@ -176,6 +180,10 @@ class Store {
 
   toggleDisplayInColor = (): void => {
     this.displayInColor = !this.displayInColor;
+  };
+
+  setStartingHue = (newHue: number): void => {
+    this.startingHue = newHue;
   };
 
   get parseStates(): ConfigResult<Count> {

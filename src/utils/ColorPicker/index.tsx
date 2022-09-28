@@ -25,11 +25,15 @@ export const hsvToHsl = (hsv: HSV): HSL => {
 };
 
 // This is specific for a system with 10 max states.
-export const hLine = (state: number): number => (310 - state * 40 + 360) % 360;
+export const defaultStartingHue = 310;
+export const hLine =
+  (startingHue: number) =>
+  (state: number): number =>
+    (startingHue - state * 40 + 360) % 360;
 export const sLine = (state: number): number => 0.08 + state * 0.05;
 
 const calcHs = (store: Store): ((state: number) => number) => {
-  return store.displayInColor ? hLine : always(219);
+  return store.displayInColor ? hLine(store.startingHue) : always(219);
 };
 
 const calcSs = (store: Store): ((state: number) => number) => {
@@ -55,11 +59,6 @@ export const makeColorPicker = (store: Store): ColorPicker => {
   const hsls = hsvs.map(hsvToHsl);
   const colors = hsls.map(
     ({ h, s, l }) => `hsl(${h}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`,
-  );
-  console.log(
-    `[SJC] hsvs: ${JSON.stringify(hsvs)}  --- hsls: ${JSON.stringify(
-      hsls,
-    )} --- colors: ${JSON.stringify(colors)}`,
   );
 
   if (store.showStateLabels) {
