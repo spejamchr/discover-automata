@@ -12,22 +12,27 @@ import {
   whenByLED,
   whenGED,
 } from '../Extensions';
+import { range } from '../Range';
 import { fromZigZagCollection } from '../ZigZag';
 import { Automata, AutomataWithRuleId, Count, Neighbors } from './Types';
 
 type StatesNeighbors = Pick<Automata, 'states' | 'neighbors'>;
 
-// Arbitrary limit... we display these, so we don't want too many
-export const maxRuleCount = 100;
-
-export const minConsiderableStates = 1;
-export const maxConsiderableStates = Math.floor(Math.sqrt(maxRuleCount));
-
-export const minConsiderableNeighbors = 0;
-export const maxConsiderableNeighbors = Math.floor(Math.log2(maxRuleCount));
-
+// Arbitrary limits...
+//
+// We display these, so we don't want too many
+export const maxRuleCount = 200;
+// We need a color for each state, so we don't want too many
+export const maxConsiderableStates = 10;
+// We need to display this whole range, so we don't want too many
 export const minNeighborIndex = -3;
 export const maxNeighborIndex = 3;
+
+export const maxConsiderableNeighbors = range(minNeighborIndex, maxNeighborIndex).length;
+
+export const minConsiderableStates = 1;
+
+export const minConsiderableNeighbors = 0;
 
 export const statesDecoder: Decoder<Count> = number.andThen(
   whenBetweenD(minConsiderableStates, maxConsiderableStates),
@@ -92,8 +97,7 @@ export const maxNeighbors = (states: Count): Count => {
 };
 
 export const maxConsiderableRuleIdLength: number = Math.max(
-  ...[...Array(maxConsiderableStates - minConsiderableStates + 1)]
-    .map((_, i) => i + minConsiderableStates)
+  ...range(minConsiderableStates, maxConsiderableStates)
     .map((s) => s ** maxNeighbors(s) * Math.log10(s))
     .map((n) => 1.1 * n) // Give some buffer room
     .map(Math.floor),

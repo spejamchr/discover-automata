@@ -1,4 +1,4 @@
-import { always } from '@kofno/piper';
+import { always, pipe } from '@kofno/piper';
 import Store from '../../components/Emulator/Store';
 import { State } from '../CellularAutomata/Types';
 import { range } from '../Range';
@@ -24,31 +24,27 @@ export const hsvToHsl = (hsv: HSV): HSL => {
   return { h, s, l };
 };
 
-// This is specific for a system with 10 max states.
-export const defaultStartingHue = 310;
-export const hLine =
-  (startingHue: number) =>
+const stepSizeForBound = (start: number, end: number, states: number): number =>
+  states === 1 ? 0 : (end - start) / (states - 1);
+
+const lineOnBound =
+  (start: number, end: number, { automata: { states } }: Store) =>
   (state: number): number =>
-    (startingHue - state * 40 + 360) % 360;
-export const sLine = (state: number): number => 0.08 + state * 0.05;
+    start + state * stepSizeForBound(start, end, states);
+
+export const defaultStartingHue = 219;
+
+const hLine = (store: Store) =>
+  pipe(lineOnBound(store.startingHue, store.startingHue - 360, store), (hue) => (hue + 360) % 360);
 
 const calcHs = (store: Store): ((state: number) => number) => {
-  return store.displayInColor ? hLine(store.startingHue) : always(219);
+  return store.displayInColor ? hLine(store) : always(defaultStartingHue);
 };
 
-const calcSs = (store: Store): ((state: number) => number) => {
-  return store.displayInColor ? sLine : always(0.09);
-};
+const calcSs = (store: Store): ((state: number) => number) =>
+  store.displayInColor ? lineOnBound(0.08, 0.6, store) : always(0.09);
 
-const calcVs = (store: Store): ((state: number) => number) => {
-  const { states } = store.automata;
-  const start = 0.92;
-  const end = 0.4;
-  if (states === 1) return always(start);
-
-  const step = (start - end) / (states - 1);
-  return (state: number) => start - state * step;
-};
+const calcVs = (store: Store): ((state: number) => number) => lineOnBound(0.92, 0.4, store);
 
 export const makeColorPicker = (store: Store): ColorPicker => {
   const cH = calcHs(store),
@@ -62,7 +58,7 @@ export const makeColorPicker = (store: Store): ColorPicker => {
   );
 
   if (store.showStateLabels) {
-    const textColors = hsls.map(({ l }) => (l >= 0.42 ? 'black' : 'white'));
+    const textColors = hsls.map(({ l }) => (l >= 0.5 ? 'black' : 'white'));
     return (state: State) => [colors[state % states], textColors[state % states]];
   } else {
     return (state: State) => [colors[state % states], 'rgba(0, 0, 0, 0)'];

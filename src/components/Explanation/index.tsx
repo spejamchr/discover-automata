@@ -44,7 +44,7 @@ class Explanation extends React.Component<Props> {
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
               <>
-                <span className="relative hidden contrast-125 dark:inline dark:contrast-100 dark:hue-rotate-[180deg] dark:invert">
+                <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
                   <span
                     style={{ backgroundColor: color }}
                     className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6"
@@ -224,7 +224,7 @@ class Explanation extends React.Component<Props> {
 
         <p>
           <>
-            <span className="relative hidden contrast-125 dark:inline dark:contrast-100 dark:hue-rotate-[180deg] dark:invert">
+            <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
               <span
                 style={{ backgroundColor: color }}
                 className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12"
