@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import Explanation from '../../components/Explanation';
+import TitleBar from '../../components/TitleBar';
 import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
 import { constrainToLocale, Locale, locales } from '../../utils/Locales/Types';
 import WithTFns from '../../utils/Locales/WithTFns';
@@ -22,6 +23,8 @@ const Home: NextPage<Props> = ({ locale }) => {
           </Head>
         )}
       </WithTFns>
+
+      <TitleBar />
 
       <main>
         <Explanation />
