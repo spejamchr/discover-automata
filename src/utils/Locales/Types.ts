@@ -28,13 +28,16 @@ const plainTextTranlations = [
   `(Next generation)`,
   `A simple example of a neighborhood is the current cell and [...]`,
   `A weather simulation can be used for predictions, but [...]`,
+  `Automaton`,
   `Configuration`,
+  `Description of the automaton...`,
   `Discover Automata`,
   `Displaying in color`,
   `Displaying in grayscale`,
   `Each cell in a cellular automata can be in one of several [...]`,
   `Emulate 1D cellular automata in the browser`,
   `Emulator`,
+  `Favorites`,
   `Go here to use the emulator.`,
   `Hiding state labels`,
   `I called this an "emulator" instead of a "simulator," [...]`,
@@ -46,8 +49,15 @@ const plainTextTranlations = [
   `One-dimensional cellular automata (1DCA) are a kind of [...]`,
   `Overflow Error: please use smaller numbers`,
   `Randomize`,
+  `Recreate Default Favorites`,
+  `Rule 110: Turing-complete!`,
+  `Rule 184: The "traffic rule"`,
+  `Rule 30: Mathematica used this as an RNG`,
+  `Rule 90: The exclusive-or function`,
   `Rule Number`,
+  `Settings`,
   `Showing state labels`,
+  `Something went wrong... Refresh to try again.`,
   `States`,
   `These transition rules can be encoded as a single number, [...]`,
   `To define a 1DCA we need to know three things: the number [...]`,
@@ -66,7 +76,7 @@ interface PlainTextTranslation {
 
 export type PlainTextKey = PlainTextTranslation['kind'];
 
-export type PlainTextTranslator = ((kind: PlainTextKey) => string) & { locale: Locale };
+export type PlainTextTranslator = (kind: PlainTextKey) => string;
 
 type Replacer = React.ReactElement;
 

@@ -1,7 +1,7 @@
+import { assertNever } from '@kofno/piper';
 import { just, Maybe, nothing } from 'maybeasy';
 import { makeObservable, computed, action, observable } from 'mobx';
 import { NonEmptyList } from 'nonempty-list';
-import { assertNever } from '../../Assert';
 import { Automata, Generation } from '../Types';
 import { State, ready, working, waiting } from './Types';
 

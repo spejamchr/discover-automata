@@ -2,11 +2,12 @@ import { always, pipe } from '@kofno/piper';
 import Decoder, { succeed } from 'jsonous';
 import { just, Maybe, nothing } from 'maybeasy';
 import { err, ok, Result } from 'resulty';
+import Task from 'taskarian';
 
 type Comparer = '<' | '<=' | '===' | '!==' | '>' | '>=';
 
 // using `number | bigint | string` here breaks things. I don't understand why.
-export type Int = Number | BigInt | String;
+export type Comparable = Number | BigInt | String | ReadonlyArray<Comparable>;
 
 export interface ComparerError {
   kind: 'comparer-error';
@@ -15,7 +16,7 @@ export interface ComparerError {
   value: string;
 }
 
-const comparison = <T extends Int>(comparer: Comparer, target: T, value: T): boolean => {
+const comparison = <T extends Comparable>(comparer: Comparer, target: T, value: T): boolean => {
   switch (comparer) {
     case '<':
       return value < target;
@@ -32,7 +33,11 @@ const comparison = <T extends Int>(comparer: Comparer, target: T, value: T): boo
   }
 };
 
-const comparerErrorR = <T extends Int>(comparer: Comparer, target: T, value: T): ComparerError => ({
+const comparerErrorR = <T extends Comparable>(
+  comparer: Comparer,
+  target: T,
+  value: T,
+): ComparerError => ({
   kind: 'comparer-error',
   comparer,
   target: String(target),
@@ -41,7 +46,7 @@ const comparerErrorR = <T extends Int>(comparer: Comparer, target: T, value: T):
 
 const whenComparedR =
   (comparer: Comparer) =>
-  <T extends Int>(target: T) =>
+  <T extends Comparable>(target: T) =>
   (value: T): Result<ComparerError, T> =>
     comparison(comparer, target, value) ? ok(value) : err(comparerErrorR(comparer, target, value));
 
@@ -53,13 +58,13 @@ export const whenGTR = whenComparedR('>');
 export const whenGER = whenComparedR('>=');
 
 export const whenBetweenR =
-  <T extends Int>(min: T, max: T) =>
+  <T extends Comparable>(min: T, max: T) =>
   (x: T): Result<ComparerError, T> =>
     ok<ComparerError, T>(x).andThen(whenGER(min)).andThen(whenLER(max));
 
 const whenComparedByR =
   (comparer: Comparer) =>
-  <T extends Int, A>(target: T, by: (a: A) => T) =>
+  <T extends Comparable, A>(target: T, by: (a: A) => T) =>
   (a: A): Result<ComparerError, A> => {
     const value = by(a);
     return comparison(comparer, target, value)
@@ -75,7 +80,7 @@ export const whenByGTR = whenComparedByR('>');
 export const whenByGER = whenComparedByR('>=');
 
 export const whenBetweenByR =
-  <T extends Int, A>(min: T, max: T, by: (a: A) => T) =>
+  <T extends Comparable, A>(min: T, max: T, by: (a: A) => T) =>
   (a: A): Result<ComparerError, A> =>
     ok<ComparerError, A>(a).map(by).andThen(whenBetweenR(min, max)).map(always(a));
 
@@ -84,7 +89,7 @@ export const fromResultM = <T>(result: Result<unknown, T>): Maybe<T> =>
 
 const whenComparedD =
   (comparer: Comparer) =>
-  <T extends Int>(target: T) =>
+  <T extends Comparable>(target: T) =>
   (value: T): Decoder<T> =>
     new Decoder(() => {
       return whenComparedR(comparer)(target)(value).mapError(
@@ -100,13 +105,13 @@ export const whenGTD = whenComparedD('>');
 export const whenGED = whenComparedD('>=');
 
 export const whenBetweenD =
-  <T extends Int>(min: T, max: T) =>
+  <T extends Comparable>(min: T, max: T) =>
   (target: T): Decoder<T> =>
     whenGED(min)(target).andThen(whenLED(max));
 
 const whenComparedByD =
   (comparer: Comparer) =>
-  <T extends Int, A>(target: T, by: (a: A) => T) =>
+  <T extends Comparable, A>(target: T, by: (a: A) => T) =>
   (a: A): Decoder<A> =>
     new Decoder(() => {
       const value = by(a);
@@ -123,14 +128,14 @@ export const whenByGTD = whenComparedByD('>');
 export const whenByGED = whenComparedByD('>=');
 
 export const whenBetweenByD =
-  <T extends Int, A>(min: T, max: T, by: (a: A) => T) =>
+  <T extends Comparable, A>(min: T, max: T, by: (a: A) => T) =>
   (a: A): Decoder<A> =>
     succeed(a).map(by).andThen(whenGED(min)).andThen(whenLED(max)).map(always(a));
 
 const whenComparedM =
   (comparer: Comparer) =>
-  (target: number) =>
-  (value: number): Maybe<number> =>
+  <T extends Comparable>(target: T) =>
+  (value: T): Maybe<T> =>
     comparison(comparer, target, value) ? just(value) : nothing();
 
 export const whenGTM = whenComparedM('>');
@@ -140,4 +145,8 @@ export const whenNEM = whenComparedM('!==');
 export const whenLTM = whenComparedM('<');
 export const whenLEM = whenComparedM('<=');
 
-export const whenBetweenM = (min: number, max: number) => pipe(whenBetweenR(min, max), fromResultM);
+export const whenBetweenM = <T extends Comparable>(min: T, max: T) =>
+  pipe(whenBetweenR(min, max), fromResultM);
+
+export const resultToTask = <E, T>(result: Result<E, T>): Task<E, T> =>
+  result.cata({ Ok: Task.succeed<E, T>, Err: Task.fail<E, T> });

@@ -9,10 +9,10 @@ interface Props {
 
 const Togglers: React.FC<Props> = ({ store }) => (
   <span className="inline-flex min-w-[15rem] flex-col">
-    <Button className="mb-1" onClick={store.toggleShowStateLabels}>
+    <Button className="mb-2" onClick={store.toggleShowStateLabels}>
       <T kind={store.showStateLabels ? 'Showing state labels' : 'Hiding state labels'} />
     </Button>
-    <Button className="mb-1" onClick={store.toggleDisplayInColor}>
+    <Button className="mb-2" onClick={store.toggleDisplayInColor}>
       <T kind={store.displayInColor ? 'Displaying in color' : 'Displaying in grayscale'} />
     </Button>
   </span>

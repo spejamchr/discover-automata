@@ -1,8 +1,7 @@
-import { always } from '@kofno/piper';
+import { always, assertNever } from '@kofno/piper';
 import { NonEmptyList } from 'nonempty-list';
 import HistoryStore from '.';
 import { nextCellsOnZero } from '..';
-import { assertNever } from '../../Assert';
 import { range } from '../../Range';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
@@ -24,7 +23,7 @@ interface Props {
 
 class Reactions extends ReactionComponent<HistoryStore, State, Props> {
   tester = () => this.props.store.state;
-  effect = (state: State) => {
+  effect = (state: State): void => {
     switch (state.kind) {
       case 'waiting':
         this.props.store.setShowableEmulationWidth(this.props.visibleEmulationWidth);

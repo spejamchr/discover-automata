@@ -11,7 +11,3 @@ export const assertResult = <T>(result: Result<unknown, T>): T =>
 
 export const assertIs = <T>(decoder: Decoder<T>): ((u: unknown) => T) =>
   pipe(decoder.decodeAny, assertResult);
-
-export const assertNever = (n: never): never => {
-  fail(`Expected never but got ${JSON.parse(n)}`);
-};

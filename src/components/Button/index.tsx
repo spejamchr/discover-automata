@@ -8,13 +8,15 @@ interface Props
     HTMLButtonElement
   > {}
 
-const Button: React.FC<Props> = ({ children, className, ...rest }) => (
+const Button: React.FC<Props> = ({ children, className, disabled, ...rest }) => (
   <button
-    className={clsx(
-      className,
-      'rounded bg-slate-300 p-2 transition hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:hover:text-slate-100 dark:active:bg-slate-500 dark:active:text-slate-50',
-    )}
+    className={clsx(className, 'rounded p-2 transition', {
+      'bg-slate-200 text-slate-400 dark:bg-slate-500 dark:text-slate-400': disabled,
+      'bg-slate-300 hover:bg-slate-400 hover:text-slate-800 active:bg-slate-500 active:text-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:hover:text-slate-100 dark:active:bg-slate-500 dark:active:text-slate-50':
+        !disabled,
+    })}
     {...rest}
+    disabled={disabled}
   >
     {children}
   </button>
