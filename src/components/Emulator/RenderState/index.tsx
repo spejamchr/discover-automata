@@ -11,10 +11,8 @@ import OnlyOnClient from '../../OnlyOnClient';
 import HeartFilled from '../../svgs/HeartFilled';
 import Store from '../Store';
 import Togglers from '../Togglers';
-import ConfigureRuleId from './ConfigureRuleId';
 import Configuring from './Configuring';
 import HistoryWithWidth from './HistoryWithWidth';
-import Rules from './Rules';
 
 interface Props {
   emulatorStore: Store;
@@ -52,11 +50,7 @@ const RenderState: React.FC<Props> = ({ emulatorStore, favoritesStore }) => {
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
-            <>
-              <Configuring store={emulatorStore} />
-              <ConfigureRuleId store={emulatorStore} />
-              <Rules store={emulatorStore} />
-            </>
+            <Configuring store={emulatorStore} />
           </Tab.Panel>
           <Tab.Panel>
             <Togglers store={emulatorStore} />
