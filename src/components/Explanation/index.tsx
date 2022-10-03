@@ -12,6 +12,7 @@ import Neighbors from '../Emulator/RenderState/Configuring/Neighbors';
 import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import Togglers from '../Emulator/Togglers';
+import { displaySettings, randomCells } from '../Emulator/Types';
 import LinkedSection from '../LinkedSection';
 import LocaleLink from '../LocaleLink';
 
@@ -24,7 +25,7 @@ const simpleAutomaton = automataCtor({
 });
 
 class Explanation extends React.Component<Props> {
-  store = new Store(true, true, simpleAutomaton);
+  store = new Store(displaySettings(true, true, randomCells()), simpleAutomaton);
 
   render() {
     const backgroundColor = this.store.colorPicker(0)[0];

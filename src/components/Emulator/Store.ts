@@ -29,7 +29,7 @@ import {
   parseRuleId,
   parseStates,
 } from '../../utils/CellularAutomata/Parser';
-import { ConfigError, ConfigResult } from './Types';
+import { ConfigError, ConfigResult, DisplaySettings, FirstGeneration } from './Types';
 import { fromBaseBig } from '../../utils/IntBase';
 
 const firstAutomata = () =>
@@ -61,11 +61,7 @@ class Store {
   userRuleId: string;
   startingHue: number;
 
-  constructor(
-    public showStateLabels: boolean,
-    public displayInColor: boolean,
-    automata?: Automata,
-  ) {
+  constructor(public settings: DisplaySettings, automata?: Automata) {
     this.automata = automata || firstAutomata();
     this.userStates = this.automata.states.toString();
     this.userNeighbors = this.automata.neighbors;
@@ -75,8 +71,7 @@ class Store {
       userStates: observable,
       userNeighbors: observable,
       userRuleId: observable,
-      showStateLabels: observable,
-      displayInColor: observable,
+      settings: observable,
       startingHue: observable,
       automata: observable,
       userAutomataPieces: computed,
@@ -89,6 +84,7 @@ class Store {
       randomizeRules: action,
       toggleShowStateLabels: action,
       toggleDisplayInColor: action,
+      setFirstGeneration: action,
       setStartingHue: action,
       minStates: computed,
       maxStates: computed,
@@ -175,11 +171,15 @@ class Store {
   };
 
   toggleShowStateLabels = (): void => {
-    this.showStateLabels = !this.showStateLabels;
+    this.settings.showStateLabels = !this.settings.showStateLabels;
   };
 
   toggleDisplayInColor = (): void => {
-    this.displayInColor = !this.displayInColor;
+    this.settings.displayInColor = !this.settings.displayInColor;
+  };
+
+  setFirstGeneration = (firstGeneration: FirstGeneration): void => {
+    this.settings.firstGeneration = firstGeneration;
   };
 
   setStartingHue = (newHue: number): void => {

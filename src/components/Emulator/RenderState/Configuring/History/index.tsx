@@ -26,6 +26,7 @@ class History extends React.Component<Props> {
     return (
       <>
         <Reactions
+          emulatorStore={this.props.emulatorStore}
           store={this.historyStore}
           fireImmediately
           visibleEmulationWidth={this.props.visibleEmulationWidth}

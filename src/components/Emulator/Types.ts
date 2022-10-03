@@ -9,6 +9,36 @@ export type ConfigError = NumberParseFailure | ComparerError | OverflowError | S
 
 export type ConfigResult<T> = Result<ConfigError, T>;
 
+export interface RandomCells {
+  kind: 'random-cells';
+}
+
+export const randomCells = (): RandomCells => ({ kind: 'random-cells' });
+
+export interface SingleCell {
+  kind: 'single-cell';
+}
+
+export const singleCell = (): SingleCell => ({ kind: 'single-cell' });
+
+export type FirstGeneration = RandomCells | SingleCell;
+
+export interface DisplaySettings {
+  showStateLabels: boolean;
+  displayInColor: boolean;
+  firstGeneration: FirstGeneration;
+}
+
+export const displaySettings = (
+  showStateLabels: boolean,
+  displayInColor: boolean,
+  firstGeneration: FirstGeneration,
+): DisplaySettings => ({
+  showStateLabels,
+  displayInColor,
+  firstGeneration,
+});
+
 export interface Configuring {
   kind: 'configuring';
   states: string;

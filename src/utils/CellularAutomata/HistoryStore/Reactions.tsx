@@ -2,6 +2,7 @@ import { always, assertNever } from '@kofno/piper';
 import { NonEmptyList } from 'nonempty-list';
 import HistoryStore from '.';
 import { nextCellsOnZero } from '..';
+import EmulatorStore from '../../../components/Emulator/Store';
 import { range } from '../../Range';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
@@ -19,7 +20,32 @@ export const posBufferWidth = (store: HistoryStore): number =>
 
 interface Props {
   visibleEmulationWidth: number;
+  emulatorStore: EmulatorStore;
 }
+
+const randState = (states: number) => () => Math.floor(Math.random() * states);
+
+const singleCenteredCell = (width: number, states: number) => (i: number) =>
+  i === Math.round(width / 2) ? states - 1 : 0;
+
+const generationPopulator = (
+  emulatorStore: EmulatorStore,
+  store: HistoryStore,
+  width: number,
+): ((i: number) => number) => {
+  switch (emulatorStore.settings.firstGeneration.kind) {
+    case 'single-cell':
+      return singleCenteredCell(width, store.automata.states);
+    case 'random-cells':
+      return randState(store.automata.states);
+  }
+};
+
+const observableGeneration = (
+  emulatorStore: EmulatorStore,
+  store: HistoryStore,
+  width: number,
+): ReadonlyArray<number> => range(width).map(generationPopulator(emulatorStore, store, width));
 
 class Reactions extends ReactionComponent<HistoryStore, State, Props> {
   tester = () => this.props.store.state;
@@ -27,12 +53,15 @@ class Reactions extends ReactionComponent<HistoryStore, State, Props> {
     switch (state.kind) {
       case 'waiting':
         this.props.store.setShowableEmulationWidth(this.props.visibleEmulationWidth);
-        const randState = () => Math.floor(Math.random() * state.automata.states);
 
         const negBuffer = range(negBufferWidth(this.props.store)).map(always(0));
         const posBuffer = range(posBufferWidth(this.props.store)).map(always(0));
-        const randGen = range(this.props.visibleEmulationWidth).map(randState);
-        const firstGenerationA = negBuffer.concat(randGen).concat(posBuffer);
+        const observableGen = observableGeneration(
+          this.props.emulatorStore,
+          this.props.store,
+          this.props.visibleEmulationWidth,
+        );
+        const firstGenerationA = negBuffer.concat(observableGen).concat(posBuffer);
 
         const firstGeneration = new NonEmptyList(firstGenerationA[0], firstGenerationA.slice(1));
 

@@ -58,6 +58,8 @@ const plainTextTranlations = [
   `Settings`,
   `Showing state labels`,
   `Something went wrong... Refresh to try again.`,
+  `Starting with Random Cells`,
+  `Starting with Single Cell`,
   `States`,
   `These transition rules can be encoded as a single number, [...]`,
   `To define a 1DCA we need to know three things: the number [...]`,

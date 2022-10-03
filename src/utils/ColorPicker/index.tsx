@@ -38,11 +38,11 @@ const hLine = (store: Store) =>
   pipe(lineOnBound(store.startingHue, store.startingHue - 360, store), (hue) => (hue + 360) % 360);
 
 const calcHs = (store: Store): ((state: number) => number) => {
-  return store.displayInColor ? hLine(store) : always(defaultStartingHue);
+  return store.settings.displayInColor ? hLine(store) : always(defaultStartingHue);
 };
 
 const calcSs = (store: Store): ((state: number) => number) =>
-  store.displayInColor ? lineOnBound(0.08, 0.6, store) : always(0.09);
+  store.settings.displayInColor ? lineOnBound(0.08, 0.6, store) : always(0.09);
 
 const calcVs = (store: Store): ((state: number) => number) => lineOnBound(0.92, 0.4, store);
 
@@ -57,7 +57,7 @@ export const makeColorPicker = (store: Store): ColorPicker => {
     ({ h, s, l }) => `hsl(${h}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`,
   );
 
-  if (store.showStateLabels) {
+  if (store.settings.showStateLabels) {
     const textColors = hsls.map(({ l }) => (l >= 0.5 ? 'black' : 'white'));
     return (state: State) => [colors[state % states], textColors[state % states]];
   } else {

@@ -101,7 +101,6 @@ class Reactions extends ReactionComponent<Store, State, Props> {
   tester = () => this.props.store.state;
   effect = (state: State): void => {
     const { store } = this.props;
-    console.log('[SJC] in reaction with state:', state.kind);
     switch (state.kind) {
       case 'waiting':
         break;

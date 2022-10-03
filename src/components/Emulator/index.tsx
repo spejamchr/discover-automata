@@ -9,11 +9,12 @@ import EmulatorReactions from './Reactions';
 import RenderState from './RenderState';
 import EmulatorStore from './Store';
 import WithTFns from '../../utils/Locales/WithTFns';
+import { displaySettings, singleCell } from './Types';
 
 interface Props {}
 
 class Emulator extends React.Component<Props> {
-  emulatorStore = new EmulatorStore(false, true);
+  emulatorStore = new EmulatorStore(displaySettings(false, true, singleCell()));
   favoritesStore = new FavoritesStore();
 
   componentDidMount(): void {

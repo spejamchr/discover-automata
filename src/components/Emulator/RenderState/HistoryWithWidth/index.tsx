@@ -28,7 +28,7 @@ const HistoryWithWidth: React.FC<Props> = ({ store }) => {
         {visibleEmulationWidth
           .map((width) => (
             <History
-              key={serialize(store.automata)}
+              key={`${serialize(store.automata)}|${JSON.stringify(store.settings.firstGeneration)}`}
               emulatorStore={store}
               visibleEmulationWidth={width}
             />
