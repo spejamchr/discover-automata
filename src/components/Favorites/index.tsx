@@ -9,18 +9,10 @@ interface Props {
   emulatorStore: EmulatorStore;
 }
 
-class Favorites extends React.Component<Props> {
-  componentDidMount(): void {
-    this.props.store.loadingStoredFavorites();
-  }
-  render(): React.ReactNode {
-    const { store, emulatorStore } = this.props;
-    return (
-      <div className="mb-2">
-        <RenderState store={store} emulatorStore={emulatorStore} />
-      </div>
-    );
-  }
-}
+const Favorites: React.FC<Props> = ({ store, emulatorStore }) => (
+  <div className="mb-2">
+    <RenderState store={store} emulatorStore={emulatorStore} />
+  </div>
+);
 
 export default observer(Favorites);

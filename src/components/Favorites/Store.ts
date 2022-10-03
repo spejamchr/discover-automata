@@ -1,10 +1,14 @@
 import { assertNever } from '@kofno/piper';
+import { Maybe, nothing } from 'maybeasy';
 import { action, computed, makeObservable, observable } from 'mobx';
+import { automataCtor } from '../../utils/CellularAutomata';
+import { PlainTextTranslator } from '../../utils/Locales/Types';
 import {
   errorLoadingStoredFavorites,
   errorRemovingFavorite,
   errorResettingDefaultFavorites,
   errorStoringNewFavorite,
+  favorite,
   Favorite,
   loadingStoredFavorites,
   LoadStoredFavoritesError,
@@ -13,11 +17,48 @@ import {
   removingFavorite,
   ResetDefaultFavoritesError,
   resettingDefaultFavorites,
+  sortBySerialized,
   State,
   StoreNewFavoriteError,
   storingNewFavorite,
   waiting,
 } from './Types';
+
+const automata30 = () =>
+  automataCtor({
+    states: 2,
+    neighbors: [-1, 0, 1],
+    ruleId: BigInt(30),
+  });
+
+const automata90 = () =>
+  automataCtor({
+    states: 2,
+    neighbors: [-1, 0, 1],
+    ruleId: BigInt(90),
+  });
+
+const automata110 = () =>
+  automataCtor({
+    states: 2,
+    neighbors: [-1, 0, 1],
+    ruleId: BigInt(110),
+  });
+
+const automata184 = () =>
+  automataCtor({
+    states: 2,
+    neighbors: [-1, 0, 1],
+    ruleId: BigInt(184),
+  });
+
+const defaultFavorites = (t: PlainTextTranslator): Array<Favorite> =>
+  [
+    favorite(automata30(), t('Rule 30: Mathematica used this as an RNG')),
+    favorite(automata90(), t('Rule 90: The exclusive-or function')),
+    favorite(automata110(), t('Rule 110: Turing-complete!')),
+    favorite(automata184(), t('Rule 184: The "traffic rule"')),
+  ].sort(sortBySerialized);
 
 class Store {
   state: State = waiting();
@@ -77,7 +118,7 @@ class Store {
     }
   };
 
-  ready = (favorites: ReadonlyArray<Favorite>): void => {
+  ready = (favorites: Maybe<ReadonlyArray<Favorite>>): void => {
     switch (this.state.kind) {
       case 'loading-stored-favorites':
       case 'storing-new-favorite':
@@ -217,22 +258,25 @@ class Store {
     }
   };
 
-  get favorites(): ReadonlyArray<Favorite> {
+  get favorites(): Maybe<ReadonlyArray<Favorite>> {
     switch (this.state.kind) {
       case 'waiting':
       case 'resetting-default-favorites':
       case 'error-resetting-default-favorites':
       case 'loading-stored-favorites':
       case 'error-loading-stored-favorites':
+        return nothing();
       case 'removing-favorite':
       case 'error-removing-favorite':
-        return [];
       case 'ready':
       case 'storing-new-favorite':
       case 'error-storing-new-favorite':
         return this.state.favorites;
     }
   }
+
+  translatedFavorites = (t: PlainTextTranslator): ReadonlyArray<Favorite> =>
+    this.favorites.getOrElse(() => defaultFavorites(t));
 }
 
 export default Store;

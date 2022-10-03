@@ -1,3 +1,4 @@
+import { Maybe } from 'maybeasy';
 import { serialize } from '../../utils/CellularAutomata';
 import { Automata } from '../../utils/CellularAutomata/Types';
 import { GetObjectError, RemoveItemError, SetItemError } from '../../utils/Storage';
@@ -15,7 +16,7 @@ export const favorite = (automata: Automata, name: string): Favorite => ({
 });
 
 interface HasFavorites {
-  favorites: ReadonlyArray<Favorite>;
+  favorites: Maybe<ReadonlyArray<Favorite>>;
 }
 
 export type ResetDefaultFavoritesError = RemoveItemError;
@@ -107,29 +108,36 @@ export const errorLoadingStoredFavorites = (
   error: LoadStoredFavoritesError,
 ): ErrorLoadingStoredFavorites => ({ kind: 'error-loading-stored-favorites', error });
 
-export const ready = (favorites: ReadonlyArray<Favorite>): Ready => ({
+export const ready = (favorites: Maybe<ReadonlyArray<Favorite>>): Ready => ({
   kind: 'ready',
   favorites,
 });
 
 export const storingNewFavorite = (
-  favorites: ReadonlyArray<Favorite>,
+  favorites: Maybe<ReadonlyArray<Favorite>>,
   favorite: Favorite,
 ): StoringNewFavorite => ({ kind: 'storing-new-favorite', favorites, favorite });
 
 export const errorStoringNewFavorite = (
-  favorites: ReadonlyArray<Favorite>,
+  favorites: Maybe<ReadonlyArray<Favorite>>,
   favorite: Favorite,
   error: StoreNewFavoriteError,
 ): ErrorStoringNewFavorite => ({ kind: 'error-storing-new-favorite', favorites, favorite, error });
 
 export const removingFavorite = (
-  favorites: ReadonlyArray<Favorite>,
+  favorites: Maybe<ReadonlyArray<Favorite>>,
   favorite: Favorite,
 ): RemovingFavorite => ({ kind: 'removing-favorite', favorites, favorite });
 
 export const errorRemovingFavorite = (
-  favorites: ReadonlyArray<Favorite>,
+  favorites: Maybe<ReadonlyArray<Favorite>>,
   favorite: Favorite,
   error: StoreNewFavoriteError,
 ): ErrorRemovingFavorite => ({ kind: 'error-removing-favorite', favorites, favorite, error });
+
+export const sortBySerialized = (a: Favorite, b: Favorite): number => {
+  const aa = a.serialized.split('.').map(Number);
+  const ba = b.serialized.split('.').map(Number);
+  const index = aa[0] === ba[0] ? (aa[1] === ba[1] ? 2 : 1) : 0;
+  return aa[index] - ba[index];
+};

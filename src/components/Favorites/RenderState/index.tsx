@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import { fromArrayMaybe } from 'nonempty-list';
 import React from 'react';
 import T from '../../../utils/Locales/T';
+import WithTFns from '../../../utils/Locales/WithTFns';
 import Button from '../../Button';
 import EmulatorStore from '../../Emulator/Store';
 import Store from '../Store';
@@ -31,26 +32,28 @@ const RenderState: React.FC<Props> = ({ store, emulatorStore }) => {
     case 'storing-new-favorite':
     case 'removing-favorite':
       return (
-        <>
-          {fromArrayMaybe(store.state.favorites)
-            .map((favorites) =>
-              favorites
-                .map((f) => (
-                  <Favorite
-                    key={f.serialized}
-                    store={store}
-                    emulatorStore={emulatorStore}
-                    favorite={f}
-                  />
-                ))
-                .toArray(),
-            )
-            .getOrElse(() => [
-              <Button key="1" onClick={store.resetDefaultFavorites}>
-                <T kind="Recreate Default Favorites" />
-              </Button>,
-            ])}
-        </>
+        <WithTFns>
+          {({ t }) =>
+            fromArrayMaybe(store.translatedFavorites(t))
+              .map((favorites) =>
+                favorites
+                  .map((f) => (
+                    <Favorite
+                      key={f.serialized}
+                      store={store}
+                      emulatorStore={emulatorStore}
+                      favorite={f}
+                    />
+                  ))
+                  .toArray(),
+              )
+              .getOrElse(() => [
+                <Button key="1" onClick={store.resetDefaultFavorites}>
+                  <T kind="Recreate Default Favorites" />
+                </Button>,
+              ])
+          }
+        </WithTFns>
       );
   }
 };

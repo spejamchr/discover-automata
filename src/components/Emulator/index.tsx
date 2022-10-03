@@ -19,6 +19,7 @@ class Emulator extends React.Component<Props> {
 
   componentDidMount(): void {
     windowGet('addEventListener').do((fn) => fn('popstate', this.emulatorStore.setAutomataFromUrl));
+    this.favoritesStore.loadingStoredFavorites();
   }
 
   render() {

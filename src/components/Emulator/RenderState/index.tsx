@@ -1,4 +1,5 @@
 import { Tab } from '@headlessui/react';
+import { identity } from '@kofno/piper';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -20,9 +21,9 @@ interface Props {
 }
 
 const RenderState: React.FC<Props> = ({ emulatorStore, favoritesStore }) => {
-  const isFavorited = favoritesStore.favorites.some(
-    (f) => f.serialized === serialize(emulatorStore.automata),
-  );
+  const isFavorited = favoritesStore
+    .translatedFavorites(identity)
+    .some((f) => f.serialized === serialize(emulatorStore.automata));
   return (
     <OnlyOnClient>
       <Tab.Group>
