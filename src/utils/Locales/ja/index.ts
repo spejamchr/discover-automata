@@ -26,6 +26,7 @@ export const ja: Translations = {
   "Favorites": "お気に入り",
   "Go here to use the emulator.": "エミュレータを使用するには、ここにアクセスしてください。",
   "Hiding state labels": "状態ラベルを非表示",
+  "Hue": "色相",
   "I called this an \"emulator\" instead of a \"simulator,\" [...]": "これを「シミュレーター」ではなく「エミュレーター」と呼んだのは、シミュレーターはシミュレートするものに近づける傾向があるためです。一方、エミュレーターの目標は、エミュレートするものの動作を正確に再現することです。",
   "I wanted to make some fun designs, and had just read about [...]": "楽しいデザインを作りたくて、一次元セルオートマトンについて読んだばかりだったので、このサイトが生まれました。",
   "In general, there are <link>many, many types of [...]": "一般に、セル オートマトンの作成に使用できる <link>非常に多くのタイプの近傍</link> があります（時間とともに変化する近傍を含みます）。 ただし、このサイトで使用される近傍は、現在のセルとその両側の最も近いいくつかのセルの選択に制限されています。",

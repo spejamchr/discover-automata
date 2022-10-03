@@ -3,6 +3,7 @@ import T from '../../../utils/Locales/T';
 import Button from '../../Button';
 import Store from '../Store';
 import { randomCells, singleCell } from '../Types';
+import ColorPicker from './ColorPicker';
 
 interface Props {
   store: Store;
@@ -31,6 +32,7 @@ const Togglers: React.FC<Props> = ({ store }) => (
         }
       />
     </Button>
+    <ColorPicker store={store} />
   </span>
 );
 

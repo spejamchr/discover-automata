@@ -26,6 +26,7 @@ export const en: Translations = {
   "Favorites":"Favorites",
   "Go here to use the emulator.": "Go here to use the emulator.",
   "Hiding state labels": "Hiding state labels",
+  "Hue": "Hue",
   "I called this an \"emulator\" instead of a \"simulator,\" [...]": "I called this an \"emulator\" instead of a \"simulator,\" because simulators tend to approximate the thing the simulate, while the goal of an emulator is to recreate the behavior of the thing they emulate exactly.",
   "I wanted to make some fun designs, and had just read about [...]": "I wanted to make some fun designs, and had just read about one-dimensional cellular automata, so this site was born.",
   "In general, there are <link>many, many types of [...]": "In general, there are <link>many, many types of neighborhoods</link> that can be used to create cellular automata (including neighboorhoods that can change with time). However, neighborhoods used on this site are limited to a selection of the current cell and several of its closest neighbors on each side.",

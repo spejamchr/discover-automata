@@ -40,6 +40,7 @@ const plainTextTranlations = [
   `Favorites`,
   `Go here to use the emulator.`,
   `Hiding state labels`,
+  `Hue`,
   `I called this an "emulator" instead of a "simulator," [...]`,
   `I wanted to make some fun designs, and had just read about [...]`,
   `In this simulation, you can set the number of states the [...]`,

@@ -26,6 +26,7 @@ export const pt: Translations = {
   "Favorites": "Favoritos",
   "Go here to use the emulator.": "Acesse aqui para usar o emulador.",
   "Hiding state labels": "Ocultando rótulos de estado",
+  "Hue": "Matiz",
   "I called this an \"emulator\" instead of a \"simulator,\" [...]": "Chamei isso de \"emulador\" em vez de \"simulador\", porque os simuladores tendem a aproximar a coisa que simula, enquanto o objetivo de um emulador é recriar exatamente o comportamento da coisa que eles emulam.",
   "I wanted to make some fun designs, and had just read about [...]": "Eu queria fazer alguns designs divertidos, e tinha acabado de ler sobre autômatos celulares unidimensionais, então este site nasceu.",
   "In general, there are <link>many, many types of [...]": "Em geral, existem <link>muitos, muitos tipos de vizinhanças</link> que podem ser usados para criar autômatos celulares (incluindo vizinhanças que podem mudar com o tempo). No entanto, as vizinhanças usadas neste site são limitadas a uma seleção da célula atual e vários de seus vizinhos mais próximos de cada lado.",
