@@ -33,6 +33,7 @@ export const en: Translations = {
   "In general, there are <link>many, many types of [...]": "In general, there are <link>many, many types of neighborhoods</link> that can be used to create cellular automata (including neighboorhoods that can change with time). However, neighborhoods used on this site are limited to a selection of the current cell and several of its closest neighbors on each side.",
   "In this emulator, you can set the number of states the [...]": "In this emulator, you can set the number of states the cellular automaton has.",
   "Neighbors": "Neighbors",
+  "Note on Naming": "Note on Naming",
   "Once the automaton is configured, this site emulates it by [...]": "Once the automaton is configured, this site emulates it by generating a random initial generation and then drawing many children generations.",
   "Once the number of states and the neighborhood [...]": "Once the number of states and the neighborhood have been selected, the transition rules must be determined. For every possible combination of states in the given neighborhood, the resulting state must be chosen. As an example, here is the transition rule saying that if all of a cell's neighbors are <tag>0</tag> then the cell should become {{nextState}}:",
   "One-dimensional Cellular Automata": "One-dimensional Cellular Automata",

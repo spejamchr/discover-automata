@@ -46,6 +46,7 @@ const plainTextTranlations = [
   `I wanted to make some fun designs, and had just read about [...]`,
   `In this emulator, you can set the number of states the [...]`,
   `Neighbors`,
+  `Note on Naming`,
   `Once the automaton is configured, this site emulates it by [...]`,
   `One-dimensional Cellular Automata`,
   `One-dimensional cellular automata (1DCA) are a kind of [...]`,
@@ -284,3 +285,9 @@ export const LocaleContext = React.createContext<LocaleContextArgs>({
   locale: defaultLocale,
   Translator: makeTranslator(defaultLocale),
 });
+
+export const sortedLocales: ReadonlyArray<{ nativeLocale: string; locale: Locale }> = locales
+  .map((l) => [translate(l, { kind: 'native-locale-name' }), l] as const)
+  .map(([a, l]) => [a.toLowerCase(), a, l] as const)
+  .sort()
+  .map(([_, nativeLocale, locale]) => ({ nativeLocale, locale }));

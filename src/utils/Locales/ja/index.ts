@@ -33,6 +33,7 @@ export const ja: Translations = {
   "In general, there are <link>many, many types of [...]": "一般に、セル オートマトンの作成に使用できる <link>非常に多くのタイプの近傍</link> があります（時間とともに変化する近傍を含みます）。 ただし、このサイトで使用される近傍は、現在のセルとその両側の最も近いいくつかのセルの選択に制限されています。",
   "In this emulator, you can set the number of states the [...]": "このシミュレーションでは、セル オートマトンの状態数を設定できます。",
   "Neighbors": "近傍",
+  "Note on Naming": "命名法に関する注意",
   "Once the automaton is configured, this site emulates it by [...]": "オートマトンが設定されると、このサイトは、ランダムな初期世代を生成し、次に多くの子世代を描画することによってそれをエミュレートします。",
   "Once the number of states and the neighborhood [...]": "状態の数と近隣を選択したら、遷移規則を決定する必要があります。与えられた近隣の州の可能な組み合わせごとに、結果の州を選択する必要があります。例として、セルのすべての隣接セルが<tag>0</tag>の場合、セルは{{nextState}}になる必要があるという遷移ルールを次に示します。",
   "One-dimensional Cellular Automata": "一次元セルオートマトン",

@@ -33,6 +33,7 @@ export const pt: Translations = {
   "In general, there are <link>many, many types of [...]": "Em geral, existem <link>muitos, muitos tipos de vizinhanças</link> que podem ser usados para criar autômatos celulares (incluindo vizinhanças que podem mudar com o tempo). No entanto, as vizinhanças usadas neste site são limitadas a uma seleção da célula atual e vários de seus vizinhos mais próximos de cada lado.",
   "In this emulator, you can set the number of states the [...]": "Nesta simulação, você pode definir o número de estados que o autômato celular possui.",
   "Neighbors": "Vizinhos",
+  "Note on Naming": "Nota sobre Nomenclatura",
   "Once the automaton is configured, this site emulates it by [...]": "Uma vez que o autômato é configurado, este site o emula gerando uma geração inicial aleatória e então desenhando muitas gerações filhas.",
   "Once the number of states and the neighborhood [...]": "Uma vez selecionado o número de estados e a vizinhança, as regras de transição devem ser determinadas. Para cada combinação possível de estados na vizinhança dada, o estado resultante deve ser escolhido. Como exemplo, aqui está a regra de transição dizendo que, se todos os vizinhos de uma célula forem <tag>0</tag>, a célula deve se tornar {{nextState}}:",
   "One-dimensional Cellular Automata": "Autômatos Celulares Unidimensionais",

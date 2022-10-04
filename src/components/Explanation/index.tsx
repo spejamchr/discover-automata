@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { automataCtor } from '../../utils/CellularAutomata';
 import T from '../../utils/Locales/T';
+import { LocaleContext, sortedLocales } from '../../utils/Locales/Types';
 import WithTFns from '../../utils/Locales/WithTFns';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Row/Cell';
@@ -36,6 +37,31 @@ class Explanation extends React.Component<Props> {
     return (
       <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
+
+        <p className="flex justify-center text-sm">
+          <LocaleContext.Consumer>
+            {({ locale: currentLocale }) =>
+              sortedLocales.map(({ nativeLocale, locale }, i) => {
+                const lang =
+                  locale === currentLocale ? (
+                    <span>{nativeLocale}</span>
+                  ) : (
+                    <LocaleLink locale={locale} href="/">
+                      {nativeLocale}
+                    </LocaleLink>
+                  );
+                const separator =
+                  i === sortedLocales.length - 1 ? <></> : <span className="mx-2"> - </span>;
+                return (
+                  <>
+                    {lang}
+                    {separator}
+                  </>
+                );
+              })
+            }
+          </LocaleContext.Consumer>
+        </p>
 
         <LinkedSection h="h1" kind="What's this all about?" />
 
@@ -253,26 +279,33 @@ class Explanation extends React.Component<Props> {
 
         <HistoryWithWidth store={this.store} height={3} className="min-h-[3rem]" />
 
-        <h3>Note on Naming</h3>
+        <LinkedSection h="h3" kind={'Note on Naming'} />
 
         <p>
           <T kind='I called this an "emulator" instead of a "simulator," [...]' />
         </p>
 
-        <h2>Display Settings</h2>
+        <LinkedSection h="h2" kind={'Display Settings'} />
 
-        <p>There are several settings that control how the emulator is displayed:</p>
+        <p>
+          <T kind={'There are several settings that control how the emulator is [...]'} />
+        </p>
 
         <Togglers store={this.store} />
 
         <ul>
-          <li>The numeric labels can be toggled on or off.</li>
-          <li>The emulator can be rendered in color or in grayscale.</li>
           <li>
-            The first generation of cells can be created randomly, or as a single non-zero cell
-            surrounded by zero cells.
+            <T kind={'The numeric labels can be toggled on or off.'} />
           </li>
-          <li>The hue can be adjusted to render the emulator using different colors.</li>
+          <li>
+            <T kind={'The emulator can be rendered in color or in grayscale.'} />
+          </li>
+          <li>
+            <T kind={'The first generation of cells can be created randomly, or [...]'} />
+          </li>
+          <li>
+            <T kind={'The hue can be adjusted to render the emulator using [...]'} />
+          </li>
         </ul>
       </div>
     );
