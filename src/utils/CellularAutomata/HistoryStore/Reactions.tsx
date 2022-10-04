@@ -7,16 +7,14 @@ import { range } from '../../Range';
 import ReactionComponent from '../../ReactionComponent';
 import { State } from './Types';
 
-export const emulationGenerations = 60;
-
 const negSpeedOfLight = (store: HistoryStore): number => Math.min(0, ...store.automata.neighbors);
 const posSpeedOfLight = (store: HistoryStore): number => Math.max(0, ...store.automata.neighbors);
 
 export const negBufferWidth = (store: HistoryStore): number =>
-  emulationGenerations * -1 * negSpeedOfLight(store);
+  store.height * -1 * negSpeedOfLight(store);
 
 export const posBufferWidth = (store: HistoryStore): number =>
-  emulationGenerations * posSpeedOfLight(store);
+  store.height * posSpeedOfLight(store);
 
 interface Props {
   visibleEmulationWidth: number;
@@ -68,13 +66,14 @@ class Reactions extends ReactionComponent<HistoryStore, State, Props> {
         this.props.store.working(this.props.store.automata, new NonEmptyList(firstGeneration, []));
         break;
       case 'working':
-        for (let i = 0; i < 4; i++) {
+        const workingRows = Math.min(4, this.props.store.height - state.generations.length);
+        for (let i = 0; i < workingRows; i++) {
           this.props.store.calcNextGeneration(nextCellsOnZero(this.props.store.automata));
         }
         this.props.store.ready();
         break;
       case 'ready':
-        if (state.generations.length < emulationGenerations) {
+        if (state.generations.length < this.props.store.height) {
           // Break the work into chunks so that we don't hog the thread
           setTimeout(() => this.props.store.working(state.automata, state.generations), 5);
         }

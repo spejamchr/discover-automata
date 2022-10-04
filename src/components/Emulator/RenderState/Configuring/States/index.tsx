@@ -41,7 +41,7 @@ const States: React.FC<Props> = ({ store, className }) => {
           onChange={(e) => store.setStates(e.target.value)}
         />
         <Button
-          className="mr-1"
+          className="mr-1 flex h-10 items-center justify-center"
           onClick={() =>
             ok(store.maxStates)
               .map((max) => max - store.minStates)

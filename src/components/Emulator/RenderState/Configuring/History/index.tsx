@@ -9,10 +9,11 @@ import EmulatorReactions from './EmulatorReactions';
 interface Props {
   emulatorStore: Store;
   visibleEmulationWidth: number;
+  height: number;
 }
 
 class History extends React.Component<Props> {
-  historyStore = new HistoryStore(this.props.emulatorStore.automata);
+  historyStore = new HistoryStore(this.props.emulatorStore.automata, this.props.height);
 
   componentDidMount(): void {
     this.historyStore.setVisibleEmulationWidth(this.props.visibleEmulationWidth);
@@ -34,6 +35,7 @@ class History extends React.Component<Props> {
         <EmulatorReactions store={this.props.emulatorStore} />
         <Generations
           historyStore={this.historyStore}
+          emulatorStore={this.props.emulatorStore}
           colorPicker={this.props.emulatorStore.colorPicker}
         />
       </>

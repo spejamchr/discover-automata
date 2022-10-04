@@ -65,7 +65,7 @@ const Neighbors: React.FC<Props> = ({ store, className }) => {
         </span>
       </span>
       <Button
-        className="mb-1"
+        className="mb-1 flex h-10 items-center justify-center"
         onClick={() =>
           ok(store.maxNeighbors)
             .map((max) => max - store.minNeighbors)

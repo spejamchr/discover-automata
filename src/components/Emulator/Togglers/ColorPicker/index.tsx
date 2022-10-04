@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import { defaultStartingHue } from '../../../../utils/ColorPicker';
 import T from '../../../../utils/Locales/T';
 import Store from '../../Store';
 
@@ -15,8 +16,8 @@ const ColorPicker: React.FC<Props> = ({ store }) => {
       <input
         className="grow"
         type="range"
-        max={359}
-        min={0}
+        min={defaultStartingHue}
+        max={defaultStartingHue + 359}
         step={1}
         value={store.startingHue}
         onChange={(e) => store.setStartingHue(Number(e.target.value))}

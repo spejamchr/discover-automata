@@ -11,9 +11,11 @@ import History from '../Configuring/History';
 
 interface Props {
   store: Store;
+  height: number;
+  className?: string;
 }
 
-const HistoryWithWidth: React.FC<Props> = ({ store }) => {
+const HistoryWithWidth: React.FC<Props> = ({ store, height, className }) => {
   const [ref, { width: fullWidth }] = useMeasure<HTMLDivElement>();
   const [cellRef, { width: cellWidth }] = useMeasure<HTMLDivElement>();
 
@@ -23,7 +25,7 @@ const HistoryWithWidth: React.FC<Props> = ({ store }) => {
     .map(({ fullWidth, cellWidth }) => Math.floor(fullWidth / cellWidth));
 
   return (
-    <>
+    <div className={className}>
       <div ref={ref} className={`flex transition-all delay-150 duration-300 ease-in-out`}>
         {visibleEmulationWidth
           .map((width) => (
@@ -31,16 +33,17 @@ const HistoryWithWidth: React.FC<Props> = ({ store }) => {
               key={`${serialize(store.automata)}|${JSON.stringify(store.settings.firstGeneration)}`}
               emulatorStore={store}
               visibleEmulationWidth={width}
+              height={height}
             />
           ))
           .getOrElse(() => (
             <></>
           ))}
       </div>
-      <div ref={cellRef} className="w-fit">
+      <div ref={cellRef} className="max-h-0 w-fit">
         <Cell state={0} colorPicker={() => ['transparent', 'transparent']} />
       </div>
-    </>
+    </div>
   );
 };
 

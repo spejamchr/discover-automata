@@ -7,8 +7,11 @@ import WithTFns from '../../utils/Locales/WithTFns';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Row/Cell';
 import EmptyCell from '../Emulator/Generations/Row/EmptyCell';
+import ConfigureRuleId from '../Emulator/RenderState/ConfigureRuleId';
 import EmulatorReactions from '../Emulator/RenderState/Configuring/History/EmulatorReactions';
 import Neighbors from '../Emulator/RenderState/Configuring/Neighbors';
+import States from '../Emulator/RenderState/Configuring/States';
+import HistoryWithWidth from '../Emulator/RenderState/HistoryWithWidth';
 import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import Togglers from '../Emulator/Togglers';
@@ -29,7 +32,7 @@ class Explanation extends React.Component<Props> {
 
   render() {
     const backgroundColor = this.store.colorPicker(0)[0];
-    const color = this.store.colorPicker(1)[0];
+    const color = this.store.colorPicker(this.store.automata.states - 1)[0];
     return (
       <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
@@ -48,12 +51,12 @@ class Explanation extends React.Component<Props> {
                 <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
                   <span
                     style={{ backgroundColor: color }}
-                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6"
+                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
                     aria-hidden
                   />
                   <LocaleLink
                     style={{ color: backgroundColor }}
-                    className="relative "
+                    className="relative transition-colors duration-500 "
                     href="/emulate"
                   >
                     {content}
@@ -62,10 +65,14 @@ class Explanation extends React.Component<Props> {
                 <span className="relative dark:hidden">
                   <span
                     style={{ backgroundColor }}
-                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6"
+                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
                     aria-hidden
                   />
-                  <LocaleLink style={{ color }} className="relative " href="/emulate">
+                  <LocaleLink
+                    style={{ color }}
+                    className="relative transition-colors duration-500 "
+                    href="/emulate"
+                  >
                     {content}
                   </LocaleLink>
                 </span>
@@ -123,25 +130,13 @@ class Explanation extends React.Component<Props> {
           <T kind="Each cell in a cellular automata can be in one of several [...]" />
         </p>
 
-        <span className="flex">
-          {range(40).map((i) => (
-            <Cell
-              className={clsx('md:flex', {
-                hidden: i > 21,
-                'sm:flex': i < 34,
-              })}
-              key={i}
-              state={[1, 6, 7, 8, 13, 15, 18, 19, 22, 29, 30, 32, 36].indexOf(i) === -1 ? 0 : 1}
-              colorPicker={this.store.colorPicker}
-            />
-          ))}
-        </span>
+        <HistoryWithWidth store={this.store} height={1} className="min-h-[1rem]" />
 
         <p>
-          <T kind="In this simulation, you can set the number of states the [...]" />
+          <T kind="In this emulator, you can set the number of states the [...]" />
         </p>
 
-        <Togglers store={this.store} />
+        <States store={this.store} />
 
         <LinkedSection h="h3" kind="Neighbors" />
 
@@ -208,6 +203,8 @@ class Explanation extends React.Component<Props> {
           <T kind="These transition rules can be encoded as a single number, [...]" />
         </p>
 
+        <ConfigureRuleId store={this.store} />
+
         <p>
           (
           <T
@@ -224,41 +221,58 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <>
-            <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
-              <span
-                style={{ backgroundColor: color }}
-                className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12"
-                aria-hidden
-              />
-              <LocaleLink style={{ color: backgroundColor }} className="relative" href="/emulate">
-                <T kind="Go here to use the emulator." />
-              </LocaleLink>
-            </span>
-            <span className="relative dark:hidden">
-              <span
-                style={{ backgroundColor }}
-                className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12"
-                aria-hidden
-              />
-              <LocaleLink style={{ color }} className="relative" href="/emulate">
-                <T kind="Go here to use the emulator." />
-              </LocaleLink>
-            </span>
-          </>
+          <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
+            <span
+              style={{ backgroundColor: color }}
+              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
+              aria-hidden
+            />
+            <LocaleLink
+              style={{ color: backgroundColor }}
+              className="relative transition-colors duration-500"
+              href="/emulate"
+            >
+              <T kind="Go here to use the emulator." />
+            </LocaleLink>
+          </span>
+          <span className="relative dark:hidden">
+            <span
+              style={{ backgroundColor }}
+              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
+              aria-hidden
+            />
+            <LocaleLink
+              style={{ color }}
+              className="relative transition-colors duration-500"
+              href="/emulate"
+            >
+              <T kind="Go here to use the emulator." />
+            </LocaleLink>
+          </span>
         </p>
+
+        <HistoryWithWidth store={this.store} height={3} className="min-h-[3rem]" />
+
+        <h3>Note on Naming</h3>
 
         <p>
           <T kind='I called this an "emulator" instead of a "simulator," [...]' />
         </p>
 
+        <h2>Display Settings</h2>
+
+        <p>There are several settings that control how the emulator is displayed:</p>
+
+        <Togglers store={this.store} />
+
         <ul>
+          <li>The numeric labels can be toggled on or off.</li>
+          <li>The emulator can be rendered in color or in grayscale.</li>
           <li>
-            <T kind="A weather simulation can be used for predictions, but [...]" />
+            The first generation of cells can be created randomly, or as a single non-zero cell
+            surrounded by zero cells.
           </li>
-          <li>
-            <T kind="When using a (good) video game emulator, the video game [...]" />
-          </li>
+          <li>The hue can be adjusted to render the emulator using different colors.</li>
         </ul>
       </div>
     );

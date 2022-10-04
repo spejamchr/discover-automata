@@ -62,7 +62,7 @@ const RenderState: React.FC<Props> = ({ emulatorStore, favoritesStore }) => {
         </Tab.Panels>
       </Tab.Group>
 
-      <HistoryWithWidth store={emulatorStore} />
+      <HistoryWithWidth store={emulatorStore} height={60} />
     </OnlyOnClient>
   );
 };

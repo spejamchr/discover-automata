@@ -10,10 +10,11 @@ class HistoryStore {
   visibleEmulationWidth: number = 20; // The bit the user's window is wide enough to see
   showableEmulationWidth: number = 20; // The bit we have calculated and can show the user
 
-  constructor(automata: Automata) {
+  constructor(automata: Automata, public height: number) {
     this.state = waiting(automata);
     makeObservable(this, {
       state: observable,
+      height: observable,
       visibleEmulationWidth: observable,
       showableEmulationWidth: observable,
       setVisibleEmulationWidth: action,
