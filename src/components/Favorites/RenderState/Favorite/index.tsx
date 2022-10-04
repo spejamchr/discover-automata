@@ -27,7 +27,10 @@ const RenderState: React.FC<Props> = ({ store, emulatorStore, favorite }) => {
       {just(favorite.serialized)
         .andThen(whenEQM(serialize(emulatorStore.automata)))
         .map(() => (
-          <span className="flex w-full max-w-full rounded-full bg-slate-200 py-1 px-2 transition duration-300 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600">
+          <span
+            key={favorite.serialized}
+            className="flex w-full max-w-full rounded-full bg-slate-200 py-1 px-2 transition duration-300 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+          >
             <span className="grow">
               <WithTFns>
                 {({ t }) => (
