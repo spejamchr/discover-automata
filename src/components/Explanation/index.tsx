@@ -35,7 +35,7 @@ class Explanation extends React.Component<Props> {
     const backgroundColor = this.store.colorPicker(0)[0];
     const color = this.store.colorPicker(this.store.automata.states - 1)[0];
     return (
-      <div className="prose mx-2 mb-72 dark:prose-invert sm:mx-12">
+      <div className="prose mx-2 mb-[50vh] dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
 
         <p className="flex justify-center text-sm">

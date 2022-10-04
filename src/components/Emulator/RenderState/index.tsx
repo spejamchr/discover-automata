@@ -8,6 +8,7 @@ import T from '../../../utils/Locales/T';
 import Favorites from '../../Favorites';
 import FavoritesStore from '../../Favorites/Store';
 import { favorite } from '../../Favorites/Types';
+import HelpLink from '../../HelpLink';
 import OnlyOnClient from '../../OnlyOnClient';
 import HeartFilled from '../../svgs/HeartFilled';
 import Store from '../Store';
@@ -54,7 +55,10 @@ const RenderState: React.FC<Props> = ({ emulatorStore, favoritesStore }) => {
             <Configuring store={emulatorStore} />
           </Tab.Panel>
           <Tab.Panel>
-            <Togglers store={emulatorStore} />
+            <span className="flex items-start">
+              <Togglers store={emulatorStore} />
+              <HelpLink kind="Display Settings" />
+            </span>
           </Tab.Panel>
           <Tab.Panel>
             <Favorites store={favoritesStore} emulatorStore={emulatorStore} />

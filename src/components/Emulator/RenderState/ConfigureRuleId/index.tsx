@@ -5,15 +5,17 @@ import * as React from 'react';
 import { whenLER } from '../../../../utils/Extensions';
 import T from '../../../../utils/Locales/T';
 import Button from '../../../Button';
+import HelpLink from '../../../HelpLink';
 import Store from '../../Store';
 import RuleIdSize from './RuleIdSize';
 
 interface Props {
   store: Store;
+  showHelp?: boolean;
 }
 
-const ConfigureRuleId: React.FC<Props> = ({ store }) => (
-  <span>
+const ConfigureRuleId: React.FC<Props> = ({ store, showHelp }) => (
+  <span className="max-w-full">
     <label htmlFor="ruleInput">
       <span className={`text-sm font-medium`}>
         <T kind="Rule Number" /> <RuleIdSize store={store} />
@@ -48,6 +50,7 @@ const ConfigureRuleId: React.FC<Props> = ({ store }) => (
       <Button onClick={store.randomizeRules}>
         <T kind="Randomize" />
       </Button>
+      {showHelp && <HelpLink kind="Transition Rules" />}
     </span>
   </span>
 );

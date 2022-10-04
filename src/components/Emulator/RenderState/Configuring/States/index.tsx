@@ -25,6 +25,7 @@ const States: React.FC<Props> = ({ store, className }) => {
           <Ranged low={store.minStates} high={store.maxStates} />
         </ErrorStyled>
         )
+        <ExampleStates store={store} />
       </label>
       <span className="mb-1 flex max-w-full flex-wrap items-start">
         <input
@@ -53,7 +54,6 @@ const States: React.FC<Props> = ({ store, className }) => {
         >
           <T kind="Randomize" />
         </Button>
-        <ExampleStates store={store} />
       </span>
     </span>
   );
