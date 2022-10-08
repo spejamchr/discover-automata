@@ -35,7 +35,6 @@ class History extends React.Component<Props> {
         <EmulatorReactions store={this.props.emulatorStore} />
         <Generations
           historyStore={this.historyStore}
-          emulatorStore={this.props.emulatorStore}
           colorPicker={this.props.emulatorStore.colorPicker}
         />
       </>

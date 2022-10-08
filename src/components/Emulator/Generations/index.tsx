@@ -4,16 +4,14 @@ import * as React from 'react';
 import HistoryStore from '../../../utils/CellularAutomata/HistoryStore';
 import { negBufferWidth } from '../../../utils/CellularAutomata/HistoryStore/Reactions';
 import { ColorPicker } from '../../../utils/ColorPicker';
-import EmulatorStore from '../Store';
 import Row from './Row';
 
 interface Props {
   historyStore: HistoryStore;
-  emulatorStore: EmulatorStore;
   colorPicker: ColorPicker;
 }
 
-const Generations: React.FC<Props> = ({ historyStore, colorPicker, emulatorStore }) => {
+const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => {
   const negBuffer = negBufferWidth(historyStore);
   const width = Math.min(historyStore.visibleEmulationWidth, historyStore.showableEmulationWidth);
   return (
