@@ -25,7 +25,7 @@ const HistoryWithWidth: React.FC<Props> = ({ store, height, className }) => {
     .map(({ fullWidth, cellWidth }) => Math.floor(fullWidth / cellWidth));
 
   return (
-    <div className={className}>
+    <div className={className} style={{ minHeight: `${height}rem` }}>
       <div ref={ref} className={`flex transition-all delay-150 duration-300 ease-in-out`}>
         {visibleEmulationWidth
           .map((width) => (

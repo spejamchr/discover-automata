@@ -24,7 +24,7 @@ class Emulator extends React.Component<Props> {
 
   render() {
     return (
-      <div className={`mb-72 min-h-screen w-full px-2 text-slate-700 dark:text-slate-200 sm:px-12`}>
+      <div className={`w-full px-2 text-slate-700 dark:text-slate-200 sm:px-12`}>
         <span className="flex flex-wrap items-start justify-between">
           <div className="prose flex w-full max-w-sm flex-wrap items-baseline justify-between pb-4 dark:prose-invert">
             <h1>

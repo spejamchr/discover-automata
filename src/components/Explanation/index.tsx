@@ -35,7 +35,7 @@ class Explanation extends React.Component<Props> {
     const backgroundColor = this.store.colorPicker(0)[0];
     const color = this.store.colorPicker(this.store.automata.states - 1)[0];
     return (
-      <div className="prose mx-2 mb-[50vh] dark:prose-invert sm:mx-12">
+      <div className="prose mx-2 dark:prose-invert sm:mx-12">
         <EmulatorReactions store={this.store} />
 
         <p className="flex justify-center text-sm">
@@ -156,7 +156,7 @@ class Explanation extends React.Component<Props> {
           <T kind="Each cell in a cellular automata can be in one of several [...]" />
         </p>
 
-        <HistoryWithWidth store={this.store} height={1} className="min-h-[1rem]" />
+        <HistoryWithWidth store={this.store} height={1} />
 
         <p>
           <T kind="In this emulator, you can set the number of states the [...]" />
@@ -277,7 +277,7 @@ class Explanation extends React.Component<Props> {
           </span>
         </p>
 
-        <HistoryWithWidth store={this.store} height={3} className="min-h-[3rem]" />
+        <HistoryWithWidth store={this.store} height={3} />
 
         <LinkedSection h="h3" kind={'Note on Naming'} />
 
