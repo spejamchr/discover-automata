@@ -10,7 +10,7 @@ interface Props {
   className?: string;
 }
 
-const indices = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+export const indices = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 const Cell: React.FC<Props> = ({ state, colorPicker, className }) => {
   const [backgroundColor, color] = colorPicker(state);

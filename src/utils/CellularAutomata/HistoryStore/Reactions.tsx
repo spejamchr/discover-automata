@@ -66,7 +66,7 @@ class Reactions extends ReactionComponent<HistoryStore, State, Props> {
         this.props.store.working(this.props.store.automata, new NonEmptyList(firstGeneration, []));
         break;
       case 'working':
-        const workingRows = Math.min(4, this.props.store.height - state.generations.length);
+        const workingRows = Math.min(12, this.props.store.height - state.generations.length);
         for (let i = 0; i < workingRows; i++) {
           this.props.store.calcNextGeneration(nextCellsOnZero(this.props.store.automata));
         }
