@@ -6,7 +6,7 @@ import { negBufferWidth } from '../../../utils/CellularAutomata/HistoryStore/Rea
 import { ColorPicker } from '../../../utils/ColorPicker';
 import WithTFns from '../../../utils/Locales/WithTFns';
 import { canvasAndContext } from '../../CanvasAndContext';
-import { indices } from './Row/Cell';
+import { indices } from './Cell';
 
 interface Props {
   historyStore: HistoryStore;

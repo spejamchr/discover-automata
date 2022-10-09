@@ -6,8 +6,8 @@ import { whenNEM } from '../../../../../utils/Extensions';
 import { toBase } from '../../../../../utils/IntBase';
 import { range } from '../../../../../utils/Range';
 import Button from '../../../../Button';
-import Cell from '../../../Generations/Row/Cell';
-import EmptyCell from '../../../Generations/Row/EmptyCell';
+import Cell from '../../../Generations/Cell';
+import EmptyCell from '../../../Generations/EmptyCell';
 import Store from '../../../Store';
 
 interface Props {

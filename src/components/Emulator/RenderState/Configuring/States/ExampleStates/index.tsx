@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { range } from '../../../../../../utils/Range';
-import Cell from '../../../../Generations/Row/Cell';
+import Cell from '../../../../Generations/Cell';
 import Store from '../../../../Store';
 
 interface Props {

@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { State } from '../../../../../utils/CellularAutomata/Types';
-import { ColorPicker } from '../../../../../utils/ColorPicker';
+import { State } from '../../../../utils/CellularAutomata/Types';
+import { ColorPicker } from '../../../../utils/ColorPicker';
 
 interface Props {
   state: State;
