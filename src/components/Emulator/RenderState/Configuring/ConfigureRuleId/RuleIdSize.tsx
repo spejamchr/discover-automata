@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import T from '../../../../utils/Locales/T';
-import ErrorStyled from '../../../ErrorStyled';
-import Ranged from '../../../Ranged';
-import Store from '../../Store';
+import T from '../../../../../utils/Locales/T';
+import ErrorStyled from '../../../../ErrorStyled';
+import Ranged from '../../../../Ranged';
+import Store from '../../../Store';
 
 interface Props {
   store: Store;

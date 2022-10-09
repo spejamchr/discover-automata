@@ -8,17 +8,16 @@ import WithTFns from '../../utils/Locales/WithTFns';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Cell';
 import EmptyCell from '../Emulator/Generations/EmptyCell';
-import ConfigureRuleId from '../Emulator/RenderState/ConfigureRuleId';
-import EmulatorReactions from '../Emulator/RenderState/Configuring/History/EmulatorReactions';
+import ConfigureRuleId from '../Emulator/RenderState/Configuring/ConfigureRuleId';
 import Neighbors from '../Emulator/RenderState/Configuring/Neighbors';
 import States from '../Emulator/RenderState/Configuring/States';
 import HistoryWithWidth from '../Emulator/RenderState/HistoryWithWidth';
 import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
-import Togglers from '../Emulator/Togglers';
 import { displaySettings, randomCells } from '../Emulator/Types';
 import LinkedSection from '../LinkedSection';
 import LocaleLink from '../LocaleLink';
+import Togglers from '../Togglers';
 
 interface Props {}
 
@@ -36,8 +35,6 @@ class Explanation extends React.Component<Props> {
     const color = this.store.colorPicker(this.store.automata.states - 1)[0];
     return (
       <div className="prose mx-2 dark:prose-invert sm:mx-12">
-        <EmulatorReactions store={this.store} />
-
         <p className="flex justify-center text-sm">
           <LocaleContext.Consumer>
             {({ locale: currentLocale }) =>

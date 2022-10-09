@@ -2,11 +2,11 @@ import { always } from '@kofno/piper';
 import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { whenLER } from '../../../../utils/Extensions';
-import T from '../../../../utils/Locales/T';
-import Button from '../../../Button';
-import HelpLink from '../../../HelpLink';
-import Store from '../../Store';
+import { whenLER } from '../../../../../utils/Extensions';
+import T from '../../../../../utils/Locales/T';
+import Button from '../../../../Button';
+import HelpLink from '../../../../HelpLink';
+import Store from '../../../Store';
 import RuleIdSize from './RuleIdSize';
 
 interface Props {

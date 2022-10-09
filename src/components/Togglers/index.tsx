@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react';
-import T from '../../../utils/Locales/T';
-import Button from '../../Button';
-import Store from '../Store';
-import { randomCells, singleCell } from '../Types';
+import T from '../../utils/Locales/T';
+import Button from '../Button';
+import Store from '../Emulator/Store';
+import { randomCells, singleCell } from '../Emulator/Types';
 import ColorPicker from './ColorPicker';
 
 interface Props {

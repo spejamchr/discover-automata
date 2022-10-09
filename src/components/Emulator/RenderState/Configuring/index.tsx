@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import HelpLink from '../../../HelpLink';
 import Store from '../../Store';
-import ConfigureRuleId from '../ConfigureRuleId';
 import Rules from '../Rules';
+import ConfigureRuleId from './ConfigureRuleId';
 import Neighbors from './Neighbors';
 import States from './States';
 

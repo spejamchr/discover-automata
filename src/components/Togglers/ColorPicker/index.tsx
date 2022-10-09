@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import { defaultStartingHue } from '../../../../utils/ColorPicker';
-import T from '../../../../utils/Locales/T';
-import Store from '../../Store';
+import { defaultStartingHue } from '../../../utils/ColorPicker';
+import T from '../../../utils/Locales/T';
+import Store from '../../Emulator/Store';
 
 interface Props {
   store: Store;

@@ -11,8 +11,8 @@ import { favorite } from '../../Favorites/Types';
 import HelpLink from '../../HelpLink';
 import OnlyOnClient from '../../OnlyOnClient';
 import HeartFilled from '../../svgs/HeartFilled';
+import Togglers from '../../Togglers';
 import Store from '../Store';
-import Togglers from '../Togglers';
 import Configuring from './Configuring';
 import HistoryWithWidth from './HistoryWithWidth';
 

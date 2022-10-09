@@ -6,7 +6,7 @@ import { serialize } from '../../../../utils/CellularAutomata';
 import { whenGTM } from '../../../../utils/Extensions';
 import { cellPixelSize } from '../../Generations';
 import Store from '../../Store';
-import History from '../Configuring/History';
+import History from './History';
 
 interface Props {
   store: Store;
