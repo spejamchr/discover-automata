@@ -1,18 +1,10 @@
 import { NumberParseFailure, parseIntR } from '@execonline-inc/numbers';
 import { NonEmptyList } from 'nonempty-list';
 import { ok, Result } from 'resulty';
-import { OverflowError, parseBigIntR } from '../BigIntExt';
-import { fromBase, fromBaseBig, toBaseBig } from '../IntBase';
+import { parseBigIntR } from '../BigIntExt';
+import { fromBase, toBaseBig } from '../IntBase';
 import { fromZigZagCollection, toZigZagCollection } from '../ZigZag';
-import {
-  Automata,
-  AutomataWithRuleId,
-  AutomataWithRules,
-  Generation,
-  Index,
-  Rules,
-  State,
-} from './Types';
+import { Automata, AutomataWithRuleId, Generation, Index, Rules, State } from './Types';
 
 const calcRules = ({ ruleId, states, neighbors }: AutomataWithRuleId): Rules => {
   const ids = toBaseBig(states)(ruleId).digits as Array<number>;
@@ -28,16 +20,6 @@ export const automataCtor = (partial: AutomataWithRuleId): Automata => ({
   rules: calcRules(partial),
 });
 
-export const automataCtorWithRules = (
-  partial: AutomataWithRules,
-): Result<OverflowError, Automata> =>
-  fromBaseBig({ kind: 'big-int-base', base: partial.states, digits: partial.rules }).map(
-    (ruleId) => ({
-      ...partial,
-      ruleId,
-    }),
-  );
-
 const calcNextCellOnZero =
   (automata: Automata) =>
   (_cell: State, index: Index, cells: ReadonlyArray<State>): State =>
@@ -45,10 +27,9 @@ const calcNextCellOnZero =
       fromBase({
         kind: 'int-base',
         digits: automata.neighbors
-          .slice()
-          .reverse()
           .map((n) => n + index)
-          .map((i) => cells[i] || 0),
+          .map((i) => cells[i] || 0)
+          .reverse(),
         base: automata.states,
       })
     ];

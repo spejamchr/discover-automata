@@ -15,5 +15,4 @@ export interface Automata {
   ruleId: bigint;
 }
 
-export type AutomataWithRules = Omit<Automata, 'ruleId'>;
 export type AutomataWithRuleId = Omit<Automata, 'rules'>;
