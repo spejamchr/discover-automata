@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import { Menu } from '@headlessui/react';
 import { LocaleContext, sortedLocales } from '../../../utils/Locales/Types';
-import LocaleLink from '../../LocaleLink';
 import clsx from 'clsx';
-import { currentLocalePath, localePathToPath, withLocale } from '../../../utils/LocalePath';
+import CurrentPageInLocale from '../../LocaleLink/CurrentPageInLocale';
 
 interface Props {}
 
@@ -27,19 +26,15 @@ const Picker: React.FC<Props> = () => {
                   <div key={locale}>
                     <Menu.Item key={locale}>
                       {({ active }) => (
-                        <LocaleLink
+                        <CurrentPageInLocale
                           locale={locale}
                           className={clsx(
                             'flex w-full justify-between rounded px-4 py-2 text-left text-sm leading-5 no-underline',
                             { 'bg-slate-300 dark:bg-slate-600': active },
                           )}
-                          href={currentLocalePath()
-                            .map(withLocale(locale))
-                            .map(localePathToPath)
-                            .getOrElseValue('/')}
                         >
                           {nativeLocale}
-                        </LocaleLink>
+                        </CurrentPageInLocale>
                       )}
                     </Menu.Item>
                   </div>

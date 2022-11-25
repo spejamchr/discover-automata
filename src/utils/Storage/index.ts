@@ -1,8 +1,8 @@
-import { pipe } from '@kofno/piper';
+import { always, pipe } from '@kofno/piper';
 import Decoder from 'jsonous';
 import { fromNullable, just, Maybe, nothing } from 'maybeasy';
-import { err, ok, Result } from 'resulty';
-import { resultToTask } from '../Extensions';
+import { ok, Result } from 'resulty';
+import { fromRaisableR, resultToTask } from '../Extensions';
 
 export interface SetItemError {
   kind: 'set-item-error';
@@ -27,15 +27,10 @@ export interface KeyAndObject<T> {
   key: string;
   object: T;
 }
-
-export const setItemR = ({ key, item }: KeyAndItem): Result<SetItemError, KeyAndItem> => {
-  try {
-    window.localStorage.setItem(key, item);
-    return ok({ key, item });
-  } catch (e) {
-    return err(setItemError(key, item, e));
-  }
-};
+export const setItemR = ({ key, item }: KeyAndItem): Result<SetItemError, KeyAndItem> =>
+  fromRaisableR(() => window.localStorage.setItem(key, item))
+    .map(always({ key, item }))
+    .mapError((e) => setItemError(key, item, e));
 
 export const setItemT = pipe(setItemR, resultToTask);
 
@@ -56,13 +51,10 @@ const getItemError = (key: string, error: unknown): GetItemError => ({
   error,
 });
 
-export const getItemR = (key: string): Result<GetItemError, Maybe<string>> => {
-  try {
-    return ok(fromNullable(window.localStorage.getItem(key)));
-  } catch (e) {
-    return err(getItemError(key, e));
-  }
-};
+export const getItemR = (key: string): Result<GetItemError, Maybe<string>> =>
+  fromRaisableR(() => window.localStorage.getItem(key))
+    .map(fromNullable)
+    .mapError((e) => getItemError(key, e));
 
 export const getItemT = pipe(getItemR, resultToTask);
 
@@ -96,13 +88,9 @@ const removeItemError = (key: string, error: unknown): RemoveItemError => ({
   error,
 });
 
-export const removeItemR = (key: string): Result<RemoveItemError, string> => {
-  try {
-    window.localStorage.removeItem(key);
-    return ok(key);
-  } catch (e) {
-    return err(removeItemError(key, e));
-  }
-};
+export const removeItemR = (key: string): Result<RemoveItemError, string> =>
+  fromRaisableR(() => window.localStorage.removeItem(key))
+    .map(always(key))
+    .mapError((e) => removeItemError(key, e));
 
 export const removeItemT = pipe(removeItemR, resultToTask);

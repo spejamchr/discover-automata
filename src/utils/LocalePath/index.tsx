@@ -1,6 +1,7 @@
 import { drop, first } from '@execonline-inc/collections';
 import { just, Maybe, nothing } from 'maybeasy';
 import { Result } from 'resulty';
+import { fromRaisableR } from '../Extensions';
 import { defaultLocale, Locale, whenLocale } from '../Locales/Types';
 import { WindowError, windowGet } from '../WindowGet';
 
@@ -43,25 +44,48 @@ const isHash = (hash: string): hash is Hash => hash === '' || hash[0] === '#';
 
 const whenHash = (hash: string): Maybe<Hash> => (isHash(hash) ? just(hash) : nothing());
 
+export interface UrlIsh {
+  pathname: string;
+  search: string;
+  hash: string;
+}
+
+export const toLocalePath = (urlIsh: UrlIsh): LocalePath => {
+  const pathname = whenPath(urlIsh.pathname).getOrElseValue('/');
+  const search = whenSearch(urlIsh.search).getOrElseValue('');
+  const hash = whenHash(urlIsh.hash).getOrElseValue('');
+
+  const { locale, path } = first(pathPieces(pathname))
+    .andThen(whenLocale)
+    .map((locale) => ({
+      locale,
+      path: `/${pathPieces(pathname).slice(1).join('/')}` as const,
+    }))
+    .getOrElseValue({
+      locale: defaultLocale,
+      path: pathname,
+    });
+
+  return localePath(locale, path, search, hash);
+};
+
+export interface InvalidUrlError {
+  kind: 'invalid-url-error';
+  url: string;
+}
+
+export const invalidUrlError = (url: string): InvalidUrlError => ({
+  kind: 'invalid-url-error',
+  url,
+});
+
+export const stringToLocalePath = (href: string): Result<InvalidUrlError, LocalePath> =>
+  fromRaisableR(() => new URL(href, 'ignored-protocol:/'))
+    .mapError(() => invalidUrlError(href))
+    .map(toLocalePath);
+
 export const currentLocalePath = (): Result<WindowError, LocalePath> =>
-  windowGet('location').map((l) => {
-    const pathname = whenPath(l.pathname).getOrElseValue('/');
-    const search = whenSearch(l.search).getOrElseValue('');
-    const hash = whenHash(l.hash).getOrElseValue('');
-
-    const { locale, path } = first(pathPieces(pathname))
-      .andThen(whenLocale)
-      .map((locale) => ({
-        locale,
-        path: `/${pathPieces(pathname).slice(1).join('/')}` as const,
-      }))
-      .getOrElseValue({
-        locale: defaultLocale,
-        path: pathname,
-      });
-
-    return localePath(locale, path, search, hash);
-  });
+  windowGet('location').map(toLocalePath);
 
 export const homeLocalePath = (locale: Locale) => localePath(locale, '/');
 

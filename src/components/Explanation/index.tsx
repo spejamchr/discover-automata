@@ -16,7 +16,8 @@ import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import { displaySettings, randomCells } from '../Emulator/Types';
 import LinkedSection from '../LinkedSection';
-import LocaleLink from '../LocaleLink';
+import CurrentPageInLocale from '../LocaleLink/CurrentPageInLocale';
+import LinkTo from '../LocaleLink/LinkTo';
 import Togglers from '../Togglers';
 
 interface Props {}
@@ -43,9 +44,7 @@ class Explanation extends React.Component<Props> {
                   locale === currentLocale ? (
                     <span>{nativeLocale}</span>
                   ) : (
-                    <LocaleLink locale={locale} href="/">
-                      {nativeLocale}
-                    </LocaleLink>
+                    <CurrentPageInLocale locale={locale}>{nativeLocale}</CurrentPageInLocale>
                   );
                 const separator =
                   i === sortedLocales.length - 1 ? <></> : <span className="mx-2"> - </span>;
@@ -77,13 +76,13 @@ class Explanation extends React.Component<Props> {
                     className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
                     aria-hidden
                   />
-                  <LocaleLink
+                  <LinkTo
                     style={{ color: backgroundColor }}
                     className="relative transition-colors duration-500 "
                     href="/emulate"
                   >
                     {content}
-                  </LocaleLink>
+                  </LinkTo>
                 </span>
                 <span className="relative dark:hidden">
                   <span
@@ -91,13 +90,13 @@ class Explanation extends React.Component<Props> {
                     className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
                     aria-hidden
                   />
-                  <LocaleLink
+                  <LinkTo
                     style={{ color }}
                     className="relative transition-colors duration-500 "
                     href="/emulate"
                   >
                     {content}
-                  </LocaleLink>
+                  </LinkTo>
                 </span>
               </>
             )}
@@ -250,13 +249,13 @@ class Explanation extends React.Component<Props> {
               className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
               aria-hidden
             />
-            <LocaleLink
+            <LinkTo
               style={{ color: backgroundColor }}
               className="relative transition-colors duration-500"
               href="/emulate"
             >
               <T kind="Go here to use the emulator." />
-            </LocaleLink>
+            </LinkTo>
           </span>
           <span className="relative dark:hidden">
             <span
@@ -264,13 +263,13 @@ class Explanation extends React.Component<Props> {
               className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
               aria-hidden
             />
-            <LocaleLink
+            <LinkTo
               style={{ color }}
               className="relative transition-colors duration-500"
               href="/emulate"
             >
               <T kind="Go here to use the emulator." />
-            </LocaleLink>
+            </LinkTo>
           </span>
         </p>
 

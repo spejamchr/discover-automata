@@ -4,12 +4,12 @@ import T from '../../utils/Locales/T';
 import { windowGet } from '../../utils/WindowGet';
 import FavoritesStore from '../Favorites/Store';
 import FavoritesReactions from '../Favorites/Reactions';
-import LocaleLink from '../LocaleLink';
 import EmulatorReactions from './Reactions';
 import RenderState from './RenderState';
 import EmulatorStore from './Store';
 import WithTFns from '../../utils/Locales/WithTFns';
 import { displaySettings, randomCells } from './Types';
+import LinkTo from '../LocaleLink/LinkTo';
 
 interface Props {}
 
@@ -30,9 +30,9 @@ class Emulator extends React.Component<Props> {
             <h1>
               <T kind="Emulator" />
             </h1>
-            <LocaleLink className="text-sm" href="/">
+            <LinkTo className="text-sm" href="/">
               <T kind="What's this all about?" />
-            </LocaleLink>
+            </LinkTo>
           </div>
         </span>
         <RenderState emulatorStore={this.emulatorStore} favoritesStore={this.favoritesStore} />

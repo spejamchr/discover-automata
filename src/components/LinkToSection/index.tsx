@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { PlainTextKey } from '../../utils/Locales/Types';
 import WithTFns from '../../utils/Locales/WithTFns';
-import LocaleLink from '../LocaleLink';
+import LinkTo from '../LocaleLink/LinkTo';
 
 interface Props {
   kind: PlainTextKey;
@@ -19,9 +19,9 @@ const LinkToSection: React.FC<Props> = ({ path, kind, children, className }) => 
       const text = t(kind);
       const id = textToId(text);
       return (
-        <LocaleLink href={`${path || ''}#${id}`} className={className}>
+        <LinkTo href={`${path || ''}#${id}`} className={className}>
           {children}
-        </LocaleLink>
+        </LinkTo>
       );
     }}
   </WithTFns>

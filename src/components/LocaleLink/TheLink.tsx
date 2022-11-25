@@ -2,20 +2,19 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { forwardRef } from 'react';
-import { Locale } from '../../utils/Locales/Types';
+import { LocalePath, localePathToString } from '../../utils/LocalePath';
 
 interface Props extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  locale: Locale;
-  href: string;
+  path: LocalePath
 }
 
 const TheLink = forwardRef<HTMLAnchorElement, Props>((props, ref) => {
-  const { locale, href, children, className, ...rest } = props;
-  const hrefWithLocale = href[0] === '/' ? `/${locale}${href}` : href;
+  const { path, children, className, ...rest } = props;
+  const href = localePathToString(path)
   return (
-    <Link href={hrefWithLocale}>
+    <Link href={href}>
       <a
-        href={hrefWithLocale}
+        href={href}
         className={clsx(className, 'font-medium underline')}
         {...rest}
         ref={ref}

@@ -150,3 +150,18 @@ export const whenBetweenM = <T extends Comparable>(min: T, max: T) =>
 
 export const resultToTask = <E, T>(result: Result<E, T>): Task<E, T> =>
   result.cata({ Ok: Task.succeed<E, T>, Err: Task.fail<E, T> });
+
+export interface RaisedError {
+  kind: 'raised-error';
+  err: unknown;
+}
+
+export const raisedError = (err: unknown): RaisedError => ({ kind: 'raised-error', err });
+
+export const fromRaisableR = <T>(fn: () => T | never): Result<RaisedError, T> => {
+  try {
+    return ok(fn());
+  } catch (e) {
+    return err(raisedError(e));
+  }
+};
