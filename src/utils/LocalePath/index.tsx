@@ -3,7 +3,6 @@ import { just, Maybe, nothing } from 'maybeasy';
 import { Result } from 'resulty';
 import { fromRaisableR } from '../Extensions';
 import { defaultLocale, Locale, whenLocale } from '../Locales/Types';
-import { WindowError, windowGet } from '../WindowGet';
 
 type Path = `/${string}`;
 
@@ -83,9 +82,6 @@ export const stringToLocalePath = (href: string): Result<InvalidUrlError, Locale
   fromRaisableR(() => new URL(href, 'ignored-protocol:/'))
     .mapError(() => invalidUrlError(href))
     .map(toLocalePath);
-
-export const currentLocalePath = (): Result<WindowError, LocalePath> =>
-  windowGet('location').map(toLocalePath);
 
 export const homeLocalePath = (locale: Locale) => localePath(locale, '/');
 

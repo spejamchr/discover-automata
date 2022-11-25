@@ -49,10 +49,10 @@ class Explanation extends React.Component<Props> {
                 const separator =
                   i === sortedLocales.length - 1 ? <></> : <span className="mx-2"> - </span>;
                 return (
-                  <>
+                  <React.Fragment key={locale}>
                     {lang}
                     {separator}
-                  </>
+                  </React.Fragment>
                 );
               })
             }
