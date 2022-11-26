@@ -33,7 +33,7 @@ const Generations: React.FC<Props> = ({ historyStore, colorPicker }) => {
             const x = j * cellPixelSize;
             const y = i * cellPixelSize;
             context.fillStyle = colorPicker(s)[0];
-            context.fillRect(x, y, cellPixelSize * 1.5, cellPixelSize * 1.5);
+            context.fillRect(x, y, cellPixelSize - 1, cellPixelSize - 1);
             context.fillStyle = colorPicker(s)[1];
             context.fillText(indices[s], x + cellPixelSize / 4, y + fontSize);
           });
