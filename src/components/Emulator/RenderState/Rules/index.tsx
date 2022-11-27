@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../../Store';
-import Rule from './Rule';
 import T from '../../../../utils/Locales/T';
+import AllRules from './AllRules';
 
 interface Props {
   store: Store;
@@ -18,11 +18,7 @@ const Rules: React.FC<Props> = ({ store }) => {
       >
         <T kind={'Transition Rules'} />
       </summary>
-      <div className={`box-content flex flex-wrap content-start items-start justify-center`}>
-        {store.automata.rules
-          .map((r, i) => <Rule key={i} ruleIndex={i} state={r} store={store} />)
-          .reverse()}
-      </div>
+      <AllRules store={store} />
     </details>
   );
 };
