@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
-import { stringToLocalePath, withLocale } from '../../utils/LocalePath';
+import { localePathToString, stringToLocalePath, withLocale } from '../../utils/LocalePath';
 import { Locale } from '../../utils/Locales/Types';
 import TheLink from './TheLink';
 
@@ -14,7 +14,7 @@ const CurrentPageInLocale = forwardRef<HTMLAnchorElement, Props>(({ locale, ...r
 
   return stringToLocalePath(asPath)
     .map(withLocale(locale))
-    .map((path) => <TheLink path={path} {...rest} ref={ref} />)
+    .map((path) => <TheLink key={localePathToString(path)} path={path} {...rest} ref={ref} />)
     .getOrElse(() => <></>);
 });
 
