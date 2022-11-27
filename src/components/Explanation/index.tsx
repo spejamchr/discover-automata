@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { automataCtor } from '../../utils/CellularAutomata';
 import T from '../../utils/Locales/T';
-import { LocaleContext, sortedLocales } from '../../utils/Locales/Types';
 import WithTFns from '../../utils/Locales/WithTFns';
 import { range } from '../../utils/Range';
 import Cell from '../Emulator/Generations/Cell';
@@ -15,9 +14,9 @@ import HistoryWithWidth from '../Emulator/RenderState/HistoryWithWidth';
 import Rule from '../Emulator/RenderState/Rules/Rule';
 import Store from '../Emulator/Store';
 import { displaySettings, randomCells } from '../Emulator/Types';
+import EmulatorLink from '../EmulatorLink';
 import LinkedSection from '../LinkedSection';
-import CurrentPageInLocale from '../LocaleLink/CurrentPageInLocale';
-import LinkTo from '../LocaleLink/LinkTo';
+import LocaleLinks from '../LocaleLinks';
 import Togglers from '../Togglers';
 
 interface Props {}
@@ -37,26 +36,7 @@ class Explanation extends React.Component<Props> {
     return (
       <div className="prose mx-2 dark:prose-invert sm:mx-12">
         <p className="flex justify-center text-sm">
-          <LocaleContext.Consumer>
-            {({ locale: currentLocale }) =>
-              sortedLocales.map(({ nativeLocale, locale }, i) => {
-                const lang =
-                  locale === currentLocale ? (
-                    <span>{nativeLocale}</span>
-                  ) : (
-                    <CurrentPageInLocale locale={locale}>{nativeLocale}</CurrentPageInLocale>
-                  );
-                const separator =
-                  i === sortedLocales.length - 1 ? <></> : <span className="mx-2"> - </span>;
-                return (
-                  <React.Fragment key={locale}>
-                    {lang}
-                    {separator}
-                  </React.Fragment>
-                );
-              })
-            }
-          </LocaleContext.Consumer>
+          <LocaleLinks />
         </p>
 
         <LinkedSection h="h1" kind="What's this all about?" />
@@ -69,36 +49,7 @@ class Explanation extends React.Component<Props> {
           <T
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
-              <>
-                <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
-                  <span
-                    style={{ backgroundColor: color }}
-                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
-                    aria-hidden
-                  />
-                  <LinkTo
-                    style={{ color: backgroundColor }}
-                    className="relative transition-colors duration-500 "
-                    href="/emulate"
-                  >
-                    {content}
-                  </LinkTo>
-                </span>
-                <span className="relative dark:hidden">
-                  <span
-                    style={{ backgroundColor }}
-                    className="absolute -inset-1 mx-0.5 block -skew-y-3 -skew-x-6 transition-colors duration-500"
-                    aria-hidden
-                  />
-                  <LinkTo
-                    style={{ color }}
-                    className="relative transition-colors duration-500 "
-                    href="/emulate"
-                  >
-                    {content}
-                  </LinkTo>
-                </span>
-              </>
+              <EmulatorLink color={color} backgroundColor={backgroundColor} children={content} />
             )}
           />
         </p>
@@ -243,34 +194,11 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
-            <span
-              style={{ backgroundColor: color }}
-              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
-              aria-hidden
-            />
-            <LinkTo
-              style={{ color: backgroundColor }}
-              className="relative transition-colors duration-500"
-              href="/emulate"
-            >
-              <T kind="Go here to use the emulator." />
-            </LinkTo>
-          </span>
-          <span className="relative dark:hidden">
-            <span
-              style={{ backgroundColor }}
-              className="absolute -inset-1 mx-0.5 block -skew-y-1 -skew-x-12 transition-colors duration-500"
-              aria-hidden
-            />
-            <LinkTo
-              style={{ color }}
-              className="relative transition-colors duration-500"
-              href="/emulate"
-            >
-              <T kind="Go here to use the emulator." />
-            </LinkTo>
-          </span>
+          <EmulatorLink
+            color={color}
+            backgroundColor={backgroundColor}
+            children={<T kind="Go here to use the emulator." />}
+          />
         </p>
 
         <HistoryWithWidth store={this.store} height={3} />
