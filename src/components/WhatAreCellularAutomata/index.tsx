@@ -58,9 +58,9 @@ const Explanation: React.FC<Props> = () => {
       <HistoryWithWidth store={striped} height={1} />
 
       <p>
-        As they tile the second row, Daedalus convinces Icarus to play a (very boring) game: when
-        they're picking the tile to use, they always use the same color as the one in the same place
-        in the first row. When they finish the second row, it looks like this.
+        Before they tile the second row, Daedalus convinces Icarus to play a (very boring) game:
+        when they're picking the tile to use, they always use the same color as the one in the same
+        place in the first row. When they finish the second row, it looks like this.
       </p>
 
       <HistoryWithWidth store={striped} height={2} />
@@ -73,9 +73,9 @@ const Explanation: React.FC<Props> = () => {
       <HistoryWithWidth store={striped} height={4} />
 
       <p>
-        Daedalus gets bored with simple stripes and decides to change the rule, just a little. He
+        Icarus gets bored with simple stripes and decides to change the rule, just a little. He
         decides that when they lay down a tile, they'll make it the opposite color from what's just
-        above it. They do four more rows, now following the new rule, and the wall now looks like
+        above it. They tile some more rows, now following the new rule, and the wall now looks like
         this:
       </p>
 
@@ -84,22 +84,25 @@ const Explanation: React.FC<Props> = () => {
 
       <p>
         Daedalus describes this "almost-checkered" rule with a picture: he draws a white tile above
-        with a black tile under it, and a black tile with a white tile underneath.
+        with a black tile under it, and a black tile with a white tile underneath. Each picture
+        shows them which color to use given the color of the tile above.
       </p>
 
       <ReadonlyRules store={checkered} />
 
       <p>
-        Icarus points out that the pattern is pretty repetitive. When deciding on a new tile's
-        color, they've only been considering the color of the tile right above it. Icarus suggests
-        that they could consider the colors of the tiles to the left & right as well. Daedalus likes
-        the idea and suggests a new rule: if the left & right tiles are the same color, use the
-        color of the tile right above it; otherwise, use the opposite color of the previous tile.
+        Icarus points out that both patterns have been pretty repetitive. When deciding on a new
+        tile's color, they've only been considering the color of the tile right above it. He
+        suggests that they could consider the colors of the tiles to the left & right as well.
+        Daedalus likes the idea and suggests a new rule: if the left & right tiles are the same
+        color, use the color of the tile right above it; otherwise, use the opposite color of the
+        previous tile.
       </p>
 
       <p>
         This new rule sounds more complicated than the others, so Icarus suggests that they draw a
-        picture of the rule, like before. This time they draw these eight pictures.
+        picture of the rule, like before. This time they draw these eight pictures. Each one shows
+        which color tile to use for a given combination of tiles above.
       </p>
 
       <ReadonlyRules store={stripedAndCheckered} />
