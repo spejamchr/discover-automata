@@ -21,7 +21,18 @@ interface Props {
   emulatorStore: EmulatorStore;
 }
 
-const randState = (states: number) => () => Math.floor(Math.random() * states);
+// Based on Mulberry32 found at: https://stackoverflow.com/a/47593316
+export const seedablePrng = (base: number) => (): number => {
+  var t = (base += 0x6d2b79f5);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+
+const randState = (states: number, seed: number) => {
+  const prng = seedablePrng(seed * 2 ** 32);
+  return () => Math.floor(prng() * states);
+};
 
 const singleCenteredCell = (width: number, states: number) => (i: number) =>
   i === Math.round(width / 2) ? states - 1 : 0;
@@ -31,11 +42,12 @@ const generationPopulator = (
   store: HistoryStore,
   width: number,
 ): ((i: number) => number) => {
-  switch (emulatorStore.settings.firstGeneration.kind) {
+  const { firstGeneration } = emulatorStore.settings;
+  switch (firstGeneration.kind) {
     case 'single-cell':
       return singleCenteredCell(width, store.automata.states);
     case 'random-cells':
-      return randState(store.automata.states);
+      return randState(store.automata.states, firstGeneration.seed);
   }
 };
 

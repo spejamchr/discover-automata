@@ -11,9 +11,10 @@ export type ConfigResult<T> = Result<ConfigError, T>;
 
 export interface RandomCells {
   kind: 'random-cells';
+  seed: number;
 }
 
-export const randomCells = (): RandomCells => ({ kind: 'random-cells' });
+export const randomCells = (): RandomCells => ({ kind: 'random-cells', seed: Math.random() });
 
 export interface SingleCell {
   kind: 'single-cell';
