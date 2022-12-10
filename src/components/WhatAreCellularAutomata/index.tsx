@@ -2,13 +2,14 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
 import React from 'react';
-import { automataCtor } from '../../utils/CellularAutomata';
+import { automataCtor, serialize } from '../../utils/CellularAutomata';
 import { Neighbors } from '../../utils/CellularAutomata/Types';
 import HistoryWithWidth from '../Emulator/RenderState/HistoryWithWidth';
 import ReadonlyRules from '../Emulator/RenderState/Rules/ReadonlyRules';
 import Store from '../Emulator/Store';
 import { displaySettings, randomCells } from '../Emulator/Types';
 import EmulatorLink from '../EmulatorLink';
+import LinkTo from '../LocaleLink/LinkTo';
 import LocaleLinks from '../LocaleLinks';
 
 interface Props {}
@@ -22,10 +23,12 @@ const tileStore = (neighbors: Neighbors, ruleId: number): Store =>
 const Explanation: React.FC<Props> = () => {
   const checkered = tileStore([0], 1);
   const striped = tileStore([0], 2);
-  const stripedAndCheckered = tileStore([-1, 0, 1], 150);
+  const trianglesLight = tileStore([-1, 0], 9);
+  const trianglesDark = tileStore([-1, 0], 6);
 
   striped.settings.firstGeneration = checkered.settings.firstGeneration;
-  stripedAndCheckered.settings.firstGeneration = checkered.settings.firstGeneration;
+  trianglesLight.settings.firstGeneration = checkered.settings.firstGeneration;
+  trianglesDark.settings.firstGeneration = checkered.settings.firstGeneration;
 
   const backgroundColor = checkered.colorPicker(0)[0];
   const color = checkered.colorPicker(checkered.automata.states - 1)[0];
@@ -43,16 +46,16 @@ const Explanation: React.FC<Props> = () => {
       </p>
 
       <p>
-        Icarus and Daedalus have been tasked with tiling a giant wall with square tiles. The tiles
-        come in two colors: black and white. The clients want the wall to be tiled in a grid one row
-        at a time, starting at the top. The clients don't care at all how the black & white tiles
-        are arranged in the grid.
+        Icarus and Daedalus have been hired to tile a wall with square tiles. The tiles come in two
+        colors: black and white. The clients want the wall to be tiled in a grid one row at a time,
+        starting at the top. The clients oddly don't care how the black & white tiles are arranged
+        in the grid.
       </p>
 
       <p>
         Icarus and Daedalus begin tiling. The first row ends up looking pretty random, since they
         didn't pay much attention to which colors they were using as they went. (They were too busy
-        telling each other old stories.) It looks like this.
+        telling each other old stories.) Here it is.
       </p>
 
       <HistoryWithWidth store={striped} height={1} />
@@ -74,18 +77,19 @@ const Explanation: React.FC<Props> = () => {
 
       <p>
         Icarus gets bored with simple stripes and decides to change the rule, just a little. He
-        decides that when they lay down a tile, they'll make it the opposite color from what's just
-        above it. They tile some more rows, now following the new rule, and the wall now looks like
-        this:
+        decides that when they lay down a tile, they'll make it the opposite of the "parent"
+        tile---the one just above it. They tile some more rows, now following the new rule, and
+        second section of the wall looks almost checkered.
       </p>
 
       <HistoryWithWidth store={striped} height={3} />
       <HistoryWithWidth store={checkered} height={5} />
 
       <p>
-        Daedalus describes this "almost-checkered" rule with a picture: he draws a white tile above
-        with a black tile under it, and a black tile with a white tile underneath. Each picture
-        shows them which color to use given the color of the tile above.
+        Daedalus describes this "almost-checkered" rule with two pictures: one with a black tile
+        above and a white tile underneath, and another with a white tile above and a black tile
+        underneath. Each picture shows them which color to use given the color of the "parent" tile
+        above.
       </p>
 
       <ReadonlyRules store={checkered} />
@@ -93,25 +97,26 @@ const Explanation: React.FC<Props> = () => {
       <p>
         Icarus points out that both patterns have been pretty repetitive. When deciding on a new
         tile's color, they've only been considering the color of the tile right above it. He
-        suggests that they could consider the colors of the tiles to the left & right as well.
-        Daedalus likes the idea and suggests a new rule: if the left & right tiles are the same
-        color, use the color of the tile right above it; otherwise, use the opposite color of the
-        previous tile.
+        suggests that the patterns could be more interesting if they considered two tiles: the
+        parent tile and the tile to the left of the parent tile. Daedalus agrees and suggests a new
+        rule: if the two tiles above are the same color use black, and if they're different use
+        white.
       </p>
 
       <p>
-        This new rule sounds more complicated than the others, so Icarus suggests that they draw a
-        picture of the rule, like before. This time they draw these eight pictures. Each one shows
-        which color tile to use for a given combination of tiles above.
+        This new rule is more complicated than the others, so Icarus suggests that they draw a
+        picture of the rule, like before. This time they draw four pictures. Each one shows which
+        color tile to use for a given combination of tiles above.
       </p>
 
-      <ReadonlyRules store={stripedAndCheckered} />
+      <ReadonlyRules store={trianglesLight} className="dark:hidden" />
+      <ReadonlyRules store={trianglesDark} className="hidden dark:flex" />
 
       <p>
         Icarus is doubtful that the new pattern will be interesting; after all, it's just a
         combination of the "striped" and "almost-checkered" rules they were using before: use the
-        "stripes" rule if the left & right tiles are the same color, and use the "almost-checkered"
-        rule if the left & right tiles are different. But he goes along with Daedalus's idea.
+        "stripes" rule if the left tile is black, and use the "almost-checkered" rule if the left
+        tile is white. But he goes along with Daedalus's idea.
       </p>
 
       <p>
@@ -119,30 +124,30 @@ const Explanation: React.FC<Props> = () => {
         following the new rule.
       </p>
 
-      <HistoryWithWidth store={stripedAndCheckered} height={2} />
-
-      <p>They add more rows.</p>
-
-      <HistoryWithWidth store={stripedAndCheckered} height={4} />
+      <HistoryWithWidth store={trianglesLight} height={2} className="dark:hidden" />
+      <HistoryWithWidth store={trianglesDark} height={2} className="hidden dark:block" />
 
       <p>
         It takes a little while for them to get used to this new rule, and they have to look at the
-        drawing they made a bunch to remember what color tile to use, but it's definitely not as
-        boring as the other two rules. Icarus and Daedalus decide to tile the rest of the wall with
-        this rule, to see if it makes some kind of larger pattern, or if it just looks random.
+        drawing they made to remember what color tile to use, but it's definitely not as boring as
+        the other two rules. Icarus and Daedalus decide to tile several more rows following this
+        rule, to see if it makes some kind of larger pattern.
       </p>
 
-      <HistoryWithWidth store={stripedAndCheckered} height={30} />
+      <HistoryWithWidth store={trianglesLight} height={10} className="dark:hidden" />
+      <HistoryWithWidth store={trianglesDark} height={10} className="hidden dark:block" />
 
       <p>
-        They decide that it seems to be mostly random, with some nice almost-triangle-shaped areas.
+        They decide that it seems to be mostly random, except that it sometimes makes black
+        triangles.
       </p>
 
       <p>The wall is now fully tiled. Here's how it turned out.</p>
 
       <HistoryWithWidth store={striped} height={3} />
       <HistoryWithWidth store={checkered} height={4} />
-      <HistoryWithWidth store={stripedAndCheckered} height={30} />
+      <HistoryWithWidth store={trianglesLight} height={30} className="dark:hidden" />
+      <HistoryWithWidth store={trianglesDark} height={30} className="hidden dark:block" />
 
       <p>
         It probably won't win any artistic prizes, but Icarus and Daedalus have used cellular
@@ -157,17 +162,47 @@ const Explanation: React.FC<Props> = () => {
       </p>
 
       <p>
-        The rules can be very simple, like the "striped" and "almost-checkered" rules, or can get
-        more complicated, like the last "combined" rule that Daedalus suggested. Also, cellular
-        automata aren't limited to only two colors, and usually use numbers in place of colors.
+        The rules can be very simple, like the "striped" and "almost-checkered" rules, and can get
+        more complicated than even the last "triangle" rule that Daedalus suggested. For example,
+        cellular automata aren't limited to only two colors, and usually use numbers in place of
+        colors.
       </p>
+
+      <p>You can view the rules from this story in the emulator on this site.</p>
+
+      <ol>
+        <li>
+          <LinkTo href={`/emulate#${serialize(striped.automata)}`}>The "striped" rule</LinkTo>
+        </li>
+        <li>
+          <LinkTo href={`/emulate#${serialize(checkered.automata)}`}>
+            The "almost-checkered" rule
+          </LinkTo>
+        </li>
+        <li>
+          <LinkTo href={`/emulate#${serialize(trianglesLight.automata)}`} className="dark:hidden">
+            The "triangle" rule
+          </LinkTo>
+          <LinkTo
+            href={`/emulate#${serialize(trianglesDark.automata)}`}
+            className="hidden dark:inline"
+          >
+            The "triangle" rule
+          </LinkTo>
+        </li>
+      </ol>
 
       <p>
         The cellular automata drawn in this story and at{' '}
         <EmulatorLink color={color} backgroundColor={backgroundColor} children={'the emulator'} />{' '}
         are all drawn row-by-row, to make a single grid of cells. Other cellular automata might
-        start with a full grid, and then have rules for making a new grid. By drawing many new grids
-        over and over, they can make simple animations.
+        start with a full grid, and then have rules for drawing a new grid. By drawing many new
+        grids over and over, they can make simple animations. The most well-known cellular
+        automaton,{' '}
+        <Link href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
+          Conway's Game of Life
+        </Link>
+        , works like this.
       </p>
 
       <p>Also check out:</p>
@@ -182,8 +217,8 @@ const Explanation: React.FC<Props> = () => {
           for lots of numbers and graphs.
         </li>
         <li>
-          <Link href="https://golly.sourceforge.net/">Golly</Link>, a program you can use to make &
-          play with all sorts of cellular automata.
+          <Link href="https://golly.sourceforge.net/">Golly</Link>, a program you can run locally to
+          make & play with all sorts of cellular automata.
         </li>
       </ul>
     </div>
