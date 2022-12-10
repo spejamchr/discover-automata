@@ -2,7 +2,6 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react/no-unknown-property": "off",
-    "react/no-unescaped-entities": "off",
-    "react/no-children-prop": "off"
+    "react/no-unescaped-entities": "off"
   }
 }

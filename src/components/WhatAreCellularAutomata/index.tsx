@@ -42,7 +42,10 @@ const Explanation: React.FC<Props> = () => {
 
       <p className={clsx('text-sm')}>
         Read on, or visit{' '}
-        <EmulatorLink color={color} backgroundColor={backgroundColor} children={'the emulator'} />.
+        <EmulatorLink color={color} backgroundColor={backgroundColor}>
+          the emulator
+        </EmulatorLink>
+        .
       </p>
 
       <p>
@@ -194,7 +197,9 @@ const Explanation: React.FC<Props> = () => {
 
       <p>
         The cellular automata drawn in this story and at{' '}
-        <EmulatorLink color={color} backgroundColor={backgroundColor} children={'the emulator'} />{' '}
+        <EmulatorLink color={color} backgroundColor={backgroundColor}>
+          the emulator
+        </EmulatorLink>{' '}
         are all drawn row-by-row, to make a single grid of cells. Other cellular automata might
         start with a full grid, and then have rules for drawing a new grid. By drawing many new
         grids over and over, they can make simple animations. The most well-known cellular

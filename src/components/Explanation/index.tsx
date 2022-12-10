@@ -49,7 +49,9 @@ class Explanation extends React.Component<Props> {
           <T
             kind="Read on, or skip straight to <link>the emulator</link>."
             link={(content) => (
-              <EmulatorLink color={color} backgroundColor={backgroundColor} children={content} />
+              <EmulatorLink color={color} backgroundColor={backgroundColor}>
+                {content}
+              </EmulatorLink>
             )}
           />
         </p>
@@ -194,11 +196,9 @@ class Explanation extends React.Component<Props> {
         </p>
 
         <p>
-          <EmulatorLink
-            color={color}
-            backgroundColor={backgroundColor}
-            children={<T kind="Go here to use the emulator." />}
-          />
+          <EmulatorLink color={color} backgroundColor={backgroundColor}>
+            <T kind="Go here to use the emulator." />
+          </EmulatorLink>
         </p>
 
         <HistoryWithWidth store={this.store} height={3} />
