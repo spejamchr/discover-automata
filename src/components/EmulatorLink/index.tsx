@@ -18,7 +18,7 @@ const EmulatorLink: React.FC<Props> = ({ color, backgroundColor, children }) => 
       />
       <LinkTo
         style={{ color: backgroundColor }}
-        className="relative transition-colors duration-500 "
+        className="relative whitespace-nowrap transition-colors duration-500 "
         href="/emulate"
       >
         {children}
@@ -32,7 +32,7 @@ const EmulatorLink: React.FC<Props> = ({ color, backgroundColor, children }) => 
       />
       <LinkTo
         style={{ color }}
-        className="relative transition-colors duration-500 "
+        className="relative whitespace-nowrap transition-colors duration-500 "
         href="/emulate"
       >
         {children}
