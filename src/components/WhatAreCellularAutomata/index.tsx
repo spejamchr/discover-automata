@@ -159,9 +159,9 @@ const Explanation: React.FC<Props> = () => {
       </p>
 
       <p>
-        At their simplest, a cellular automaton is a set of rules for deciding how to tile
-        something. That something can be a wall, or an infinite plane, or the surface of a sphere,
-        or almost anything you want.
+        Put simply, a cellular automaton is a set of rules for deciding how to tile something. That
+        something can be a wall, or an infinite plane, or the surface of a sphere, or almost
+        anything you want.
       </p>
 
       <p>
@@ -210,7 +210,7 @@ const Explanation: React.FC<Props> = () => {
         , works like this.
       </p>
 
-      <p>Also check out:</p>
+      <p>Here are some other nice resources to learn about or play with cellular automata.</p>
 
       <ul>
         <li>

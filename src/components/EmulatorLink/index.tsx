@@ -10,7 +10,7 @@ interface Props {
 
 const EmulatorLink: React.FC<Props> = ({ color, backgroundColor, children }) => (
   <>
-    <span className="relative hidden dark:inline dark:hue-rotate-[180deg] dark:invert">
+    <span className="relative hidden whitespace-nowrap dark:inline dark:hue-rotate-[180deg] dark:invert">
       <span
         style={{ backgroundColor: color }}
         className="absolute -inset-1 mx-0.5 block -skew-y-[2deg] -skew-x-12 transition-colors duration-500"
@@ -18,13 +18,13 @@ const EmulatorLink: React.FC<Props> = ({ color, backgroundColor, children }) => 
       />
       <LinkTo
         style={{ color: backgroundColor }}
-        className="relative whitespace-nowrap transition-colors duration-500 "
+        className="relative transition-colors duration-500 "
         href="/emulate"
       >
         {children}
       </LinkTo>
     </span>
-    <span className="relative dark:hidden">
+    <span className="relative whitespace-nowrap dark:hidden">
       <span
         style={{ backgroundColor }}
         className="absolute -inset-1 mx-0.5 block -skew-y-[1deg] -skew-x-12 transition-colors duration-500"
@@ -32,7 +32,7 @@ const EmulatorLink: React.FC<Props> = ({ color, backgroundColor, children }) => 
       />
       <LinkTo
         style={{ color }}
-        className="relative whitespace-nowrap transition-colors duration-500 "
+        className="relative transition-colors duration-500 "
         href="/emulate"
       >
         {children}
