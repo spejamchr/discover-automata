@@ -6,7 +6,7 @@ import LinkTo from '../LocaleLink/LinkTo';
 
 interface Props {
   kind: PlainTextKey;
-  path?: string;
+  path: string;
   children: React.ReactNode;
   className?: string;
 }

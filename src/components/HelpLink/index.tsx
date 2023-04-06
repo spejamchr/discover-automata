@@ -8,7 +8,7 @@ interface Props {
 
 const HelpLink: React.FC<Props> = ({ kind }) => (
   <LinkToSection
-    path="/"
+    path="guide"
     kind={kind}
     className="ml-2 rounded-full bg-slate-200 px-2 font-extralight no-underline dark:bg-slate-900"
   >

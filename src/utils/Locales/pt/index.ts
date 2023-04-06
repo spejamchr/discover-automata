@@ -63,9 +63,11 @@ export const pt: Translations = {
   "This representation of the transition rules as a [...]": "Esta representação das regras de transição como um \"número da regra\" usa o <link>Código Wolfram</link>.",
   "To define a 1DCA we need to know three things: the number [...]": "Para definir um AC1D, precisamos saber três coisas: o número de estados a serem usados, quais vizinhos considerar ao calcular a próxima geração e as regras de transição para decidir para qual estado uma célula evoluirá (com base nos estados de seus vizinhos).",
   "Transition Rules": "Regras de Transição",
-  "What are Cellular Automata?": "O que são Autômatos Celulares?",
   "When using a (good) video game emulator, the video game [...]": "Ao usar um (bom) emulador de videogame, o videogame não sabe que está sendo executado em um emulador, porque o emulador se comporta exatamente como o sistema que está emulando.",
   "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life": "https://pt.wikipedia.org/wiki/Jogo_da_vida",
   "maximum digits:": "dígitos máximos:",
   "native-locale-name": "Português",
+  "What are Cellular Automata?": "",
+  "Icarus and Daedalus Tile a Wall": "Icarus and Daedalus Tile a Wall",
+  "Finishing Touches": "Finishing Touches",
 };

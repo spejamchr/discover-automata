@@ -9,8 +9,8 @@ import ReadonlyRules from '../Emulator/RenderState/Rules/ReadonlyRules';
 import Store from '../Emulator/Store';
 import { displaySettings, randomCells } from '../Emulator/Types';
 import EmulatorLink from '../EmulatorLink';
+import LinkedSection from '../LinkedSection';
 import LinkTo from '../LocaleLink/LinkTo';
-import LocaleLinks from '../LocaleLinks';
 
 interface Props {}
 
@@ -34,11 +34,7 @@ const Explanation: React.FC<Props> = () => {
   const color = checkered.colorPicker(checkered.automata.states - 1)[0];
   return (
     <div className="prose mx-2 dark:prose-invert sm:mx-12">
-      <p className="flex justify-center text-sm">
-        <LocaleLinks />
-      </p>
-
-      <h1>What are Cellular Automata?</h1>
+      <LinkedSection h="h1" kind="What are Cellular Automata?" />
 
       <p className={clsx('text-sm')}>
         Read on, or visit{' '}
@@ -48,7 +44,7 @@ const Explanation: React.FC<Props> = () => {
         .
       </p>
 
-      <h2>Icarus and Daedalus Tile a Wall</h2>
+      <LinkedSection h="h1" kind="Icarus and Daedalus Tile a Wall" />
 
       <p>
         Icarus and Daedalus have been hired to tile a wall with square tiles. The tiles come in two
@@ -160,7 +156,7 @@ const Explanation: React.FC<Props> = () => {
         automaton.
       </p>
 
-      <h2>Finishing Touches</h2>
+      <LinkedSection h="h2" kind="Finishing Touches" />
 
       <p>
         Put simply, a cellular automaton is a set of rules for deciding how to tile something (note

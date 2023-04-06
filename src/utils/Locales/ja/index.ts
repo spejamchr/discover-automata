@@ -63,9 +63,11 @@ export const ja: Translations = {
   "This representation of the transition rules as a [...]": "この\"規則番号\"としての遷移規則の表現は<link>Wolframコード</link>を使用しています。",
   "To define a 1DCA we need to know three things: the number [...]": "1DCA を定義するには、次の 3 つのことを知る必要があります。使用する状態の数、次の世代を計算するときに考慮すべき隣接セル、セルがどの状態に進化するかを決定するための遷移規則（隣接セルの状態に基づく）。",
   "Transition Rules": "遷移規則",
-  "What are Cellular Automata?": "セルオートマトンとは？",
   "When using a (good) video game emulator, the video game [...]": "（良い）ビデオ ゲーム エミュレーターを使用する場合、エミュレーターはエミュレートしているシステムとまったく同じように動作するため、ビデオ ゲームはエミュレーター上で実行されていることを認識できません。",
   "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life": "https://ja.wikipedia.org/wiki/%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B2%E3%83%BC%E3%83%A0",
   "maximum digits:": "最大桁数：",
   "native-locale-name": "日本語",
+  "What are Cellular Automata?": "",
+  "Icarus and Daedalus Tile a Wall": "Icarus and Daedalus Tile a Wall",
+  "Finishing Touches": "Finishing Touches",
 };
