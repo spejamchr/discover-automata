@@ -1,34 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<picture>
+ <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/spejamchr/discover-automata/main/5.7.685970445153587909765156071183826318147427356496819909180746345369600859897652333069673-dark.png">
+ <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/spejamchr/discover-automata/main/5.7.685970445153587909765156071183826318147427356496819909180746345369600859897652333069673-light.png">
+ <img alt="A pattern generated with a 5-state cellular automaton" src="https://raw.githubusercontent.com/spejamchr/discover-automata/main/5.7.685970445153587909765156071183826318147427356496819909180746345369600859897652333069673-light.png">
+</picture>
+
+# Discover Automata
+
+A simple cellular automata emulator built with [NextJS] and [CooperTS] and styled with
+[tailwindcss].
+
+I think cellular automata are fun and can make nice looking designs, and I wanted to lean into that.
+
+[NextJS]: https://nextjs.org/
+[CooperTS]: https://github.com/execonline-inc/CooperTS
+[tailwindcss]: https://tailwindcss.com/
+
+## CooperTS?
+
+CooperTS is an Elm-inspired functional programming library for Typescript that I use and contribute
+to as part of my day job. I enjoy using it enough that I decided to use parts of it here, too. It is
+focused on using the compiler to eliminate run-time errors.
+
+## Translations
+
+This whole little project is a place for me to play, and that is particularly true of the
+translations. I implemented my own translation system that works with NextJS's Static Site
+Generation (NextJS's built-in translation routing [doesn't work with SSG]). It is also
+strongly-typed: if I create a new translation but forget to provide a translation for one of the
+supported languages the project will fail to compile.
+
+Most of the site is translated into Portuguese and Japanese. However, the translation quality is not
+great; I used Google Translate and proof-read the results myself, but my Portuguese is rusty and I'm
+only a beginner in Japanese.
+
+[doesn't work with SSG]: https://nextjs.org/docs/advanced-features/i18n-routing#how-does-this-work-with-static-generation
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Deploying
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Push to main. [Vercel] will handle the rest.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[Vercel]: https://vercel.com/dashboard
