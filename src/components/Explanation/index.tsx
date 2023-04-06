@@ -39,7 +39,7 @@ class Explanation extends React.Component<Props> {
           <LocaleLinks />
         </p>
 
-        <LinkedSection h="h1" kind="What's this all about?" />
+        <LinkedSection h="h1" kind="How Does the Emulator Work?" />
 
         <p>
           <T kind="I wanted to make some fun designs, and had just read about [...]" />

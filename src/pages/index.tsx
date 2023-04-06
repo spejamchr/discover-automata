@@ -1,8 +1,8 @@
 import { GetStaticProps } from 'next';
 import { defaultLocale } from '../utils/Locales/Types';
-import Home, { Props, getStaticProps as getStaticPropsImpl } from './[locale]';
+import Emulate, { Props, getStaticProps as getStaticPropsImpl } from './[locale]';
 
-export default Home;
+export default Emulate;
 
 export const getStaticProps: GetStaticProps<Props> = () =>
   getStaticPropsImpl({ params: { locale: defaultLocale } });

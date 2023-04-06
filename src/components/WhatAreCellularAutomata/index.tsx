@@ -38,7 +38,7 @@ const Explanation: React.FC<Props> = () => {
         <LocaleLinks />
       </p>
 
-      <h1>What are cellular automata?</h1>
+      <h1>What are Cellular Automata?</h1>
 
       <p className={clsx('text-sm')}>
         Read on, or visit{' '}

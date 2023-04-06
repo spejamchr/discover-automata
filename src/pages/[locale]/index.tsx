@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import Explanation from '../../components/Explanation';
+import Emulator from '../../components/Emulator';
 import Footer from '../../components/Footer';
 import TitleBar from '../../components/TitleBar';
 import LocaleContextProvider from '../../utils/Locales/LocaleContextProvider';
@@ -12,7 +12,7 @@ export interface Props {
   locale: Locale;
 }
 
-const Home: NextPage<Props> = ({ locale }) => {
+const Emulate: NextPage<Props> = ({ locale }) => {
   return (
     <LocaleContextProvider locale={locale}>
       <WithTFns>
@@ -28,7 +28,7 @@ const Home: NextPage<Props> = ({ locale }) => {
       <TitleBar />
 
       <main>
-        <Explanation />
+        <Emulator />
       </main>
 
       <Footer />
@@ -36,7 +36,7 @@ const Home: NextPage<Props> = ({ locale }) => {
   );
 };
 
-export default Home;
+export default Emulate;
 
 export const getStaticPaths: GetStaticPaths = () => {
   const paths = locales.map((locale) => ({ params: { locale } }));

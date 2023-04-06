@@ -26,13 +26,19 @@ class Emulator extends React.Component<Props> {
     return (
       <div className={`w-full px-2 text-slate-700 dark:text-slate-200 sm:px-12`}>
         <span className="flex flex-wrap items-start justify-between">
-          <div className="prose flex w-full max-w-sm flex-wrap items-baseline justify-between pb-4 dark:prose-invert">
+          <div className="prose flex w-full flex-wrap items-baseline justify-between pb-4 dark:prose-invert">
             <h1>
               <T kind="Emulator" />
             </h1>
-            <LinkTo className="text-sm" href="/">
-              <T kind="What's this all about?" />
-            </LinkTo>
+            <span>
+              <LinkTo className="text-sm" href="/cellular-automata">
+                <T kind="What are Cellular Automata?" />
+              </LinkTo>
+              <span className="px-2">|</span>
+              <LinkTo className="text-sm" href="/guide">
+                <T kind="How does this work?" />
+              </LinkTo>
+            </span>
           </div>
         </span>
         <RenderState emulatorStore={this.emulatorStore} favoritesStore={this.favoritesStore} />
