@@ -48,6 +48,8 @@ const Explanation: React.FC<Props> = () => {
         .
       </p>
 
+      <h2>Icarus and Daedalus Tile a Wall</h2>
+
       <p>
         Icarus and Daedalus have been hired to tile a wall with square tiles. The tiles come in two
         colors: black and white. The clients want the wall to be tiled in a grid one row at a time,
@@ -65,24 +67,24 @@ const Explanation: React.FC<Props> = () => {
 
       <p>
         Before they tile the second row, Daedalus convinces Icarus to play a (very boring) game:
-        when they're picking the tile to use, they always use the same color as the one in the same
-        place in the first row. When they finish the second row, it looks like this.
+        when they place a tile, they always use the same color as the tile in the same position in
+        the first row. When they finish the second row, it looks like this.
       </p>
 
       <HistoryWithWidth store={striped} height={2} />
 
       <p>
-        They do some more rows like this: when they lay down a tile, they make sure it's always the
-        same color as whatever tile is just above it.
+        They do some more rows like this: when they lay down a tile, they make sure it's the same
+        color as the tile just above it.
       </p>
 
       <HistoryWithWidth store={striped} height={4} />
 
       <p>
-        Icarus gets bored with simple stripes and decides to change the rule, just a little. He
-        decides that when they lay down a tile, they'll make it the opposite of the "parent"
-        tile---the one just above it. They tile some more rows, now following the new rule, and
-        second section of the wall looks almost checkered.
+        Icarus gets bored with the simple striping pattern this creates and wants to change the
+        rule, just a little. He decides that when they lay down a tile, they'll make it the opposite
+        of the "parent" tile&mdash;the one just above it. They tile some more rows, now following
+        the new rule, and the second section of the wall makes a sort of checkered pattern.
       </p>
 
       <HistoryWithWidth store={striped} height={3} />
@@ -92,7 +94,7 @@ const Explanation: React.FC<Props> = () => {
         Daedalus describes this "almost-checkered" rule with two pictures: one with a black tile
         above and a white tile underneath, and another with a white tile above and a black tile
         underneath. Each picture shows them which color to use given the color of the "parent" tile
-        above.
+        above. Daedalus calls these pictures the "transition rules" for their tiling game.
       </p>
 
       <ReadonlyRules store={checkered} />
@@ -107,9 +109,9 @@ const Explanation: React.FC<Props> = () => {
       </p>
 
       <p>
-        This new rule is more complicated than the others, so Icarus suggests that they draw a
-        picture of the rule, like before. This time they draw four pictures. Each one shows which
-        color tile to use for a given combination of tiles above.
+        This new rule is more complicated than the others, so Icarus asks Daedalus to draw another
+        picture of the "transition rules," like before. This time they draw four pictures. Each one
+        shows which color tile to use for a given combination of neighboring parent tiles.
       </p>
 
       <ReadonlyRules store={trianglesLight} className="dark:hidden" />
@@ -158,10 +160,13 @@ const Explanation: React.FC<Props> = () => {
         automaton.
       </p>
 
+      <h2>Finishing Touches</h2>
+
       <p>
-        Put simply, a cellular automaton is a set of rules for deciding how to tile something. That
-        something can be a wall, or an infinite plane, or the surface of a sphere, or almost
-        anything you want.
+        Put simply, a cellular automaton is a set of rules for deciding how to tile something (note
+        that the cellular automaton is the set of rules, and not the final tiling itself). That
+        something can be a wall, or an infinite plane, or the surface of a sphere, or almost any
+        surface you can think of.
       </p>
 
       <p>
@@ -200,10 +205,9 @@ const Explanation: React.FC<Props> = () => {
         <EmulatorLink color={color} backgroundColor={backgroundColor}>
           the emulator
         </EmulatorLink>{' '}
-        are all drawn row-by-row, to make a single grid of cells. Other cellular automata might
-        start with a full grid, and then have rules for drawing a new grid. By drawing many new
-        grids over and over, they can make simple animations. The most well-known cellular
-        automaton,{' '}
+        are all drawn row-by-row, to make a single grid of cells. Many other cellular automata start
+        with a full grid, and then have rules for drawing a new grid. By drawing many new grids over
+        and over, they can make simple animations. The most well-known cellular automaton,{' '}
         <Link href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
           Conway's Game of Life
         </Link>
